@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { API_ENDPOINT } from '../constants/variable.constant'
-import { CreatePaymentRequest, CreateSiSPaymentRequest, ListGroupedProvidersRequest } from '../models'
+import {
+  CreatePaymentRequest,
+  CreateSiSPaymentRequest,
+  GetPaymentStatusRequest,
+  ListGroupedProvidersRequest
+} from '../models'
 import { handleRequest } from './handle-request.util'
 
 const apiEndpoint = API_ENDPOINT
@@ -107,7 +112,9 @@ const payments = {
   create: (payload: CreatePaymentRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments`, payload, headers)),
   createSiSPayment: (payload: CreateSiSPaymentRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.post(`${apiEndpoint}/payments`, payload, headers))
+    handleRequest(requests.post(`${apiEndpoint}/payments`, payload, headers)),
+  getPaymentStatus: (payload: GetPaymentStatusRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.get(`${apiEndpoint}/payments/${payload.transactionId}`, headers))
 }
 
 export const api = {

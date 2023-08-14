@@ -1,8 +1,13 @@
-import { CreateSiSPaymentRequest, CreateSiSPaymentResponse } from '../models'
-import { CreatePaymentRequest } from '../models/request/create-payment.model'
-import { ListGroupedProvidersRequest } from '../models/request/get-list-grouped-payment-providers.model'
-import { CreatePaymentResponse } from '../models/response/create-payment.model'
-import { ListGroupedProvidersResponse } from '../models/response/get-list-grouped-payment-providers.model'
+import {
+  CreatePaymentRequest,
+  CreatePaymentResponse,
+  CreateSiSPaymentRequest,
+  CreateSiSPaymentResponse,
+  GetPaymentStatusRequest,
+  GetPaymentStatusResponse,
+  ListGroupedProvidersRequest,
+  ListGroupedProvidersResponse
+} from '../models'
 
 export interface IPaytrail {
   /**
@@ -44,4 +49,17 @@ export interface IPaytrail {
    * @see https://docs.paytrail.com/#/?id=create
    */
   createShopInShopPayment(createSiSPaymentResquest: CreateSiSPaymentRequest): Promise<CreateSiSPaymentResponse>
+
+  /**
+   *
+   * @summary HTTP GET /payments/{transactionId} returns payment information.
+   *          Get transaction info. Payments are reported primarily via callbacks, and implementations should mainly rely on receiving the info via them. All received payments will be eventually reported.
+   *           Note! The transaction id needs to be sent on checkout-transaction-id header as well.
+   * @param {GetPaymentStatusRequest} getPaymentStatusRequest
+   * @throws {ValidateException}
+   * @throws {RequestException}
+   * @throws {HmacException}
+   * @see https://docs.paytrail.com/#/?id=get
+   */
+  getPaymentStatus(getPaymentStatusRequest: GetPaymentStatusRequest): Promise<GetPaymentStatusResponse>
 }
