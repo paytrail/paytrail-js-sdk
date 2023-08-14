@@ -5,6 +5,8 @@ import { IPaytrail } from './interfaces/IPayTrail.interface'
 import {
   CreatePaymentRequest,
   CreatePaymentResponse,
+  CreateSiSPaymentRequest,
+  CreateSiSPaymentResponse,
   ListGroupedProvidersRequest,
   ListGroupedProvidersResponse
 } from './models'
@@ -46,13 +48,14 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     }
 
     // Execute to Paytrail API
-    const [error, res] = await api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers)
+    const [error, data] = await api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers)
 
     if (error) {
-      throw new RequestException(error?.response?.data?.message, error?.response?.status)
+      throw new RequestException(
+        error?.response?.data?.message || error?.response?.data?.message,
+        error?.response?.status
+      )
     }
-
-    const data = res?.data
 
     return data as ListGroupedProvidersResponse
   }
@@ -73,9 +76,33 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     const [error, data] = await api.payments.create(createPaymentRequest, headers)
 
     if (error) {
-      throw new RequestException(error?.response?.data?.meta, error?.response?.status)
+      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
     }
 
     return data as CreatePaymentResponse
+  }
+
+  public async createShopInShopPayment(
+    createSiSPaymentResquest: CreateSiSPaymentRequest
+  ): Promise<CreateSiSPaymentResponse> {
+    // Create headers
+    const headers = this.getHeaders(METHOD.POST, '', '', createSiSPaymentResquest)
+
+    // Validate payload
+    const validate = convertObjectToClass(createSiSPaymentResquest, CreateSiSPaymentRequest)
+    const [errorValidate, isSuccess] = await validateError(validate)
+
+    if (errorValidate) {
+      throw new ValidateException(JSON.stringify(errorValidate), 400)
+    }
+
+    // Execute to Paytrail API
+    const [error, data] = await api.payments.create(createSiSPaymentResquest, headers)
+
+    if (error) {
+      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
+    }
+
+    return data as CreateSiSPaymentResponse
   }
 }

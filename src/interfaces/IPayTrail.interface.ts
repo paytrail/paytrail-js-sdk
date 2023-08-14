@@ -1,3 +1,4 @@
+import { CreateSiSPaymentRequest, CreateSiSPaymentResponse } from '../models'
 import { CreatePaymentRequest } from '../models/request/create-payment.model'
 import { ListGroupedProvidersRequest } from '../models/request/get-list-grouped-payment-providers.model'
 import { CreatePaymentResponse } from '../models/response/create-payment.model'
@@ -32,4 +33,15 @@ export interface IPaytrail {
    * @see https://docs.paytrail.com/#/?id=create
    */
   createPayment(createPaymentResquest: CreatePaymentRequest): Promise<CreatePaymentResponse>
+
+  /**
+   *
+   * @summary Create a shop-in-shop payment request.
+   * @param {CreateSiSPaymentRequest} createSiSPaymentResquest
+   * @throws {ValidateException}
+   * @throws {RequestException}
+   * @throws {HmacException}
+   * @see https://docs.paytrail.com/#/?id=create
+   */
+  createShopInShopPayment(createSiSPaymentResquest: CreateSiSPaymentRequest): Promise<CreateSiSPaymentResponse>
 }
