@@ -2,7 +2,7 @@ import { PaymentMethodGroupDataWithProviders } from './response-model/payment-me
 import { Provider } from './response-model/provider.model'
 
 export class ListGroupedProvidersResponse {
-  public terms: string = ''
-  public groups: PaymentMethodGroupDataWithProviders[] = []
-  public providers: Provider[] = []
+  public terms: string
+  public groups: PaymentMethodGroupDataWithProviders[]
+  public providers: Provider[]
 }
