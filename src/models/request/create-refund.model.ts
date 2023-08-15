@@ -1,8 +1,8 @@
-import { IsArray, IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator'
+import { IsArray, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator'
 import { CallbackUrl, RefundItem } from './request-model'
 
 export class CreateRefundRequest {
-  @IsString()
+  @IsNumber()
   @IsOptional()
   amount?: number
 
