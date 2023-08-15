@@ -192,7 +192,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     }
 
     // Execute to Paytrail API
-    const [error, data] = await api.payments.createRefund(emailRefundParams, emailRefundRequest, headers)
+    const [error, data] = await api.payments.emailRefunds(emailRefundParams, emailRefundRequest, headers)
 
     if (error) {
       throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
