@@ -1,6 +1,9 @@
 import {
   CreatePaymentRequest,
   CreatePaymentResponse,
+  CreateRefundParams,
+  CreateRefundRequest,
+  CreateRefundResponse,
   CreateSiSPaymentRequest,
   CreateSiSPaymentResponse,
   GetPaymentStatusRequest,
@@ -8,8 +11,6 @@ import {
   ListGroupedProvidersRequest,
   ListGroupedProvidersResponse
 } from '../models'
-import { CreateRefundParams, CreateRefundRequest } from '../models/request/create-refund.model'
-import { CreateRefundResponse } from '../models/response/create-refund.model'
 
 export interface IPaytrail {
   /**
