@@ -115,16 +115,12 @@ const payments = {
   createSiSPayment: (payload: CreateSiSPaymentRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments`, payload, headers)),
   getPaymentStatus: (payload: GetPaymentStatusRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.get(`${apiEndpoint}/payments/${payload.transactionId}`, headers))
-}
-
-const refund = {
-  create: (params: CreateRefundParams, payload: CreateRefundRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.get(`${apiEndpoint}/payments/${payload.transactionId}`, headers)),
+  createRefund: (params: CreateRefundParams, payload: CreateRefundRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund`, payload, headers))
 }
 
 export const api = {
   merchants,
-  payments,
-  refund
+  payments
 }
