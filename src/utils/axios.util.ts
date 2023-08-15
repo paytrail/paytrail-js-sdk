@@ -2,12 +2,15 @@ import axios from 'axios'
 import { API_ENDPOINT } from '../constants/variable.constant'
 import {
   CreatePaymentRequest,
+  CreateRefundParams,
+  CreateRefundRequest,
   CreateSiSPaymentRequest,
+  EmailRefundParams,
+  EmailRefundRequest,
   GetPaymentStatusRequest,
   ListGroupedProvidersRequest
 } from '../models'
 import { handleRequest } from './handle-request.util'
-import { CreateRefundParams, CreateRefundRequest } from '../models/request/create-refund.model'
 
 const apiEndpoint = API_ENDPOINT
 
@@ -117,7 +120,9 @@ const payments = {
   getPaymentStatus: (payload: GetPaymentStatusRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.get(`${apiEndpoint}/payments/${payload.transactionId}`, headers)),
   createRefund: (params: CreateRefundParams, payload: CreateRefundRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund`, payload, headers))
+    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund`, payload, headers)),
+  emailRefunds: (params: EmailRefundParams, payload: EmailRefundRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund/email`, payload, headers))
 }
 
 export const api = {

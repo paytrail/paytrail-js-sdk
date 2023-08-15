@@ -7,6 +7,9 @@ import {
   CreatePaymentResponse,
   CreateSiSPaymentRequest,
   CreateSiSPaymentResponse,
+  EmailRefundParams,
+  EmailRefundRequest,
+  EmailRefundResponse,
   GetPaymentStatusRequest,
   GetPaymentStatusResponse,
   ListGroupedProvidersRequest,
@@ -147,7 +150,12 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     const [errorValidatePayload, isSuccessPayload] = await validateError(validatePayload)
 
     if (errorValidateParam || errorValidatePayload) {
-      throw new ValidateException(JSON.stringify(`${errorValidateParam}, ${errorValidatePayload}`), 400)
+      let message = ''
+
+      if (errorValidateParam) message += errorValidateParam
+      if (errorValidatePayload) message += errorValidatePayload
+
+      throw new ValidateException(message, 400)
     }
 
     // Execute to Paytrail API
@@ -158,5 +166,38 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     }
 
     return data as GetPaymentStatusResponse
+  }
+
+  public async emailRefund(
+    emailRefundParams: EmailRefundParams,
+    emailRefundRequest: EmailRefundRequest
+  ): Promise<EmailRefundResponse> {
+    // Create headers
+    const headers = this.getHeaders(METHOD.POST, emailRefundParams.transactionId, '', emailRefundRequest)
+
+    // Validate payload
+    const validateParam = convertObjectToClass(emailRefundParams, EmailRefundParams)
+    const [errorValidateParam, isSuccessParam] = await validateError(validateParam)
+
+    const validatePayload = convertObjectToClass(emailRefundRequest, EmailRefundRequest)
+    const [errorValidatePayload, isSuccessPayload] = await validateError(validatePayload)
+
+    if (errorValidateParam || errorValidatePayload) {
+      let message = ''
+
+      if (errorValidateParam) message += errorValidateParam
+      if (errorValidatePayload) message += errorValidatePayload
+
+      throw new ValidateException(message, 400)
+    }
+
+    // Execute to Paytrail API
+    const [error, data] = await api.payments.createRefund(emailRefundParams, emailRefundRequest, headers)
+
+    if (error) {
+      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
+    }
+
+    return data as EmailRefundResponse
   }
 }
