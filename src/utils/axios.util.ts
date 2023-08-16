@@ -11,6 +11,7 @@ import {
   ListGroupedProvidersRequest
 } from '../models'
 import { handleRequest } from './handle-request.util'
+import { PaymentReportRequest } from '../models/request/payment-report-request.model'
 
 const apiEndpoint = API_ENDPOINT
 
@@ -87,7 +88,14 @@ const payments = {
     handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund/email`, payload, headers))
 }
 
+// Execute Paytrail API
+const paymentReports = {
+  paymentReportRequest: (payload: PaymentReportRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/report`, payload, headers))
+}
+
 export const api = {
   merchants,
-  payments
+  payments,
+  paymentReports
 }

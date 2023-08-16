@@ -5,6 +5,9 @@ import { IPaytrail } from './interfaces/IPayTrail.interface'
 import {
   CreatePaymentRequest,
   CreatePaymentResponse,
+  CreateRefundParams,
+  CreateRefundRequest,
+  CreateRefundResponse,
   CreateSiSPaymentRequest,
   CreateSiSPaymentResponse,
   EmailRefundParams,
@@ -13,10 +16,10 @@ import {
   GetPaymentStatusRequest,
   GetPaymentStatusResponse,
   ListGroupedProvidersRequest,
-  ListGroupedProvidersResponse
+  ListGroupedProvidersResponse,
+  PaymentReportRequest,
+  PaymentReportResponse
 } from './models'
-import { CreateRefundParams, CreateRefundRequest } from './models/request/create-refund.model'
-import { CreateRefundResponse } from './models/response/create-refund.model'
 import { Paytrail } from './paytrail'
 import { api } from './utils/axios.util'
 import { convertObjectToClass } from './utils/convert-object-to-class.utils'
@@ -255,5 +258,33 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     }
 
     return this.handleResponse<EmailRefundResponse>(responseMessage.SUCCESS, EmailRefundResponse, data)
+  }
+
+  public async paymentReportRequest(paymentReportRequest: PaymentReportRequest): Promise<PaymentReportResponse[]> {
+    // Create headers
+    const headers = this.getHeaders(METHOD.POST, '', '', paymentReportRequest)
+
+    // Validate payload
+    const validate = convertObjectToClass(paymentReportRequest, PaymentReportRequest)
+    const [errorValidate, isSuccess] = await validateError(validate)
+
+    if (errorValidate) {
+      return this.handleResponse<PaymentReportResponse[]>(responseMessage.VALIDATE_FAIL, PaymentReportResponse, null, {
+        message: errorValidate,
+        status: responseStatus.VALIDATE_FAIL
+      })
+    }
+
+    // Execute to Paytrail API
+    const [error, data] = await api.paymentReports.paymentReportRequest(paymentReportRequest, headers)
+
+    if (error) {
+      return this.handleResponse<PaymentReportResponse[]>(responseMessage.EXCEPTION, PaymentReportResponse, null, {
+        message: error?.response?.data?.message || error?.response?.data?.message,
+        status: error?.response?.status
+      })
+    }
+
+    return this.handleResponse<PaymentReportResponse[]>(responseMessage.SUCCESS, PaymentReportResponse, data)
   }
 }
