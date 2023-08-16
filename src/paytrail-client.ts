@@ -1,6 +1,6 @@
 import { Configuration } from './configuration'
+import { responseMessage, responseStatus } from './constants/message-response.constant'
 import { API_ENDPOINT, METHOD } from './constants/variable.constant'
-import { RequestException, ValidateException } from './exceptions/exception'
 import { IPaytrail } from './interfaces/IPayTrail.interface'
 import {
   CreatePaymentRequest,
@@ -43,7 +43,6 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   public async listGroupedProviders(
     listGroupedProvidersRequest: ListGroupedProvidersRequest
   ): Promise<ListGroupedProvidersResponse> {
-    // Create headers
     const headers = this.getHeaders(METHOD.GET)
 
     // Validate payload
@@ -51,20 +50,37 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     const [errorValidate, isSuccess] = await validateError(validate)
 
     if (errorValidate) {
-      throw new ValidateException(JSON.stringify(errorValidate), 400)
+      return this.handleResponse<ListGroupedProvidersResponse>(
+        responseMessage.VALIDATE_FAIL,
+        ListGroupedProvidersResponse,
+        null,
+        {
+          message: errorValidate,
+          status: responseStatus.VALIDATE_FAIL
+        }
+      )
     }
 
     // Execute to Paytrail API
     const [error, data] = await api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers)
 
     if (error) {
-      throw new RequestException(
-        error?.response?.data?.message || error?.response?.data?.message,
-        error?.response?.status
+      return this.handleResponse<ListGroupedProvidersResponse>(
+        responseMessage.EXCEPTION,
+        ListGroupedProvidersResponse,
+        null,
+        {
+          message: error?.response?.data?.message || error?.response?.data?.message,
+          status: error?.response?.status
+        }
       )
     }
 
-    return data as ListGroupedProvidersResponse
+    return this.handleResponse<ListGroupedProvidersResponse>(
+      responseMessage.SUCCESS,
+      ListGroupedProvidersResponse,
+      data
+    )
   }
 
   public async createPayment(createPaymentRequest: CreatePaymentRequest): Promise<CreatePaymentResponse> {
@@ -76,17 +92,23 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     const [errorValidate, isSuccess] = await validateError(validate)
 
     if (errorValidate) {
-      throw new ValidateException(JSON.stringify(errorValidate), 400)
+      return this.handleResponse<CreatePaymentResponse>(responseMessage.VALIDATE_FAIL, CreatePaymentResponse, null, {
+        message: errorValidate,
+        status: responseStatus.VALIDATE_FAIL
+      })
     }
 
     // Execute to Paytrail API
     const [error, data] = await api.payments.create(createPaymentRequest, headers)
 
     if (error) {
-      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
+      return this.handleResponse<CreatePaymentResponse>(responseMessage.EXCEPTION, CreatePaymentResponse, null, {
+        message: error?.response?.data?.message || error?.response?.data?.message,
+        status: error?.response?.status
+      })
     }
 
-    return data as CreatePaymentResponse
+    return this.handleResponse<CreatePaymentResponse>(responseMessage.SUCCESS, CreatePaymentResponse, data)
   }
 
   public async createShopInShopPayment(
@@ -100,17 +122,28 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     const [errorValidate, isSuccess] = await validateError(validate)
 
     if (errorValidate) {
-      throw new ValidateException(JSON.stringify(errorValidate), 400)
+      return this.handleResponse<CreateSiSPaymentResponse>(
+        responseMessage.VALIDATE_FAIL,
+        CreateSiSPaymentResponse,
+        null,
+        {
+          message: errorValidate,
+          status: responseStatus.VALIDATE_FAIL
+        }
+      )
     }
 
     // Execute to Paytrail API
-    const [error, data] = await api.payments.create(createSiSPaymentResquest, headers)
+    const [error, data] = await api.payments.createSiSPayment(createSiSPaymentResquest, headers)
 
     if (error) {
-      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
+      return this.handleResponse<CreateSiSPaymentResponse>(responseMessage.EXCEPTION, CreateSiSPaymentResponse, null, {
+        message: error?.response?.data?.message || error?.response?.data?.message,
+        status: error?.response?.status
+      })
     }
 
-    return data as CreateSiSPaymentResponse
+    return this.handleResponse<CreateSiSPaymentResponse>(responseMessage.SUCCESS, CreateSiSPaymentResponse, data)
   }
 
   public async getPaymentStatus(getPaymentStatusRequest: GetPaymentStatusRequest): Promise<GetPaymentStatusResponse> {
@@ -122,17 +155,28 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     const [errorValidate, isSuccess] = await validateError(validate)
 
     if (errorValidate) {
-      throw new ValidateException(JSON.stringify(errorValidate), 400)
+      return this.handleResponse<GetPaymentStatusResponse>(
+        responseMessage.VALIDATE_FAIL,
+        GetPaymentStatusResponse,
+        null,
+        {
+          message: errorValidate,
+          status: responseStatus.VALIDATE_FAIL
+        }
+      )
     }
 
     // Execute to Paytrail API
     const [error, data] = await api.payments.getPaymentStatus(getPaymentStatusRequest, headers)
 
     if (error) {
-      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
+      return this.handleResponse<GetPaymentStatusResponse>(responseMessage.EXCEPTION, GetPaymentStatusResponse, null, {
+        message: error?.response?.data?.message || error?.response?.data?.message,
+        status: error?.response?.status
+      })
     }
 
-    return data as GetPaymentStatusResponse
+    return this.handleResponse<GetPaymentStatusResponse>(responseMessage.SUCCESS, GetPaymentStatusResponse, data)
   }
 
   public async createRefund(
@@ -155,17 +199,23 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       if (errorValidateParam) message += errorValidateParam
       if (errorValidatePayload) message += errorValidatePayload
 
-      throw new ValidateException(message, 400)
+      return this.handleResponse<CreateRefundResponse>(responseMessage.VALIDATE_FAIL, CreateRefundResponse, null, {
+        message: message,
+        status: responseStatus.VALIDATE_FAIL
+      })
     }
 
     // Execute to Paytrail API
     const [error, data] = await api.payments.createRefund(createRefundParams, createRefundRequest, headers)
 
     if (error) {
-      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
+      return this.handleResponse<CreateRefundResponse>(responseMessage.EXCEPTION, CreateRefundResponse, null, {
+        message: error?.response?.data?.message || error?.response?.data?.message,
+        status: error?.response?.status
+      })
     }
 
-    return data as GetPaymentStatusResponse
+    return this.handleResponse<CreateRefundResponse>(responseMessage.SUCCESS, CreateRefundResponse, data)
   }
 
   public async emailRefund(
@@ -188,16 +238,22 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       if (errorValidateParam) message += errorValidateParam
       if (errorValidatePayload) message += errorValidatePayload
 
-      throw new ValidateException(message, 400)
+      return this.handleResponse<EmailRefundResponse>(responseMessage.VALIDATE_FAIL, EmailRefundResponse, null, {
+        message: message,
+        status: responseStatus.VALIDATE_FAIL
+      })
     }
 
     // Execute to Paytrail API
-    const [error, data] = await api.payments.createRefund(emailRefundParams, emailRefundRequest, headers)
+    const [error, data] = await api.payments.emailRefunds(emailRefundParams, emailRefundRequest, headers)
 
     if (error) {
-      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
+      return this.handleResponse<EmailRefundResponse>(responseMessage.EXCEPTION, EmailRefundResponse, null, {
+        message: error?.response?.data?.message || error?.response?.data?.message,
+        status: error?.response?.status
+      })
     }
 
-    return data as EmailRefundResponse
+    return this.handleResponse<EmailRefundResponse>(responseMessage.SUCCESS, EmailRefundResponse, data)
   }
 }

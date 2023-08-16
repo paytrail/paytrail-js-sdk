@@ -10,9 +10,9 @@ export class Signature {
     body: { [key: string]: string | number | object } | '' | object,
     encType = 'sha256'
   ) => {
-    if (!this.supportedEnc.includes(encType)) {
-      throw new HmacException('Not supported encryption', 400)
-    }
+    // if (!this.supportedEnc.includes(encType)) {
+    //   throw new HmacException('Not supported encryption', 400)
+    // }
 
     const hmacPayload = Object.keys(hparams)
       .sort()
@@ -26,16 +26,12 @@ export class Signature {
   public static validateHmac(
     hparams: { [key: string]: string },
     body: { [key: string]: string | number | object } | '',
-    signature: string = '',
-    secretKey: string = '',
+    signature: string,
+    secretKey: string,
     encType = 'sha256'
   ): boolean {
-    try {
-      const hmac = Signature.calculateHmac(secretKey, hparams, body, encType)
-      return hmac === signature
-    } catch (error) {
-      throw new HmacException('HMAC signature is invalid.', 401)
-    }
+    const hmac = Signature.calculateHmac(secretKey, hparams, body, encType)
+    return hmac === signature
   }
 
   public static encodeMD5(data: string): string {

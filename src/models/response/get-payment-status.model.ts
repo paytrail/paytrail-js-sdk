@@ -1,4 +1,10 @@
-export class GetPaymentStatusResponse {
+import { Response } from './response-model'
+
+export class GetPaymentStatusResponse extends Response {
+  data: GetPaymentStatusData
+}
+
+export class GetPaymentStatusData {
   transactionId: string
   status: string
   amount: number
