@@ -28,7 +28,7 @@ export class CreatePaymentRequest {
   @IsNumber()
   @IsInt()
   @IsNotEmpty()
-  @Min(0)
+  @Min(1)
   @Max(99999999)
   public amount?: number
 
