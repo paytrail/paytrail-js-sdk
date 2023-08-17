@@ -75,7 +75,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
         ListGroupedProvidersResponse,
         null,
         {
-          message: error?.response?.data?.message || error?.response?.data?.message,
+          message: error?.response?.data?.meta || error?.response?.data?.message,
           status: error?.response?.status
         }
       )
@@ -108,7 +108,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
     if (error) {
       return this.handleResponse<CreatePaymentResponse>(responseMessage.EXCEPTION, CreatePaymentResponse, null, {
-        message: error?.response?.data?.message || error?.response?.data?.message,
+        message: error?.response?.data?.meta || error?.response?.data?.message,
         status: error?.response?.status
       })
     }
@@ -143,7 +143,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
     if (error) {
       return this.handleResponse<CreateSiSPaymentResponse>(responseMessage.EXCEPTION, CreateSiSPaymentResponse, null, {
-        message: error?.response?.data?.message || error?.response?.data?.message,
+        message: error?.response?.data?.meta || error?.response?.data?.message,
         status: error?.response?.status
       })
     }
@@ -176,7 +176,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
     if (error) {
       return this.handleResponse<GetPaymentStatusResponse>(responseMessage.EXCEPTION, GetPaymentStatusResponse, null, {
-        message: error?.response?.data?.message || error?.response?.data?.message,
+        message: error?.response?.data?.meta || error?.response?.data?.message,
         status: error?.response?.status
       })
     }
@@ -215,7 +215,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
     if (error) {
       return this.handleResponse<CreateRefundResponse>(responseMessage.EXCEPTION, CreateRefundResponse, null, {
-        message: error?.response?.data?.message || error?.response?.data?.message,
+        message: error?.response?.data?.meta || error?.response?.data?.message,
         status: error?.response?.status
       })
     }
@@ -254,7 +254,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
     if (error) {
       return this.handleResponse<EmailRefundResponse>(responseMessage.EXCEPTION, EmailRefundResponse, null, {
-        message: error?.response?.data?.message || error?.response?.data?.message,
+        message: error?.response?.data?.meta || error?.response?.data?.message,
         status: error?.response?.status
       })
     }
@@ -282,7 +282,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
     if (error) {
       return this.handleResponse<PaymentReportResponse[]>(responseMessage.EXCEPTION, PaymentReportResponse, null, {
-        message: error?.response?.data?.message || error?.response?.data?.message,
+        message: error?.response?.data?.meta || error?.response?.data?.message,
         status: error?.response?.status
       })
     }
