@@ -29,12 +29,12 @@ export class PaymentReportRequest {
   paymentStatus?: PaymentStatus
 
   @IsString()
-  @IsOptional()
-  startDate?: string
+  @IsNotEmpty()
+  startDate: string
 
   @IsString()
-  @IsOptional()
-  endDate?: string
+  @IsNotEmpty()
+  endDate: string
 
   @IsInt()
   @Min(0)
