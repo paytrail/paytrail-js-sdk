@@ -18,7 +18,9 @@ import {
   ListGroupedProvidersRequest,
   ListGroupedProvidersResponse,
   PaymentReportRequest,
-  PaymentReportResponse
+  PaymentReportResponse,
+  SettlementsRequest,
+  SettlementsResponse
 } from './models'
 import { Paytrail } from './paytrail'
 import { api } from './utils/axios.util'
@@ -286,5 +288,33 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     }
 
     return this.handleResponse<PaymentReportResponse[]>(responseMessage.SUCCESS, PaymentReportResponse, data)
+  }
+
+  public async requestSettlements(settlementsRequest: SettlementsRequest): Promise<SettlementsResponse[]> {
+    // Create headers
+    const headers = this.getHeaders(METHOD.GET)
+
+    // Validate payload
+    const validate = convertObjectToClass(settlementsRequest, SettlementsRequest)
+    const [errorValidate, isSuccess] = await validateError(validate)
+
+    if (errorValidate) {
+      return this.handleResponse<SettlementsResponse[]>(responseMessage.VALIDATE_FAIL, SettlementsResponse, null, {
+        message: errorValidate,
+        status: responseStatus.VALIDATE_FAIL
+      })
+    }
+
+    // Execute to Paytrail API
+    const [error, data] = await api.settlements.get(settlementsRequest, headers)
+
+    if (error) {
+      return this.handleResponse<SettlementsResponse[]>(responseMessage.EXCEPTION, SettlementsResponse, null, {
+        message: error?.response?.data?.meta || error?.response?.data?.message,
+        status: error?.response?.status
+      })
+    }
+
+    return this.handleResponse<SettlementsResponse[]>(responseMessage.SUCCESS, SettlementsResponse, data)
   }
 }
