@@ -108,7 +108,9 @@ const tokenPayments = {
   createGetToken: (param: GetTokenRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.post(`${apiEndpoint}/tokenization/${param.checkoutTokenizationId}`, {}, headers)),
   createMitPayment: (payload: MitPaymentRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.post(`${apiEndpoint}/payments/token/mit/charge`, payload, headers))
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/mit/charge`, payload, headers)),
+  createMitPaymentAuthorizationHold: (payload: MitPaymentRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/mit/authorization-hold`, payload, headers))
 }
 
 export const api = {
