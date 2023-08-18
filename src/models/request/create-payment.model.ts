@@ -1,4 +1,15 @@
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator'
+import {
+  IsArray,
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  ValidateNested
+} from 'class-validator'
 import { Item } from './request-model/item.model'
 import { Customer } from './request-model/customer.model'
 import { Address } from './request-model/address.model'
@@ -15,8 +26,10 @@ export class CreatePaymentRequest {
   public reference?: string
 
   @IsNumber()
+  @IsInt()
   @IsNotEmpty()
-  @Min(0)
+  @Min(1)
+  @Max(99999999)
   public amount?: number
 
   @IsNotEmpty()
