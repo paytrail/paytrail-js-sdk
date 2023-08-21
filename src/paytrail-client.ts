@@ -402,30 +402,34 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   }
 
   public async createMitPaymentCharge(mitPaymentRequest: MitPaymentRequest): Promise<MitPaymentResponse> {
-    // Create headers
-    const headers = this.getHeaders(METHOD.POST, '', '', mitPaymentRequest)
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, '', '', mitPaymentRequest)
 
-    // Validate payload
-    const validate = convertObjectToClass(mitPaymentRequest, MitPaymentRequest)
-    const [errorValidate, isSuccess] = await validateError(validate)
+      // Validate payload
+      const validate = convertObjectToClass(mitPaymentRequest, MitPaymentRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
 
-    if (errorValidate) {
-      return this.handleResponse<MitPaymentResponse>(responseMessage.VALIDATE_FAIL, MitPaymentResponse, null, {
-        message: errorValidate,
-        status: responseStatus.VALIDATE_FAIL
-      })
+      if (errorValidate) {
+        return this.handleResponse<MitPaymentResponse>(responseMessage.VALIDATE_FAIL, MitPaymentResponse, null, {
+          message: errorValidate,
+          status: responseStatus.VALIDATE_FAIL
+        })
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.tokenPayments.createMitPayment(mitPaymentRequest, headers)
+
+      if (error) {
+        return this.handleResponse<MitPaymentResponse>(responseMessage.EXCEPTION, MitPaymentResponse, null, {
+          message: error?.response?.data?.meta || error?.response?.data?.message,
+          status: error?.response?.status
+        })
+      }
+
+      return this.handleResponse<MitPaymentResponse>(responseMessage.SUCCESS, MitPaymentResponse, data)
+    } catch (error) {
+      throw new Error(error?.message)
     }
-
-    // Execute to Paytrail API
-    const [error, data] = await api.tokenPayments.createMitPayment(mitPaymentRequest, headers)
-
-    if (error) {
-      return this.handleResponse<MitPaymentResponse>(responseMessage.EXCEPTION, MitPaymentResponse, null, {
-        message: error?.response?.data?.meta || error?.response?.data?.message,
-        status: error?.response?.status
-      })
-    }
-
-    return this.handleResponse<MitPaymentResponse>(responseMessage.SUCCESS, MitPaymentResponse, data)
   }
 }
