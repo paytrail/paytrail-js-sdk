@@ -6,4 +6,5 @@ export class CreateCitPaymentResponse extends Response {
 
 export class CreateCitPaymentData {
   transactionId: string
+  threeDSecureUrl: string
 }
