@@ -29,26 +29,30 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   public async listGroupedProviders(
     listGroupedProvidersRequest: ListGroupedProvidersRequest
   ): Promise<ListGroupedProvidersResponse> {
-    // Create headers
-    const headers = this.getHeaders(METHOD.GET)
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.GET)
 
-    // Validate payload
-    const validate = convertObjectToClass(listGroupedProvidersRequest, ListGroupedProvidersRequest)
-    const [errorValidate, isSuccess] = await validateError(validate)
+      // Validate payload
+      const validate = convertObjectToClass(listGroupedProvidersRequest, ListGroupedProvidersRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
 
-    if (errorValidate) {
-      throw new ValidateException(JSON.stringify(errorValidate), 400)
+      if (errorValidate) {
+        throw new ValidateException(JSON.stringify(errorValidate), 400)
+      }
+
+      // Execute to Paytrail API
+      const [error, res] = await api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers)
+
+      if (error) {
+        throw new RequestException(error?.response?.data?.message, error?.response?.status)
+      }
+
+      const data = res?.data
+
+      return data as ListGroupedProvidersResponse
+    } catch (error) {
+      throw new Error(error?.message)
     }
-
-    // Execute to Paytrail API
-    const [error, res] = await api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers)
-
-    if (error) {
-      throw new RequestException(error?.response?.data?.message, error?.response?.status)
-    }
-
-    const data = res?.data
-
-    return data as ListGroupedProvidersResponse
   }
 }
