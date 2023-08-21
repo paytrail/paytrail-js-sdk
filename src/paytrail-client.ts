@@ -118,24 +118,31 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   }
 
   public async getPaymentStatus(getPaymentStatusRequest: GetPaymentStatusRequest): Promise<GetPaymentStatusResponse> {
-    // Create headers
-    const headers = this.getHeaders(METHOD.GET, getPaymentStatusRequest.transactionId)
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.GET, getPaymentStatusRequest.transactionId)
 
-    // Validate payload
-    const validate = convertObjectToClass(getPaymentStatusRequest, GetPaymentStatusRequest)
-    const [errorValidate, isSuccess] = await validateError(validate)
+      // Validate payload
+      const validate = convertObjectToClass(getPaymentStatusRequest, GetPaymentStatusRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
 
-    if (errorValidate) {
-      throw new ValidateException(JSON.stringify(errorValidate), 400)
+      if (errorValidate) {
+        throw new ValidateException(JSON.stringify(errorValidate), 400)
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.payments.getPaymentStatus(getPaymentStatusRequest, headers)
+
+      if (error) {
+        throw new RequestException(
+          error?.response?.data?.meta || error?.response?.data?.message,
+          error?.response?.status
+        )
+      }
+
+      return data as GetPaymentStatusResponse
+    } catch (error) {
+      throw new Error(error?.message)
     }
-
-    // Execute to Paytrail API
-    const [error, data] = await api.payments.getPaymentStatus(getPaymentStatusRequest, headers)
-
-    if (error) {
-      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
-    }
-
-    return data as GetPaymentStatusResponse
   }
 }
