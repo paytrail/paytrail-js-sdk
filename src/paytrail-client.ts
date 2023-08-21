@@ -368,30 +368,34 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   }
 
   public async createGetTokenRequest(getTokenRequest: GetTokenRequest): Promise<GetTokenResponse> {
-    // Create headers
-    const headers = this.getHeaders(METHOD.POST, '', getTokenRequest.checkoutTokenizationId, {})
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, '', getTokenRequest.checkoutTokenizationId, {})
 
-    // Validate payload
-    const validate = convertObjectToClass(getTokenRequest, GetTokenRequest)
-    const [errorValidate, isSuccess] = await validateError(validate)
+      // Validate payload
+      const validate = convertObjectToClass(getTokenRequest, GetTokenRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
 
-    if (errorValidate) {
-      return this.handleResponse<GetTokenResponse>(responseMessage.VALIDATE_FAIL, GetTokenResponse, null, {
-        message: errorValidate,
-        status: responseStatus.VALIDATE_FAIL
-      })
+      if (errorValidate) {
+        return this.handleResponse<GetTokenResponse>(responseMessage.VALIDATE_FAIL, GetTokenResponse, null, {
+          message: errorValidate,
+          status: responseStatus.VALIDATE_FAIL
+        })
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.tokenPayments.createGetToken(getTokenRequest, headers)
+
+      if (error) {
+        return this.handleResponse<GetTokenResponse>(responseMessage.EXCEPTION, GetTokenResponse, null, {
+          message: error?.response?.data?.meta || error?.response?.data?.message,
+          status: error?.response?.status
+        })
+      }
+
+      return this.handleResponse<GetTokenResponse>(responseMessage.SUCCESS, GetTokenResponse, data)
+    } catch (error) {
+      throw new Error(error?.message)
     }
-
-    // Execute to Paytrail API
-    const [error, data] = await api.tokenPayments.createGetToken(getTokenRequest, headers)
-
-    if (error) {
-      return this.handleResponse<GetTokenResponse>(responseMessage.EXCEPTION, GetTokenResponse, null, {
-        message: error?.response?.data?.meta || error?.response?.data?.message,
-        status: error?.response?.status
-      })
-    }
-
-    return this.handleResponse<GetTokenResponse>(responseMessage.SUCCESS, GetTokenResponse, data)
   }
 }
