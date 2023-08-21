@@ -38,74 +38,83 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   public async listGroupedProviders(
     listGroupedProvidersRequest: ListGroupedProvidersRequest
   ): Promise<ListGroupedProvidersResponse> {
-    // Create headers
-    const headers = this.getHeaders(METHOD.GET)
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.GET)
 
-    // Validate payload
-    const validate = convertObjectToClass(listGroupedProvidersRequest, ListGroupedProvidersRequest)
-    const [errorValidate, isSuccess] = await validateError(validate)
+      // Validate payload
+      const validate = convertObjectToClass(listGroupedProvidersRequest, ListGroupedProvidersRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
 
-    if (errorValidate) {
-      throw new ValidateException(JSON.stringify(errorValidate), 400)
+      if (errorValidate) {
+        throw new ValidateException(JSON.stringify(errorValidate), 400)
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers)
+
+      if (error) {
+        throw new RequestException(error?.response?.data?.message, error?.response?.status)
+      }
+
+      return data as ListGroupedProvidersResponse
+    } catch (error) {
+      throw new Error(error?.message)
     }
-
-    // Execute to Paytrail API
-    const [error, data] = await api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers)
-
-    if (error) {
-      throw new RequestException(
-        error?.response?.data?.message || error?.response?.data?.message,
-        error?.response?.status
-      )
-    }
-
-    return data as ListGroupedProvidersResponse
   }
 
   public async createPayment(createPaymentRequest: CreatePaymentRequest): Promise<CreatePaymentResponse> {
-    // Create headers
-    const headers = this.getHeaders(METHOD.POST, '', '', createPaymentRequest)
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, '', '', createPaymentRequest)
 
-    // Validate payload
-    const validate = convertObjectToClass(createPaymentRequest, CreatePaymentRequest)
-    const [errorValidate, isSuccess] = await validateError(validate)
+      // Validate payload
+      const validate = convertObjectToClass(createPaymentRequest, CreatePaymentRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
 
-    if (errorValidate) {
-      throw new ValidateException(JSON.stringify(errorValidate), 400)
+      if (errorValidate) {
+        throw new ValidateException(JSON.stringify(errorValidate), 400)
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.payments.create(createPaymentRequest, headers)
+
+      if (error) {
+        throw new RequestException(error?.response?.data?.meta, error?.response?.status)
+      }
+
+      return data as CreatePaymentResponse
+    } catch (error) {
+      throw new Error(error?.message)
     }
-
-    // Execute to Paytrail API
-    const [error, data] = await api.payments.create(createPaymentRequest, headers)
-
-    if (error) {
-      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
-    }
-
-    return data as CreatePaymentResponse
   }
 
   public async createShopInShopPayment(
     createSiSPaymentResquest: CreateSiSPaymentRequest
   ): Promise<CreateSiSPaymentResponse> {
-    // Create headers
-    const headers = this.getHeaders(METHOD.POST, '', '', createSiSPaymentResquest)
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, '', '', createSiSPaymentResquest)
 
-    // Validate payload
-    const validate = convertObjectToClass(createSiSPaymentResquest, CreateSiSPaymentRequest)
-    const [errorValidate, isSuccess] = await validateError(validate)
+      // Validate payload
+      const validate = convertObjectToClass(createSiSPaymentResquest, CreateSiSPaymentRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
 
-    if (errorValidate) {
-      throw new ValidateException(JSON.stringify(errorValidate), 400)
+      if (errorValidate) {
+        throw new ValidateException(JSON.stringify(errorValidate), 400)
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.payments.createSiSPayment(createSiSPaymentResquest, headers)
+
+      if (error) {
+        throw new RequestException(error?.response?.data?.meta, error?.response?.status)
+      }
+
+      return data as CreateSiSPaymentResponse
+    } catch (error) {
+      throw new Error(error?.message)
     }
-
-    // Execute to Paytrail API
-    const [error, data] = await api.payments.createSiSPayment(createSiSPaymentResquest, headers)
-
-    if (error) {
-      throw new RequestException(error?.response?.data?.meta || error?.response?.data?.message, error?.response?.status)
-    }
-
-    return data as CreateSiSPaymentResponse
   }
 
   public async getPaymentStatus(getPaymentStatusRequest: GetPaymentStatusRequest): Promise<GetPaymentStatusResponse> {
