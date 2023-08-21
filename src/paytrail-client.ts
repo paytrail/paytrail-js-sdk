@@ -62,24 +62,28 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   }
 
   public async createPayment(createPaymentRequest: CreatePaymentRequest): Promise<CreatePaymentResponse> {
-    // Create headers
-    const headers = this.getHeaders(METHOD.POST, '', '', createPaymentRequest)
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, '', '', createPaymentRequest)
 
-    // Validate payload
-    const validate = convertObjectToClass(createPaymentRequest, CreatePaymentRequest)
-    const [errorValidate, isSuccess] = await validateError(validate)
+      // Validate payload
+      const validate = convertObjectToClass(createPaymentRequest, CreatePaymentRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
 
-    if (errorValidate) {
-      throw new ValidateException(JSON.stringify(errorValidate), 400)
+      if (errorValidate) {
+        throw new ValidateException(JSON.stringify(errorValidate), 400)
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.payments.create(createPaymentRequest, headers)
+
+      if (error) {
+        throw new RequestException(error?.response?.data?.meta, error?.response?.status)
+      }
+
+      return data as CreatePaymentResponse
+    } catch (error) {
+      throw new Error(error?.message)
     }
-
-    // Execute to Paytrail API
-    const [error, data] = await api.payments.create(createPaymentRequest, headers)
-
-    if (error) {
-      throw new RequestException(error?.response?.data?.meta, error?.response?.status)
-    }
-
-    return data as CreatePaymentResponse
   }
 }
