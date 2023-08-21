@@ -4,4 +4,5 @@ export class MitPaymentResponse {
 
 export class MitPaymentData {
   transactionId: string
+  threeDSecureUrl: string
 }
