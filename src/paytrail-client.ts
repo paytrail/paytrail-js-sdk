@@ -510,4 +510,48 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       throw new Error(error?.message)
     }
   }
+
+  public async createCitPaymentAuthorizationHold(
+    createCitPaymentRequest: CreateCitPaymentRequest
+  ): Promise<CreateCitPaymentResponse> {
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, '', '', createCitPaymentRequest)
+
+      // Validate payload
+      const validate = convertObjectToClass(createCitPaymentRequest, CreateCitPaymentRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
+
+      if (errorValidate) {
+        return this.handleResponse<CreateCitPaymentResponse>(
+          responseMessage.VALIDATE_FAIL,
+          CreateCitPaymentResponse,
+          null,
+          {
+            message: errorValidate,
+            status: responseStatus.VALIDATE_FAIL
+          }
+        )
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.tokenPayments.createCitPaymentAuthorizationHold(createCitPaymentRequest, headers)
+
+      if (error) {
+        return this.handleResponse<CreateCitPaymentResponse>(
+          responseMessage.EXCEPTION,
+          CreateCitPaymentResponse,
+          null,
+          {
+            message: error?.response?.data?.meta || error?.response?.data?.message,
+            status: error?.response?.status
+          }
+        )
+      }
+
+      return this.handleResponse<CreateCitPaymentResponse>(responseMessage.SUCCESS, CreateCitPaymentResponse, data)
+    } catch (error) {
+      throw new Error(error?.message)
+    }
+  }
 }
