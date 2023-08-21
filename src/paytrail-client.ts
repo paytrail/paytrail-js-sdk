@@ -3,6 +3,8 @@ import { responseMessage, responseStatus } from './constants/message-response.co
 import { API_ENDPOINT, METHOD } from './constants/variable.constant'
 import { IPaytrail } from './interfaces/IPayTrail.interface'
 import {
+  CreateCitPaymentRequest,
+  CreateCitPaymentResponse,
   CreatePaymentRequest,
   CreatePaymentResponse,
   CreateRefundParams,
@@ -460,6 +462,50 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       }
 
       return this.handleResponse<MitPaymentResponse>(responseMessage.SUCCESS, MitPaymentResponse, data)
+    } catch (error) {
+      throw new Error(error?.message)
+    }
+  }
+
+  public async createCitPaymentCharge(
+    createCitPaymentRequest: CreateCitPaymentRequest
+  ): Promise<CreateCitPaymentResponse> {
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, '', '', createCitPaymentRequest)
+
+      // Validate payload
+      const validate = convertObjectToClass(createCitPaymentRequest, CreateCitPaymentRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
+
+      if (errorValidate) {
+        return this.handleResponse<CreateCitPaymentResponse>(
+          responseMessage.VALIDATE_FAIL,
+          CreateCitPaymentResponse,
+          null,
+          {
+            message: errorValidate,
+            status: responseStatus.VALIDATE_FAIL
+          }
+        )
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.tokenPayments.createCitPaymentCharge(createCitPaymentRequest, headers)
+
+      if (error) {
+        return this.handleResponse<CreateCitPaymentResponse>(
+          responseMessage.EXCEPTION,
+          CreateCitPaymentResponse,
+          null,
+          {
+            message: error?.response?.data?.meta || error?.response?.data?.message,
+            status: error?.response?.status
+          }
+        )
+      }
+
+      return this.handleResponse<CreateCitPaymentResponse>(responseMessage.SUCCESS, CreateCitPaymentResponse, data)
     } catch (error) {
       throw new Error(error?.message)
     }

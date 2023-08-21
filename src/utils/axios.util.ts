@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { API_ENDPOINT } from '../constants/variable.constant'
 import {
+  CreateCitPaymentRequest,
   CreatePaymentRequest,
   CreateRefundParams,
   CreateRefundRequest,
@@ -110,7 +111,9 @@ const tokenPayments = {
   createMitPayment: (payload: MitPaymentRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments/token/mit/charge`, payload, headers)),
   createMitPaymentAuthorizationHold: (payload: MitPaymentRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.post(`${apiEndpoint}/payments/token/mit/authorization-hold`, payload, headers))
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/mit/authorization-hold`, payload, headers)),
+  createCitPaymentCharge: (payload: CreateCitPaymentRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/cit/charge`, payload, headers))
 }
 
 export const api = {
