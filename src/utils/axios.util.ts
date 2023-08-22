@@ -11,6 +11,7 @@ import {
   GetPaymentStatusRequest,
   GetTokenRequest,
   ListGroupedProvidersRequest,
+  MitPaymentParams,
   MitPaymentRequest,
   SettlementsRequest
 } from '../models'
@@ -115,7 +116,9 @@ const tokenPayments = {
   createCitPaymentCharge: (payload: CreateCitPaymentRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments/token/cit/charge`, payload, headers)),
   createCitPaymentAuthorizationHold: (payload: CreateCitPaymentRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.post(`${apiEndpoint}/payments/token/cit/authorization-hold`, payload, headers))
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/cit/authorization-hold`, payload, headers)),
+  createMitPaymentCommit: (params: MitPaymentParams, payload: MitPaymentRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/commit`, payload, headers))
 }
 
 export const api = {
