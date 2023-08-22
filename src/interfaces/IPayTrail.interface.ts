@@ -1,4 +1,5 @@
 import {
+  CreateCitPaymentParams,
   CreateCitPaymentRequest,
   CreateCitPaymentResponse,
   CreatePaymentRequest,
@@ -162,4 +163,17 @@ export interface IPaytrail {
     mitPaymentParams: MitPaymentParams,
     mitPaymentRequest: MitPaymentRequest
   ): Promise<MitPaymentResponse>
+
+  /**
+   *
+   * @summary HTTP POST /payments/{transactionId}/token/commit commits an existing authorization hold.
+   *          A successful commit will charge the payer's card.
+   * @param {CreateCitPaymentRequest} mitPaymentRequest
+   * @param {CreateCitPaymentParams} citPaymentParams
+   * @see https://docs.paytrail.com/#/?id=charging-a-token
+   */
+  createCitPaymentCommit(
+    citPaymentParams: CreateCitPaymentParams,
+    citPaymentRequest: CreateCitPaymentRequest
+  ): Promise<CreateCitPaymentResponse>
 }
