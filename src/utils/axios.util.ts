@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { API_ENDPOINT } from '../constants/variable.constant'
 import {
+  AddCardFormRequest,
   CreateCitPaymentParams,
   CreateCitPaymentRequest,
   CreatePaymentRequest,
@@ -19,6 +20,7 @@ import {
 } from '../models'
 import { handleRequest } from './handle-request.util'
 import { PaymentReportRequest } from '../models/request/payment-report-request.model'
+import { convertObjectKeys } from './convert-object-keys.util'
 
 const apiEndpoint = API_ENDPOINT
 
@@ -36,11 +38,19 @@ export const requests = {
       headers
     }).then((res) => res.data)
   },
-  post: async (url: string, body: object, headers: { [key: string]: string }) => {
+  post: async (url: string, body: object, headers?: { [key: string]: string }) => {
+    if (headers) {
+      return axios({
+        method: 'post',
+        url,
+        headers,
+        data: body
+      }).then((res) => res.data)
+    }
+
     return axios({
       method: 'post',
       url,
-      headers,
       data: body
     }).then((res) => res.data)
   }
@@ -127,7 +137,9 @@ const tokenPayments = {
     headers: { [key: string]: string }
   ) => handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/commit`, payload, headers)),
   revertPaymentAuthorizationHold: (params: RevertPaymentAuthHoldRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/revert`, {}, headers))
+    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/revert`, {}, headers)),
+  createAddCardFormRequest: (payload: AddCardFormRequest) =>
+    handleRequest(requests.post(`${apiEndpoint}/tokenization/addcard-form`, convertObjectKeys(payload)))
 }
 
 export const api = {
