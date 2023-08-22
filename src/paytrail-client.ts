@@ -27,6 +27,8 @@ import {
   MitPaymentResponse,
   PaymentReportRequest,
   PaymentReportResponse,
+  RevertPaymentAuthHoldRequest,
+  RevertPaymentAuthHoldResponse,
   SettlementsRequest,
   SettlementsResponse
 } from './models'
@@ -648,6 +650,57 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       }
 
       return this.handleResponse<CreateCitPaymentResponse>(responseMessage.SUCCESS, CreateCitPaymentResponse, data)
+    } catch (error) {
+      throw new Error(error?.message)
+    }
+  }
+
+  public async revertPaymentAuthorizationHold(
+    revertPaymentAuthHoldRequest: RevertPaymentAuthHoldRequest
+  ): Promise<RevertPaymentAuthHoldResponse> {
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, revertPaymentAuthHoldRequest.transactionId, '', {})
+
+      // Validate payload
+      const validate = convertObjectToClass(revertPaymentAuthHoldRequest, RevertPaymentAuthHoldRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
+
+      if (errorValidate) {
+        return this.handleResponse<RevertPaymentAuthHoldResponse>(
+          responseMessage.VALIDATE_FAIL,
+          RevertPaymentAuthHoldResponse,
+          null,
+          {
+            message: errorValidate,
+            status: responseStatus.VALIDATE_FAIL
+          }
+        )
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.tokenPayments.revertPaymentAuthorizationHold(
+        revertPaymentAuthHoldRequest,
+        headers
+      )
+
+      if (error) {
+        return this.handleResponse<RevertPaymentAuthHoldResponse>(
+          responseMessage.EXCEPTION,
+          RevertPaymentAuthHoldResponse,
+          null,
+          {
+            message: error?.response?.data?.meta || error?.response?.data?.message,
+            status: error?.response?.status
+          }
+        )
+      }
+
+      return this.handleResponse<RevertPaymentAuthHoldResponse>(
+        responseMessage.SUCCESS,
+        RevertPaymentAuthHoldResponse,
+        data
+      )
     } catch (error) {
       throw new Error(error?.message)
     }

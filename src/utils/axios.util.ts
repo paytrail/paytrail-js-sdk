@@ -14,6 +14,7 @@ import {
   ListGroupedProvidersRequest,
   MitPaymentParams,
   MitPaymentRequest,
+  RevertPaymentAuthHoldRequest,
   SettlementsRequest
 } from '../models'
 import { handleRequest } from './handle-request.util'
@@ -124,7 +125,9 @@ const tokenPayments = {
     params: CreateCitPaymentParams,
     payload: CreateCitPaymentRequest,
     headers: { [key: string]: string }
-  ) => handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/commit`, payload, headers))
+  ) => handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/commit`, payload, headers)),
+  revertPaymentAuthorizationHold: (params: RevertPaymentAuthHoldRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/revert`, {}, headers))
 }
 
 export const api = {

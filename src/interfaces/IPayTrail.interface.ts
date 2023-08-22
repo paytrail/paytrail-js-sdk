@@ -23,6 +23,8 @@ import {
   MitPaymentResponse,
   PaymentReportRequest,
   PaymentReportResponse,
+  RevertPaymentAuthHoldRequest,
+  RevertPaymentAuthHoldResponse,
   SettlementsRequest,
   SettlementsResponse
 } from '../models'
@@ -176,4 +178,15 @@ export interface IPaytrail {
     citPaymentParams: CreateCitPaymentParams,
     citPaymentRequest: CreateCitPaymentRequest
   ): Promise<CreateCitPaymentResponse>
+
+  /**
+   *
+   * @summary HTTP POST /payments/{transactionId}/token/revert reverts an existing authorization hold.
+   *          A successful revert will remove the authorization hold from the payer's card.
+   * @param {RevertPaymentAuthHoldRequest} revertPaymentAuthHoldRequest
+   * @see https://docs.paytrail.com/#/?id=charging-a-token
+   */
+  revertPaymentAuthorizationHold(
+    revertPaymentAuthHoldRequest: RevertPaymentAuthHoldRequest
+  ): Promise<RevertPaymentAuthHoldResponse>
 }
