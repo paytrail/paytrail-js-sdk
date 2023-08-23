@@ -589,7 +589,11 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       }
 
       // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.createMitPaymentCommit(mitPaymentParams, mitPaymentRequest, headers)
+      const [error, data] = await api.tokenPayments.createMitOrCitPaymentCommit(
+        mitPaymentParams,
+        mitPaymentRequest,
+        headers
+      )
 
       if (error) {
         return this.handleResponse<MitPaymentResponse>(responseMessage.EXCEPTION, MitPaymentResponse, null, {
@@ -637,7 +641,11 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       }
 
       // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.createCitPaymentCommit(citPaymentParams, citPaymentRequest, headers)
+      const [error, data] = await api.tokenPayments.createMitOrCitPaymentCommit(
+        citPaymentParams,
+        citPaymentRequest,
+        headers
+      )
 
       if (error) {
         return this.handleResponse<CreateCitPaymentResponse>(
