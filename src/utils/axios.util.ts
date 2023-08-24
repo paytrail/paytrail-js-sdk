@@ -18,13 +18,13 @@ const requests = {
         method: 'get',
         url,
         headers
-      })
+      }).then((res) => res.data)
     }
 
     return axios({
       method: 'get',
       url
-    })
+    }).then((res) => res.data)
   },
   post: async (url: string, body: object, headers: { [key: string]: string }) => {
     if (headers) {
