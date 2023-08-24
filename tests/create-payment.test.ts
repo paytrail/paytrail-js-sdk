@@ -1,0 +1,155 @@
+import { api } from '../src/utils/axios.util'
+import { PaytrailClient } from './../src/paytrail-client'
+
+describe('create-payment', () => {
+  let client: PaytrailClient
+
+  beforeEach(() => {
+    const mockConfiguration = {
+      merchantId: '375917',
+      secretKey: 'SAIPPUAKAUPPIAS',
+      platformName: 'test'
+    }
+    client = new PaytrailClient(mockConfiguration)
+  })
+
+  it('should return status 200', async () => {
+    const data = await client.createPayment({
+      stamp: crypto.randomUUID(),
+      reference: '9187445',
+      amount: 1590,
+      currency: 'EUR',
+      language: 'FI',
+      items: [
+        {
+          unitPrice: 1590,
+          units: 1,
+          vatPercentage: 24,
+          productCode: '#927502759',
+          stamp: crypto.randomUUID()
+        }
+      ],
+      customer: {
+        email: 'erja.esimerkki@example.org'
+      },
+      redirectUrls: {
+        success: 'https://ecom.example.org/success',
+        cancel: 'https://ecom.example.org/cancel'
+      },
+      callbackUrls: {
+        success: 'https://ecom.example.org/success',
+        cancel: 'https://ecom.example.org/cancel'
+      }
+    })
+
+    expect(data.status).toEqual(200)
+  })
+
+  it('should return status 400', async () => {
+    const data = await client.createPayment({
+      stamp: crypto.randomUUID(),
+      reference: '9187445',
+      amount: -1590,
+      currency: 'EUR',
+      language: 'FI',
+      items: [
+        {
+          unitPrice: 1590,
+          units: 1,
+          vatPercentage: 24,
+          productCode: '#927502759',
+          stamp: crypto.randomUUID()
+        }
+      ],
+      customer: {
+        email: 'erja.esimerkki@example.org'
+      },
+      redirectUrls: {
+        success: 'https://ecom.example.org/success',
+        cancel: 'https://ecom.example.org/cancel'
+      },
+      callbackUrls: {
+        success: 'https://ecom.example.org/success',
+        cancel: 'https://ecom.example.org/cancel'
+      }
+    })
+
+    expect(data.status).toEqual(400)
+  })
+
+  it('should return status 401', async () => {
+    client = new PaytrailClient({
+      merchantId: '375917',
+      secretKey: 'SAIPPUAKAUPPIASS',
+      platformName: 'test'
+    })
+
+    const data = await client.createPayment({
+      stamp: crypto.randomUUID(),
+      reference: '9187445',
+      amount: 1590,
+      currency: 'EUR',
+      language: 'FI',
+      items: [
+        {
+          unitPrice: 1590,
+          units: 1,
+          vatPercentage: 24,
+          productCode: '#927502759',
+          stamp: crypto.randomUUID()
+        }
+      ],
+      customer: {
+        email: 'erja.esimerkki@example.org'
+      },
+      redirectUrls: {
+        success: 'https://ecom.example.org/success',
+        cancel: 'https://ecom.example.org/cancel'
+      },
+      callbackUrls: {
+        success: 'https://ecom.example.org/success',
+        cancel: 'https://ecom.example.org/cancel'
+      }
+    })
+
+    expect(data.status).toEqual(401)
+  })
+
+  it('should handle API error', async () => {
+    // Mock the API call to throw an error
+    const mockError = new Error('API error')
+    jest.spyOn(api.payments, 'create').mockRejectedValue(mockError)
+
+    try {
+      await client.createPayment({
+        stamp: crypto.randomUUID(),
+        reference: '9187445',
+        amount: 1590,
+        currency: 'EUR',
+        language: 'FI',
+        items: [
+          {
+            unitPrice: 1590,
+            units: 1,
+            vatPercentage: 24,
+            productCode: '#927502759',
+            stamp: crypto.randomUUID()
+          }
+        ],
+        customer: {
+          email: 'erja.esimerkki@example.org'
+        },
+        redirectUrls: {
+          success: 'https://ecom.example.org/success',
+          cancel: 'https://ecom.example.org/cancel'
+        },
+        callbackUrls: {
+          success: 'https://ecom.example.org/success',
+          cancel: 'https://ecom.example.org/cancel'
+        }
+      })
+    } catch (error) {
+      expect(error.message).toBe('API error')
+    }
+  })
+})
