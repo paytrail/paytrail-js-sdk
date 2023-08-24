@@ -10,6 +10,7 @@ import {
   GetPaymentStatusRequest,
   GetTokenRequest,
   ListGroupedProvidersRequest,
+  MitPaymentRequest,
   SettlementsRequest
 } from '../models'
 import { handleRequest } from './handle-request.util'
@@ -105,7 +106,9 @@ const settlements = {
 // Execute Paytrail API
 const tokenPayments = {
   createGetToken: (param: GetTokenRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.post(`${apiEndpoint}/tokenization/${param.checkoutTokenizationId}`, {}, headers))
+    handleRequest(requests.post(`${apiEndpoint}/tokenization/${param.checkoutTokenizationId}`, {}, headers)),
+  createMitPayment: (payload: MitPaymentRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/mit/charge`, payload, headers))
 }
 
 export const api = {

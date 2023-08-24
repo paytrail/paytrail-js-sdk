@@ -15,6 +15,8 @@ import {
   GetTokenResponse,
   ListGroupedProvidersRequest,
   ListGroupedProvidersResponse,
+  MitPaymentRequest,
+  MitPaymentResponse,
   PaymentReportRequest,
   PaymentReportResponse,
   SettlementsRequest,
@@ -112,4 +114,12 @@ export interface IPaytrail {
    * @see https://docs.paytrail.com/#/?id=get-token
    */
   createGetTokenRequest(getTokenRequest: GetTokenRequest): Promise<GetTokenResponse>
+
+  /**
+   *
+   * @summary HTTP POST /payments/token/{mit|cit}/{authorization-hold|charge} creates either an authorization hold or direct charge for MIT and CIT payments.
+   * @param {MitPaymentRequest} mitPaymentRequest
+   * @see https://docs.paytrail.com/#/?id=charging-a-token
+   */
+  createMitPaymentCharge(mitPaymentRequest: MitPaymentRequest): Promise<MitPaymentResponse>
 }
