@@ -21,6 +21,7 @@ import {
   GetTokenResponse,
   ListGroupedProvidersRequest,
   ListGroupedProvidersResponse,
+  MitPaymentParams,
   MitPaymentRequest,
   MitPaymentResponse,
   PaymentReportRequest,
@@ -545,6 +546,49 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       }
 
       return this.handleResponse<CreateCitPaymentResponse>(responseMessage.SUCCESS, CreateCitPaymentResponse, data)
+    } catch (error) {
+      throw new Error(error?.message)
+    }
+  }
+
+  public async createMitPaymentCommit(
+    mitPaymentParams: MitPaymentParams,
+    mitPaymentRequest: MitPaymentRequest
+  ): Promise<MitPaymentResponse> {
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, mitPaymentParams.transactionId, '', mitPaymentRequest)
+
+      // Validate payload
+      const validateParam = convertObjectToClass(mitPaymentParams, MitPaymentParams)
+      const [errorValidateParam, isSuccessParam] = await validateError(validateParam)
+
+      const validatePayload = convertObjectToClass(mitPaymentRequest, MitPaymentRequest)
+      const [errorValidatePayload, isSuccessPayload] = await validateError(validatePayload)
+
+      if (errorValidateParam || errorValidatePayload) {
+        let message = ''
+
+        if (errorValidateParam) message += errorValidateParam
+        if (errorValidatePayload) message += errorValidatePayload
+
+        return this.handleResponse<MitPaymentResponse>(responseMessage.VALIDATE_FAIL, MitPaymentResponse, null, {
+          message: message,
+          status: responseStatus.VALIDATE_FAIL
+        })
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.tokenPayments.createMitPaymentCommit(mitPaymentParams, mitPaymentRequest, headers)
+
+      if (error) {
+        return this.handleResponse<MitPaymentResponse>(responseMessage.EXCEPTION, MitPaymentResponse, null, {
+          message: error?.response?.data?.meta || error?.response?.data?.message,
+          status: error?.response?.status
+        })
+      }
+
+      return this.handleResponse<MitPaymentResponse>(responseMessage.SUCCESS, MitPaymentResponse, data)
     } catch (error) {
       throw new Error(error?.message)
     }
