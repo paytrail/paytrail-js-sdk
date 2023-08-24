@@ -8,6 +8,7 @@ import {
   EmailRefundParams,
   EmailRefundRequest,
   GetPaymentStatusRequest,
+  GetTokenRequest,
   ListGroupedProvidersRequest,
   SettlementsRequest
 } from '../models'
@@ -101,9 +102,16 @@ const settlements = {
     handleRequest(requests.get(`${apiEndpoint}/settlements?${convertQuery(query)}`, headers))
 }
 
+// Execute Paytrail API
+const tokenPayments = {
+  createGetToken: (param: GetTokenRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.post(`${apiEndpoint}/tokenization/${param.checkoutTokenizationId}`, {}, headers))
+}
+
 export const api = {
   merchants,
   payments,
   paymentReports,
-  settlements
+  settlements,
+  tokenPayments
 }

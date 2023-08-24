@@ -11,6 +11,8 @@ import {
   EmailRefundResponse,
   GetPaymentStatusRequest,
   GetPaymentStatusResponse,
+  GetTokenRequest,
+  GetTokenResponse,
   ListGroupedProvidersRequest,
   ListGroupedProvidersResponse,
   PaymentReportRequest,
@@ -101,4 +103,13 @@ export interface IPaytrail {
    * @see https://docs.paytrail.com/#/?id=settlements
    */
   requestSettlements(settlementsRequest: SettlementsRequest): Promise<SettlementsResponse>
+
+  /**
+   *
+   * @summary HTTP POST /tokenization/{checkout-tokenization-id} is requested after the merchant has received a checkout-tokenization-id
+   *          from the success redirect URL parameters, or the callback URL request if given.
+   * @param {GetTokenRequest} getTokenRequest
+   * @see https://docs.paytrail.com/#/?id=get-token
+   */
+  createGetTokenRequest(getTokenRequest: GetTokenRequest): Promise<GetTokenResponse>
 }
