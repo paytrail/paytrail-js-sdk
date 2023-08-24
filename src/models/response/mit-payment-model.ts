@@ -1,4 +1,6 @@
-export class MitPaymentResponse {
+import { Response } from './response-model'
+
+export class MitPaymentResponse extends Response {
   data: MitPaymentData
 }
 
