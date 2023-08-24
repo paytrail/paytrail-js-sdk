@@ -14,7 +14,9 @@ import {
   ListGroupedProvidersRequest,
   ListGroupedProvidersResponse,
   PaymentReportRequest,
-  PaymentReportResponse
+  PaymentReportResponse,
+  SettlementsRequest,
+  SettlementsResponse
 } from '../models'
 
 export interface IPaytrail {
@@ -90,4 +92,13 @@ export interface IPaytrail {
    * @see https://docs.paytrail.com/#/?id=email-refunds
    */
   paymentReportRequest(paymentReportRequest: PaymentReportRequest): Promise<PaymentReportResponse>
+
+  /**
+   *
+   * @summary HTTP GET /settlements returns merchant's settlement IDs and corresponding bank references.
+   *          Maximum of 100 settlement IDs are returned, starting from the most recent settelements
+   * @param {SettlementsRequest} settlementsRequest
+   * @see https://docs.paytrail.com/#/?id=settlements
+   */
+  requestSettlements(settlementsRequest: SettlementsRequest): Promise<SettlementsResponse>
 }

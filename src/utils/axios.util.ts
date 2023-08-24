@@ -8,7 +8,8 @@ import {
   EmailRefundParams,
   EmailRefundRequest,
   GetPaymentStatusRequest,
-  ListGroupedProvidersRequest
+  ListGroupedProvidersRequest,
+  SettlementsRequest
 } from '../models'
 import { handleRequest } from './handle-request.util'
 import { PaymentReportRequest } from '../models/request/payment-report-request.model'
@@ -70,8 +71,8 @@ const convertQuery = (param: any): string => {
 
 // Execute Paytrail API
 const merchants = {
-  listGroupedProviders: (payload: ListGroupedProvidersRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.get(`${apiEndpoint}/merchants/grouped-payment-providers?${convertQuery(payload)}`, headers))
+  listGroupedProviders: (query: ListGroupedProvidersRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.get(`${apiEndpoint}/merchants/grouped-payment-providers?${convertQuery(query)}`, headers))
 }
 
 // Execute Paytrail API
@@ -80,8 +81,8 @@ const payments = {
     handleRequest(requests.post(`${apiEndpoint}/payments`, payload, headers)),
   createSiSPayment: (payload: CreateSiSPaymentRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments`, payload, headers)),
-  getPaymentStatus: (payload: GetPaymentStatusRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.get(`${apiEndpoint}/payments/${payload.transactionId}`, headers)),
+  getPaymentStatus: (param: GetPaymentStatusRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.get(`${apiEndpoint}/payments/${param.transactionId}`, headers)),
   createRefund: (params: CreateRefundParams, payload: CreateRefundRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund`, payload, headers)),
   emailRefunds: (params: EmailRefundParams, payload: EmailRefundRequest, headers: { [key: string]: string }) =>
@@ -94,8 +95,15 @@ const paymentReports = {
     handleRequest(requests.post(`${apiEndpoint}/payments/report`, payload, headers))
 }
 
+// Execute Paytrail API
+const settlements = {
+  get: (query: SettlementsRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.get(`${apiEndpoint}/settlements?${convertQuery(query)}`, headers))
+}
+
 export const api = {
   merchants,
   payments,
-  paymentReports
+  paymentReports,
+  settlements
 }
