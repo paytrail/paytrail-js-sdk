@@ -1,6 +1,9 @@
 import {
   CreatePaymentRequest,
   CreatePaymentResponse,
+  CreateRefundParams,
+  CreateRefundRequest,
+  CreateRefundResponse,
   CreateSiSPaymentRequest,
   CreateSiSPaymentResponse,
   GetPaymentStatusRequest,
@@ -62,4 +65,19 @@ export interface IPaytrail {
    * @see https://docs.paytrail.com/#/?id=get
    */
   getPaymentStatus(getPaymentStatusRequest: GetPaymentStatusRequest): Promise<GetPaymentStatusResponse>
+
+  /**
+   *
+   * @summary HTTP POST /payments/{transactionId}/refund refunds a payment by transaction ID.
+   * @param {CreateRefundParams} createRefundParams
+   * @param {CreateRefundRequest} createRefundRequest
+   * @throws {ValidateException}
+   * @throws {RequestException}
+   * @throws {HmacException}
+   * @see https://docs.paytrail.com/#/?id=refund
+   */
+  createRefund(
+    createRefundParams: CreateRefundParams,
+    createRefundRequest: CreateRefundRequest
+  ): Promise<CreateRefundResponse>
 }

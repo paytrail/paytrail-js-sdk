@@ -12,6 +12,8 @@ import {
   ListGroupedProvidersRequest,
   ListGroupedProvidersResponse
 } from './models'
+import { CreateRefundParams, CreateRefundRequest } from './models/request/create-refund.model'
+import { CreateRefundResponse } from './models/response/create-refund.model'
 import { Paytrail } from './paytrail'
 import { api } from './utils/axios.util'
 import { convertObjectToClass } from './utils/convert-object-to-class.utils'
@@ -132,6 +134,41 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
       // Execute to Paytrail API
       const [error, data] = await api.payments.getPaymentStatus(getPaymentStatusRequest, headers)
+
+      if (error) {
+        throw new RequestException(
+          error?.response?.data?.meta || error?.response?.data?.message,
+          error?.response?.status
+        )
+      }
+
+      return data as GetPaymentStatusResponse
+    } catch (error) {
+      throw new Error(error?.message)
+    }
+  }
+
+  public async createRefund(
+    createRefundParams: CreateRefundParams,
+    createRefundRequest: CreateRefundRequest
+  ): Promise<CreateRefundResponse> {
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, createRefundParams.transactionId, '', createRefundRequest)
+
+      // Validate payload
+      const validateParam = convertObjectToClass(createRefundParams, CreateRefundParams)
+      const [errorValidateParam, isSuccessParam] = await validateError(validateParam)
+
+      const validatePayload = convertObjectToClass(createRefundParams, CreateRefundParams)
+      const [errorValidatePayload, isSuccessPayload] = await validateError(validatePayload)
+
+      if (errorValidateParam || errorValidatePayload) {
+        throw new ValidateException(JSON.stringify(`${errorValidateParam}, ${errorValidatePayload}`), 400)
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.payments.createRefund(createRefundParams, createRefundRequest, headers)
 
       if (error) {
         throw new RequestException(

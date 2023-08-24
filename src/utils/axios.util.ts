@@ -7,6 +7,7 @@ import {
   ListGroupedProvidersRequest
 } from '../models'
 import { handleRequest } from './handle-request.util'
+import { CreateRefundParams, CreateRefundRequest } from '../models/request/create-refund.model'
 
 const apiEndpoint = API_ENDPOINT
 
@@ -114,7 +115,9 @@ const payments = {
   createSiSPayment: (payload: CreateSiSPaymentRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments`, payload, headers)),
   getPaymentStatus: (payload: GetPaymentStatusRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.get(`${apiEndpoint}/payments/${payload.transactionId}`, headers))
+    handleRequest(requests.get(`${apiEndpoint}/payments/${payload.transactionId}`, headers)),
+  createRefund: (params: CreateRefundParams, payload: CreateRefundRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund`, payload, headers))
 }
 
 export const api = {
