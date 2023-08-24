@@ -1,4 +1,6 @@
 import {
+  CreateCitPaymentRequest,
+  CreateCitPaymentResponse,
   CreatePaymentRequest,
   CreatePaymentResponse,
   CreateRefundParams,
@@ -130,4 +132,12 @@ export interface IPaytrail {
    * @see https://docs.paytrail.com/#/?id=charging-a-token
    */
   createMitPaymentAuthorizationHold(mitPaymentRequest: MitPaymentRequest): Promise<MitPaymentResponse>
+
+  /**
+   *
+   * @summary HTTP POST /payments/token/{mit|cit}/{authorization-hold|charge} creates either an authorization hold or direct charge for MIT and CIT payments.
+   * @param {CreateCitPaymentRequest} createCitPaymentRequest
+   * @see https://docs.paytrail.com/#/?id=charging-a-token
+   */
+  createCitPaymentCharge(createCitPaymentRequest: CreateCitPaymentRequest): Promise<CreateCitPaymentResponse>
 }
