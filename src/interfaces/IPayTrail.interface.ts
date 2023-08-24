@@ -122,4 +122,12 @@ export interface IPaytrail {
    * @see https://docs.paytrail.com/#/?id=charging-a-token
    */
   createMitPaymentCharge(mitPaymentRequest: MitPaymentRequest): Promise<MitPaymentResponse>
+
+  /**
+   *
+   * @summary HTTP POST /payments/token/{mit|cit}/{authorization-hold|charge} creates either an authorization hold or direct charge for MIT and CIT payments.
+   * @param {MitPaymentRequest} mitPaymentRequest
+   * @see https://docs.paytrail.com/#/?id=charging-a-token
+   */
+  createMitPaymentAuthorizationHold(mitPaymentRequest: MitPaymentRequest): Promise<MitPaymentResponse>
 }
