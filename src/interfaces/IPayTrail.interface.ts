@@ -12,7 +12,9 @@ import {
   GetPaymentStatusRequest,
   GetPaymentStatusResponse,
   ListGroupedProvidersRequest,
-  ListGroupedProvidersResponse
+  ListGroupedProvidersResponse,
+  PaymentReportRequest,
+  PaymentReportResponse
 } from '../models'
 
 export interface IPaytrail {
@@ -23,9 +25,6 @@ export interface IPaytrail {
    *          it returns payment group data containing localized group names, icons for the groups and grouped providers.
    *          Returns also a localized text with a link to the terms of payment.
    * @param {ListGroupedProvidersRequest} listGroupedProvidersRequest
-   * @throws {ValidateException}
-   * @throws {RequestException}
-   * @throws {HmacException}
    * @see https://docs.paytrail.com/#/?id=list-grouped-providers
    */
   listGroupedProviders(listGroupedProvidersRequest: ListGroupedProvidersRequest): Promise<ListGroupedProvidersResponse>
@@ -38,9 +37,6 @@ export interface IPaytrail {
    *
    *          Once the payment has been completed the client browser will return to the merchant provided redirect URL.
    * @param {CreatePaymentRequest} createPaymentResquest
-   * @throws {ValidateException}
-   * @throws {RequestException}
-   * @throws {HmacException}
    * @see https://docs.paytrail.com/#/?id=create
    */
   createPayment(createPaymentResquest: CreatePaymentRequest): Promise<CreatePaymentResponse>
@@ -49,9 +45,6 @@ export interface IPaytrail {
    *
    * @summary Create a shop-in-shop payment request.
    * @param {CreateSiSPaymentRequest} createSiSPaymentResquest
-   * @throws {ValidateException}
-   * @throws {RequestException}
-   * @throws {HmacException}
    * @see https://docs.paytrail.com/#/?id=create
    */
   createShopInShopPayment(createSiSPaymentResquest: CreateSiSPaymentRequest): Promise<CreateSiSPaymentResponse>
@@ -62,9 +55,6 @@ export interface IPaytrail {
    *          Get transaction info. Payments are reported primarily via callbacks, and implementations should mainly rely on receiving the info via them. All received payments will be eventually reported.
    *           Note! The transaction id needs to be sent on checkout-transaction-id header as well.
    * @param {GetPaymentStatusRequest} getPaymentStatusRequest
-   * @throws {ValidateException}
-   * @throws {RequestException}
-   * @throws {HmacException}
    * @see https://docs.paytrail.com/#/?id=get
    */
   getPaymentStatus(getPaymentStatusRequest: GetPaymentStatusRequest): Promise<GetPaymentStatusResponse>
@@ -74,9 +64,6 @@ export interface IPaytrail {
    * @summary HTTP POST /payments/{transactionId}/refund refunds a payment by transaction ID.
    * @param {CreateRefundParams} createRefundParams
    * @param {CreateRefundRequest} createRefundRequest
-   * @throws {ValidateException}
-   * @throws {RequestException}
-   * @throws {HmacException}
    * @see https://docs.paytrail.com/#/?id=refund
    */
   createRefund(
@@ -89,13 +76,18 @@ export interface IPaytrail {
    * @summary HTTP POST /payments/{transactionId}/refund/email email refunds a payment by transaction ID.
    * @param {EmailRefundParams} emailRefundParams
    * @param {EmailRefundRequest} emailRefundRequest
-   * @throws {ValidateException}
-   * @throws {RequestException}
-   * @throws {HmacException}
    * @see https://docs.paytrail.com/#/?id=email-refunds
    */
   emailRefund(
     emailRefundParams: EmailRefundParams,
     emailRefundRequest: EmailRefundRequest
   ): Promise<EmailRefundResponse>
+
+  /**
+   *
+   * @summary HTTP POST /payments/report results in a callback containing the payment report.
+   * @param {PaymentReportRequest} paymentReportRequest
+   * @see https://docs.paytrail.com/#/?id=email-refunds
+   */
+  paymentReportRequest(paymentReportRequest: PaymentReportRequest): Promise<PaymentReportResponse>
 }
