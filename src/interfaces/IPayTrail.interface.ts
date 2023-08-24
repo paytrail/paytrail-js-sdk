@@ -89,5 +89,5 @@ export interface IPaytrail {
    * @param {PaymentReportRequest} paymentReportRequest
    * @see https://docs.paytrail.com/#/?id=email-refunds
    */
-  paymentReportRequest(paymentReportRequest: PaymentReportRequest): Promise<PaymentReportResponse[]>
+  paymentReportRequest(paymentReportRequest: PaymentReportRequest): Promise<PaymentReportResponse>
 }
