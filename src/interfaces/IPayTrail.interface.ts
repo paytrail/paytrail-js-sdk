@@ -1,4 +1,6 @@
+import { CreatePaymentRequest } from '../models/request/create-payment.model'
 import { ListGroupedProvidersRequest } from '../models/request/get-list-grouped-payment-providers.model'
+import { CreatePaymentResponse } from '../models/response/create-payment.model'
 import { ListGroupedProvidersResponse } from '../models/response/get-list-grouped-payment-providers.model'
 
 export interface IPaytrail {
@@ -15,4 +17,19 @@ export interface IPaytrail {
    * @see https://docs.paytrail.com/#/?id=list-grouped-providers
    */
   listGroupedProviders(listGroupedProvidersRequest: ListGroupedProvidersRequest): Promise<ListGroupedProvidersResponse>
+
+  /**
+   *
+   * @summary HTTP POST /payments creates a new open payment and returns a JSON object that includes the available payment methods.
+   *          The merchant web shop renders HTML forms from the response objects (see example).
+   *          The client browser will submit the form to the payment method provider.
+   *
+   *          Once the payment has been completed the client browser will return to the merchant provided redirect URL.
+   * @param {CreatePaymentRequest} createPaymentResquest
+   * @throws {ValidateException}
+   * @throws {RequestException}
+   * @throws {HmacException}
+   * @see https://docs.paytrail.com/#/?id=create
+   */
+  createPayment(createPaymentResquest: CreatePaymentRequest): Promise<CreatePaymentResponse>
 }

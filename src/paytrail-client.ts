@@ -2,7 +2,12 @@ import { Configuration } from './configuration'
 import { API_ENDPOINT, METHOD } from './constants/variable.constant'
 import { RequestException, ValidateException } from './exceptions/exception'
 import { IPaytrail } from './interfaces/IPayTrail.interface'
-import { ListGroupedProvidersRequest, ListGroupedProvidersResponse } from './models'
+import {
+  CreatePaymentRequest,
+  CreatePaymentResponse,
+  ListGroupedProvidersRequest,
+  ListGroupedProvidersResponse
+} from './models'
 import { Paytrail } from './paytrail'
 import { api } from './utils/axios.util'
 import { convertObjectToClass } from './utils/convert-object-to-class.utils'
@@ -51,6 +56,32 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       const data = res?.data
 
       return data as ListGroupedProvidersResponse
+    } catch (error) {
+      throw new Error(error?.message)
+    }
+  }
+
+  public async createPayment(createPaymentRequest: CreatePaymentRequest): Promise<CreatePaymentResponse> {
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, '', '', createPaymentRequest)
+
+      // Validate payload
+      const validate = convertObjectToClass(createPaymentRequest, CreatePaymentRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
+
+      if (errorValidate) {
+        throw new ValidateException(JSON.stringify(errorValidate), 400)
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.payments.create(createPaymentRequest, headers)
+
+      if (error) {
+        throw new RequestException(error?.response?.data?.meta, error?.response?.status)
+      }
+
+      return data as CreatePaymentResponse
     } catch (error) {
       throw new Error(error?.message)
     }
