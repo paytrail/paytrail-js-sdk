@@ -20,83 +20,45 @@ axios.interceptors.request.use((config) => {
   return config
 })
 
-const requests = {
+export const requests = {
   get: async (url: string, headers: { [key: string]: string }) => {
-    if (headers) {
-      return axios({
-        method: 'get',
-        url,
-        headers
-      }).then((res) => res.data)
-    }
-
     return axios({
       method: 'get',
-      url
+      url,
+      headers
     }).then((res) => res.data)
   },
   post: async (url: string, body: object, headers: { [key: string]: string }) => {
-    if (headers) {
-      return axios({
-        method: 'post',
-        url,
-        headers,
-        data: body
-      }).then((res) => res.data)
-    }
-
     return axios({
       method: 'post',
       url,
-      data: body
-    }).then((res) => res.data)
-  },
-  delete: async (url: string, headers: { [key: string]: string }) => {
-    if (headers) {
-      return axios({
-        method: 'delete',
-        url,
-        headers
-      }).then((res) => res.data)
-    }
-
-    return axios({
-      method: 'delete',
-      url
-    }).then((res) => res.data)
-  },
-  put: async (url: string, body: object, headers: { [key: string]: string }) => {
-    if (headers) {
-      return axios({
-        method: 'put',
-        url,
-        headers,
-        data: body
-      }).then((res) => res.data)
-    }
-
-    return axios({
-      method: 'put',
-      url,
-      data: body
-    }).then((res) => res.data)
-  },
-  patch: async (url: string, body: object, headers: { [key: string]: string }) => {
-    if (headers) {
-      return axios({
-        method: 'patch',
-        url,
-        headers,
-        data: body
-      }).then((res) => res.data)
-    }
-
-    return axios({
-      method: 'patch',
-      url,
+      headers,
       data: body
     }).then((res) => res.data)
   }
+  // delete: async (url: string, headers: { [key: string]: string }) => {
+  //   return axios({
+  //     method: 'delete',
+  //     url,
+  //     headers
+  //   }).then((res) => res.data)
+  // },
+  // put: async (url: string, body: object, headers: { [key: string]: string }) => {
+  //   return axios({
+  //     method: 'put',
+  //     url,
+  //     headers,
+  //     data: body
+  //   }).then((res) => res.data)
+  // },
+  // patch: async (url: string, body: object, headers: { [key: string]: string }) => {
+  //   return axios({
+  //     method: 'patch',
+  //     url,
+  //     headers,
+  //     data: body
+  //   }).then((res) => res.data)
+  // }
 }
 
 const convertQuery = (param: any): string => {

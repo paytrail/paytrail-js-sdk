@@ -1,5 +1,5 @@
 import { Configuration } from './configuration'
-import { ValidateException } from './exceptions/exception'
+import { responseMessage, responseStatus } from './constants/message-response.constant'
 import { Signature } from './utils/signature.util'
 
 export abstract class Paytrail {
@@ -56,13 +56,40 @@ export abstract class Paytrail {
     return headers
   }
 
-  protected validateRequestItem<T extends { validate(): [boolean, string] }>(item: T): boolean {
-    const [isPassValidate, message] = item.validate()
-
-    if (!isPassValidate) {
-      throw new ValidateException(message, 400)
+  public handleResponse<T>(
+    type: string,
+    targetClass: any,
+    data?: any,
+    dataError?: { message: string | boolean; status: number }
+  ): T {
+    const instance = new targetClass()
+    switch (type) {
+      case responseMessage.SUCCESS:
+        instance.message = responseMessage.SUCCESS
+        instance.status = responseStatus.SUCCESS
+        instance.data = data
+        break
+      case responseMessage.VALIDATE_FAIL:
+        instance.message = dataError?.message
+        instance.status = dataError?.status
+        break
+      case responseMessage.SIGNATURE_NULL:
+        instance.message = dataError?.message
+        instance.status = dataError?.status
+        break
+      case responseMessage.EXCEPTION:
+        instance.message = dataError?.message
+        instance.status = dataError?.status
+        break
+      case responseMessage.UNAUTHORIZED:
+        instance.message = dataError?.message
+        instance.status = dataError?.status
+        break
+      default:
+        instance.message = responseMessage.SERVER_ERROR
+        instance.status = responseStatus.SERVER_ERROR
     }
 
-    return true
+    return instance as T
   }
 }
