@@ -113,7 +113,9 @@ const tokenPayments = {
   createMitPaymentAuthorizationHold: (payload: MitPaymentRequest, headers: { [key: string]: string }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments/token/mit/authorization-hold`, payload, headers)),
   createCitPaymentCharge: (payload: CreateCitPaymentRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.post(`${apiEndpoint}/payments/token/cit/charge`, payload, headers))
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/cit/charge`, payload, headers)),
+  createCitPaymentAuthorizationHold: (payload: CreateCitPaymentRequest, headers: { [key: string]: string }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/cit/authorization-hold`, payload, headers))
 }
 
 export const api = {
