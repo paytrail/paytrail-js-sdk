@@ -7,6 +7,9 @@ import {
   CreatePaymentResponse,
   CreateSiSPaymentRequest,
   CreateSiSPaymentResponse,
+  EmailRefundParams,
+  EmailRefundRequest,
+  EmailRefundResponse,
   GetPaymentStatusRequest,
   GetPaymentStatusResponse,
   ListGroupedProvidersRequest,
@@ -178,6 +181,41 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       }
 
       return data as GetPaymentStatusResponse
+    } catch (error) {
+      throw new Error(error?.message)
+    }
+  }
+
+  public async emailRefund(
+    emailRefundParams: EmailRefundParams,
+    emailRefundRequest: EmailRefundRequest
+  ): Promise<EmailRefundResponse> {
+    try {
+      // Create headers
+      const headers = this.getHeaders(METHOD.POST, emailRefundParams.transactionId, '', emailRefundRequest)
+
+      // Validate payload
+      const validateParam = convertObjectToClass(emailRefundParams, EmailRefundParams)
+      const [errorValidateParam, isSuccessParam] = await validateError(validateParam)
+
+      const validatePayload = convertObjectToClass(emailRefundRequest, EmailRefundRequest)
+      const [errorValidatePayload, isSuccessPayload] = await validateError(validatePayload)
+
+      if (errorValidateParam || errorValidatePayload) {
+        throw new ValidateException(JSON.stringify(`${errorValidateParam}, ${errorValidatePayload}`), 400)
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.payments.emailRefunds(emailRefundParams, emailRefundRequest, headers)
+
+      if (error) {
+        throw new RequestException(
+          error?.response?.data?.meta || error?.response?.data?.message,
+          error?.response?.status
+        )
+      }
+
+      return data as EmailRefundResponse
     } catch (error) {
       throw new Error(error?.message)
     }

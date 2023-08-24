@@ -6,6 +6,9 @@ import {
   CreateRefundResponse,
   CreateSiSPaymentRequest,
   CreateSiSPaymentResponse,
+  EmailRefundParams,
+  EmailRefundRequest,
+  EmailRefundResponse,
   GetPaymentStatusRequest,
   GetPaymentStatusResponse,
   ListGroupedProvidersRequest,
@@ -80,4 +83,19 @@ export interface IPaytrail {
     createRefundParams: CreateRefundParams,
     createRefundRequest: CreateRefundRequest
   ): Promise<CreateRefundResponse>
+
+  /**
+   *
+   * @summary HTTP POST /payments/{transactionId}/refund/email email refunds a payment by transaction ID.
+   * @param {EmailRefundParams} emailRefundParams
+   * @param {EmailRefundRequest} emailRefundRequest
+   * @throws {ValidateException}
+   * @throws {RequestException}
+   * @throws {HmacException}
+   * @see https://docs.paytrail.com/#/?id=email-refunds
+   */
+  emailRefund(
+    emailRefundParams: EmailRefundParams,
+    emailRefundRequest: EmailRefundRequest
+  ): Promise<EmailRefundResponse>
 }
