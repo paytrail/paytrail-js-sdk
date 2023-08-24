@@ -302,7 +302,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     }
   }
 
-  public async paymentReportRequest(paymentReportRequest: PaymentReportRequest): Promise<PaymentReportResponse[]> {
+  public async paymentReportRequest(paymentReportRequest: PaymentReportRequest): Promise<PaymentReportResponse> {
     try {
       // Create headers
       const headers = this.getHeaders(METHOD.POST, '', '', paymentReportRequest)
@@ -312,34 +312,29 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       const [errorValidate, isSuccess] = await validateError(validate)
 
       if (errorValidate) {
-        return this.handleResponse<PaymentReportResponse[]>(
-          responseMessage.VALIDATE_FAIL,
-          PaymentReportResponse,
-          null,
-          {
-            message: errorValidate,
-            status: responseStatus.VALIDATE_FAIL
-          }
-        )
+        return this.handleResponse<PaymentReportResponse>(responseMessage.VALIDATE_FAIL, PaymentReportResponse, null, {
+          message: errorValidate,
+          status: responseStatus.VALIDATE_FAIL
+        })
       }
 
       // Execute to Paytrail API
       const [error, data] = await api.paymentReports.paymentReportRequest(paymentReportRequest, headers)
 
       if (error) {
-        return this.handleResponse<PaymentReportResponse[]>(responseMessage.EXCEPTION, PaymentReportResponse, null, {
+        return this.handleResponse<PaymentReportResponse>(responseMessage.EXCEPTION, PaymentReportResponse, null, {
           message: error?.response?.data?.meta || error?.response?.data?.message,
           status: error?.response?.status
         })
       }
 
-      return this.handleResponse<PaymentReportResponse[]>(responseMessage.SUCCESS, PaymentReportResponse, data)
+      return this.handleResponse<PaymentReportResponse>(responseMessage.SUCCESS, PaymentReportResponse, data)
     } catch (error) {
       throw new Error(error?.message)
     }
   }
 
-  public async requestSettlements(settlementsRequest: SettlementsRequest): Promise<SettlementsResponse[]> {
+  public async requestSettlements(settlementsRequest: SettlementsRequest): Promise<SettlementsResponse> {
     try {
       // Create headers
       const headers = this.getHeaders(METHOD.GET)
@@ -349,7 +344,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       const [errorValidate, isSuccess] = await validateError(validate)
 
       if (errorValidate) {
-        return this.handleResponse<SettlementsResponse[]>(responseMessage.VALIDATE_FAIL, SettlementsResponse, null, {
+        return this.handleResponse<SettlementsResponse>(responseMessage.VALIDATE_FAIL, SettlementsResponse, null, {
           message: errorValidate,
           status: responseStatus.VALIDATE_FAIL
         })
@@ -359,13 +354,13 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       const [error, data] = await api.settlements.get(settlementsRequest, headers)
 
       if (error) {
-        return this.handleResponse<SettlementsResponse[]>(responseMessage.EXCEPTION, SettlementsResponse, null, {
+        return this.handleResponse<SettlementsResponse>(responseMessage.EXCEPTION, SettlementsResponse, null, {
           message: error?.response?.data?.meta || error?.response?.data?.message,
           status: error?.response?.status
         })
       }
 
-      return this.handleResponse<SettlementsResponse[]>(responseMessage.SUCCESS, SettlementsResponse, data)
+      return this.handleResponse<SettlementsResponse>(responseMessage.SUCCESS, SettlementsResponse, data)
     } catch (error) {
       throw new Error(error?.message)
     }
