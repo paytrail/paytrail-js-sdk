@@ -3,11 +3,11 @@ import { PaymentMethodGroupData } from './response-model/payment-method-group-da
 import { Provider } from './response-model/provider.model'
 
 export class CreatePaymentResponse {
-  public transactionId?: string = ''
-  public href: string = ''
-  public terms: string = ''
-  public groups: PaymentMethodGroupData[] = []
-  public reference: string = ''
-  public providers: Provider[] = []
-  public customProviders: ApplePay | undefined
+  public transactionId: string
+  public href: string
+  public terms: string
+  public groups: PaymentMethodGroupData[]
+  public reference: string
+  public providers: Provider[]
+  public customProviders: ApplePay
 }

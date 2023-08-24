@@ -2,9 +2,9 @@ import { PaymentMethodGroup } from '../../request/request-model/payment-method-g
 import { Provider } from './provider.model'
 
 export class PaymentMethodGroupDataWithProviders {
-  public id?: PaymentMethodGroup
-  public name?: string
-  public icon?: string
-  public svg?: string
-  public providers?: Provider[]
+  public id: PaymentMethodGroup
+  public name: string
+  public icon: string
+  public svg: string
+  public providers: Provider[]
 }
