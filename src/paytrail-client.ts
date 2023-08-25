@@ -3,6 +3,8 @@ import { responseMessage, responseStatus } from './constants/message-response.co
 import { API_ENDPOINT, METHOD } from './constants/variable.constant'
 import { IPaytrail } from './interfaces/IPayTrail.interface'
 import {
+  AddCardFormRequest,
+  AddCardFormResponse,
   CreateCitPaymentParams,
   CreateCitPaymentRequest,
   CreateCitPaymentResponse,
@@ -704,6 +706,35 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
         RevertPaymentAuthHoldResponse,
         data
       )
+    } catch (error) {
+      throw new Error(error?.message)
+    }
+  }
+
+  public async createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse> {
+    try {
+      // Validate payload
+      const validate = convertObjectToClass(addCardFormRequest, AddCardFormRequest)
+      const [errorValidate, isSuccess] = await validateError(validate)
+
+      if (errorValidate) {
+        return this.handleResponse<AddCardFormResponse>(responseMessage.VALIDATE_FAIL, AddCardFormResponse, null, {
+          message: errorValidate,
+          status: responseStatus.VALIDATE_FAIL
+        })
+      }
+
+      // Execute to Paytrail API
+      const [error, data] = await api.tokenPayments.createAddCardFormRequest(addCardFormRequest)
+
+      if (error) {
+        return this.handleResponse<AddCardFormResponse>(responseMessage.EXCEPTION, AddCardFormResponse, null, {
+          message: error?.response?.data?.meta || error?.response?.data?.message,
+          status: error?.response?.status
+        })
+      }
+
+      return this.handleResponse<AddCardFormResponse>(responseMessage.SUCCESS, AddCardFormResponse, data)
     } catch (error) {
       throw new Error(error?.message)
     }

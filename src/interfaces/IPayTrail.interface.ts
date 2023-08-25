@@ -1,4 +1,6 @@
 import {
+  AddCardFormRequest,
+  AddCardFormResponse,
   CreateCitPaymentParams,
   CreateCitPaymentRequest,
   CreateCitPaymentResponse,
@@ -189,4 +191,14 @@ export interface IPaytrail {
   revertPaymentAuthorizationHold(
     revertPaymentAuthHoldRequest: RevertPaymentAuthHoldRequest
   ): Promise<RevertPaymentAuthHoldResponse>
+
+  /**
+   *
+   * @summary HTTP POST /tokenization/addcard-form is a form post requested from the user's browser.
+   *          On a successful request the user will be redirected to Paytrail's card addition service
+   *          where user will input credit card information.
+   * @param {AddCardFormRequest} addCardFormRequest
+   * @see https://docs.paytrail.com/#/?id=add-card-form
+   */
+  createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse>
 }

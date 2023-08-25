@@ -6,7 +6,7 @@ export class Signature {
 
   public static calculateHmac = (
     secret: string,
-    hparams: { [key: string]: string },
+    hparams: { [key: string]: string | number },
     body: { [key: string]: string | number | object } | '' | object,
     encType = 'sha256'
   ) => {
@@ -24,7 +24,7 @@ export class Signature {
   }
 
   public static validateHmac(
-    hparams: { [key: string]: string },
+    hparams: { [key: string]: string | number },
     body: { [key: string]: string | number | object } | '',
     signature: string,
     secretKey: string,
