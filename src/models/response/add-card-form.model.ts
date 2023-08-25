@@ -4,4 +4,7 @@ export class AddCardFormResponse extends Response {
   data: AddCardFormData
 }
 
-export class AddCardFormData {}
+export class AddCardFormData {
+  transactionId: string
+  redirectUrl: string
+}
