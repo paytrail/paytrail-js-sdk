@@ -5,12 +5,11 @@ describe('create-get-token', () => {
   let client: PaytrailClient
 
   beforeEach(() => {
-    const mockConfiguration = {
-      merchantId: '695861',
+    client = new PaytrailClient({
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIAS',
       platformName: 'test'
-    }
-    client = new PaytrailClient(mockConfiguration)
+    })
   })
 
   it('should return status 200', async () => {
@@ -31,7 +30,7 @@ describe('create-get-token', () => {
 
   it('should return status 401', async () => {
     client = new PaytrailClient({
-      merchantId: '695861',
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIASS',
       platformName: 'test'
     })
@@ -44,7 +43,6 @@ describe('create-get-token', () => {
   })
 
   it('should handle API error', async () => {
-    // Mock the API call to throw an error
     const mockError = new Error('API error')
     jest.spyOn(api.tokenPayments, 'createGetToken').mockRejectedValue(mockError)
 

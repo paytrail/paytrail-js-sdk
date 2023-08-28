@@ -7,12 +7,11 @@ describe('paymen-report-request', () => {
   let client: PaytrailClient
 
   beforeEach(async () => {
-    const mockConfiguration = {
-      merchantId: '695861',
+    client = new PaytrailClient({
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIAS',
       platformName: 'test'
-    }
-    client = new PaytrailClient(mockConfiguration)
+    })
   })
 
   it('should return status 200', async () => {
@@ -43,7 +42,7 @@ describe('paymen-report-request', () => {
 
   it('should return status 401', async () => {
     client = new PaytrailClient({
-      merchantId: '695861',
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIASS',
       platformName: 'test'
     })
@@ -61,7 +60,6 @@ describe('paymen-report-request', () => {
   })
 
   it('should handle API error', async () => {
-    // Mock the API call to throw an error
     const mockError = new Error('API error')
     jest.spyOn(api.paymentReports, 'paymentReportRequest').mockRejectedValue(mockError)
 

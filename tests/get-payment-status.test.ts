@@ -1,17 +1,17 @@
 import { api } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import * as crypto from 'crypto'
 
 describe('get-payment-status', () => {
   let client: PaytrailClient
   let transactionId: string
 
   beforeEach(async () => {
-    const mockConfiguration = {
-      merchantId: '375917',
+    client = new PaytrailClient({
+      merchantId: 375917,
       secretKey: 'SAIPPUAKAUPPIAS',
       platformName: 'test'
-    }
-    client = new PaytrailClient(mockConfiguration)
+    })
 
     transactionId = await client
       .createPayment({
@@ -42,7 +42,7 @@ describe('get-payment-status', () => {
         }
       })
       .then((res) => res.data.transactionId)
-      .catch((err) => '')
+      .catch(() => '')
   })
 
   it('should return status 200', async () => {
@@ -71,7 +71,7 @@ describe('get-payment-status', () => {
 
   it('should return status 401', async () => {
     client = new PaytrailClient({
-      merchantId: '375917',
+      merchantId: 375917,
       secretKey: 'SAIPPUAKAUPPIASS',
       platformName: 'test'
     })
@@ -84,16 +84,13 @@ describe('get-payment-status', () => {
   })
 
   it('should handle API error', async () => {
-    // Mock the API call to throw an error
     const mockError = new Error('API error')
     jest.spyOn(api.payments, 'getPaymentStatus').mockRejectedValue(mockError)
 
-    try {
-      await client.getPaymentStatus({
+    await expect(
+      client.getPaymentStatus({
         transactionId
       })
-    } catch (error) {
-      expect(error.message).toBe('API error')
-    }
+    ).rejects.toThrowError(mockError.message)
   })
 })

@@ -5,12 +5,11 @@ describe('create-add-card-form', () => {
   let client: PaytrailClient
 
   beforeEach(() => {
-    const mockConfiguration = {
-      merchantId: '695861',
+    client = new PaytrailClient({
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIAS',
       platformName: 'test'
-    }
-    client = new PaytrailClient(mockConfiguration)
+    })
   })
 
   it('should return status 200', async () => {
@@ -46,7 +45,6 @@ describe('create-add-card-form', () => {
   })
 
   it('should handle API error', async () => {
-    // Mock the API call to throw an error
     const mockError = new Error('API error')
     jest.spyOn(api.tokenPayments, 'createAddCardFormRequest').mockRejectedValue(mockError)
 

@@ -1,24 +1,24 @@
-import { api, requests } from '../src/utils/axios.util'
+import { api } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import * as crypto from 'crypto'
 
 describe('revert-payment-authorization-hold', () => {
   let client: PaytrailClient
   let transactionId: string
 
   beforeEach(async () => {
-    const mockConfiguration = {
-      merchantId: '695861',
+    client = new PaytrailClient({
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIAS',
       platformName: 'test'
-    }
-    client = new PaytrailClient(mockConfiguration)
+    })
 
     const token = await client
       .createGetTokenRequest({
         checkoutTokenizationId: '818c478e-5682-46bf-97fd-b9c2b93a3fcd'
       })
       .then((res) => res.data.token)
-      .catch((err) => '')
+      .catch(() => '')
 
     transactionId = await client
       .createMitPaymentAuthorizationHold({
@@ -50,7 +50,7 @@ describe('revert-payment-authorization-hold', () => {
         }
       })
       .then((res) => res.data.transactionId)
-      .catch((error) => '')
+      .catch(() => '')
   })
 
   it('should return status 200', async () => {
@@ -79,7 +79,7 @@ describe('revert-payment-authorization-hold', () => {
 
   it('should return status 401', async () => {
     client = new PaytrailClient({
-      merchantId: '695861',
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIASS',
       platformName: 'test'
     })
@@ -92,7 +92,6 @@ describe('revert-payment-authorization-hold', () => {
   })
 
   it('should handle API error', async () => {
-    // Mock the API call to throw an error
     const mockError = new Error('API error')
     jest.spyOn(api.tokenPayments, 'revertPaymentAuthorizationHold').mockRejectedValue(mockError)
 

@@ -1,16 +1,16 @@
 import { api } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import * as crypto from 'crypto'
 
 describe('create-mit-payment-commit', () => {
   let client: PaytrailClient
 
   beforeEach(async () => {
-    const mockConfiguration = {
-      merchantId: '695861',
+    client = new PaytrailClient({
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIAS',
       platformName: 'test'
-    }
-    client = new PaytrailClient(mockConfiguration)
+    })
   })
 
   it('should return status 200', async () => {
@@ -91,7 +91,7 @@ describe('create-mit-payment-commit', () => {
 
   it('should return status 401', async () => {
     client = new PaytrailClient({
-      merchantId: '695861',
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIASS',
       platformName: 'test'
     })
@@ -134,7 +134,6 @@ describe('create-mit-payment-commit', () => {
   })
 
   it('should handle API error', async () => {
-    // Mock the API call to throw an error
     const mockError = new Error('API error')
     jest.spyOn(api.tokenPayments, 'createMitOrCitPaymentCommit').mockRejectedValue(mockError)
 

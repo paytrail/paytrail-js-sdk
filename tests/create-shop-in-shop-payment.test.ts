@@ -1,16 +1,16 @@
 import { api } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import * as crypto from 'crypto'
 
 describe('create-shop-in-shop-payment', () => {
   let client: PaytrailClient
 
   beforeEach(() => {
-    const mockConfiguration = {
-      merchantId: '695861',
+    client = new PaytrailClient({
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIAS',
       platformName: 'test'
-    }
-    client = new PaytrailClient(mockConfiguration)
+    })
   })
 
   it('should return status 200', async () => {
@@ -123,7 +123,7 @@ describe('create-shop-in-shop-payment', () => {
 
   it('should return status 401', async () => {
     client = new PaytrailClient({
-      merchantId: '695861',
+      merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIASS',
       platformName: 'test'
     })
@@ -177,10 +177,11 @@ describe('create-shop-in-shop-payment', () => {
         cancel: 'https://ecom.example.org/cancel'
       }
     })
+
+    expect(data.status).toEqual(401)
   })
 
   it('should handle API error', async () => {
-    // Mock the API call to throw an error
     const mockError = new Error('API error')
     jest.spyOn(api.payments, 'createSiSPayment').mockRejectedValue(mockError)
 

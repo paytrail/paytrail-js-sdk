@@ -6,12 +6,11 @@ describe('list-grouped-providers', () => {
   let client: PaytrailClient
 
   beforeEach(() => {
-    const mockConfiguration = {
-      merchantId: '375917',
+    client = new PaytrailClient({
+      merchantId: 375917,
       secretKey: 'SAIPPUAKAUPPIAS',
       platformName: 'test'
-    }
-    client = new PaytrailClient(mockConfiguration)
+    })
   })
 
   it('should return status 200', async () => {
@@ -34,7 +33,7 @@ describe('list-grouped-providers', () => {
 
   it('should return status 401', async () => {
     client = new PaytrailClient({
-      merchantId: '375917',
+      merchantId: 375917,
       secretKey: 'SAIPPUAKAUPPIASS',
       platformName: 'test'
     })
@@ -48,11 +47,9 @@ describe('list-grouped-providers', () => {
   })
 
   it('should handle API error', async () => {
-    // Mock the API call to throw an error
     const mockError = new Error('API error')
     jest.spyOn(api.merchants, 'listGroupedProviders').mockRejectedValue(mockError)
 
-    // Use a request that will trigger the mocked error
     const request: ListGroupedProvidersRequest = {
       amount: 1,
       groups: [PaymentMethodGroup.Mobile, PaymentMethodGroup.CreditCard]

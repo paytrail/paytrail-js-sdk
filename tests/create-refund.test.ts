@@ -1,17 +1,17 @@
 import { api, requests } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import * as crypto from 'crypto'
 
 describe('create-refund', () => {
   let client: PaytrailClient
   let transactionId: string
 
   beforeEach(async () => {
-    const mockConfiguration = {
-      merchantId: '375917',
+    client = new PaytrailClient({
+      merchantId: 375917,
       secretKey: 'SAIPPUAKAUPPIAS',
       platformName: 'test'
-    }
-    client = new PaytrailClient(mockConfiguration)
+    })
 
     transactionId = await client
       .createPayment({
@@ -42,7 +42,7 @@ describe('create-refund', () => {
         }
       })
       .then((res) => res.data.transactionId)
-      .catch((err) => '')
+      .catch(() => '')
   })
 
   it('should return status 200', async () => {
@@ -110,7 +110,7 @@ describe('create-refund', () => {
 
   it('should return status 401', async () => {
     client = new PaytrailClient({
-      merchantId: '375917',
+      merchantId: 375917,
       secretKey: 'SAIPPUAKAUPPIASSS',
       platformName: 'test'
     })
@@ -134,7 +134,6 @@ describe('create-refund', () => {
   })
 
   it('should handle API error', async () => {
-    // Mock the API call to throw an error
     const mockError = new Error('API error')
     jest.spyOn(api.payments, 'createRefund').mockRejectedValue(mockError)
 
