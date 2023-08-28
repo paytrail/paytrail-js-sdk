@@ -1,4 +1,3 @@
-import { Configuration } from './configuration'
 import { API_ENDPOINT, METHOD } from './constants/variable.constant'
 import { IPaytrail } from './interfaces/IPayTrail.interface'
 import {
@@ -42,10 +41,6 @@ import { validateError } from './utils/validate-error.utils'
 export class PaytrailClient extends Paytrail implements IPaytrail {
   public API_ENDPOINT: string = API_ENDPOINT
 
-  constructor(configuration: Configuration) {
-    super(configuration)
-  }
-
   public validateHmac(
     hparams: { [key: string]: string },
     body: { [key: string]: string | number | object } | '',
@@ -62,7 +57,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.GET)
 
-      return this.callApi<ListGroupedProvidersResponse>(
+      return await this.callApi<ListGroupedProvidersResponse>(
         () => api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers),
         ListGroupedProvidersResponse,
         null,
@@ -78,7 +73,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, null, null, createPaymentRequest)
 
-      return this.callApi<CreatePaymentResponse>(
+      return await this.callApi<CreatePaymentResponse>(
         () => api.payments.create(createPaymentRequest, headers),
         CreatePaymentResponse,
         () => validateError(convertObjectToClass(createPaymentRequest, CreatePaymentRequest)),
@@ -96,7 +91,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, null, null, createSiSPaymentResquest)
 
-      return this.callApi<CreateSiSPaymentResponse>(
+      return await this.callApi<CreateSiSPaymentResponse>(
         () => api.payments.createSiSPayment(createSiSPaymentResquest, headers),
         CreateSiSPaymentResponse,
         () => validateError(convertObjectToClass(createSiSPaymentResquest, CreateSiSPaymentRequest)),
@@ -112,7 +107,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.GET, getPaymentStatusRequest.transactionId)
 
-      return this.callApi<GetPaymentStatusResponse>(
+      return await this.callApi<GetPaymentStatusResponse>(
         () => api.payments.getPaymentStatus(getPaymentStatusRequest, headers),
         GetPaymentStatusResponse,
         null,
@@ -131,7 +126,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, createRefundParams.transactionId, null, createRefundRequest)
 
-      return this.callApi<CreateRefundResponse>(
+      return await this.callApi<CreateRefundResponse>(
         () => api.payments.createRefund(createRefundParams, createRefundRequest, headers),
         CreateRefundResponse,
         () => validateError(convertObjectToClass(createRefundRequest, CreateRefundRequest)),
@@ -150,7 +145,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, emailRefundParams.transactionId, null, emailRefundRequest)
 
-      return this.callApi<EmailRefundResponse>(
+      return await this.callApi<EmailRefundResponse>(
         () => api.payments.emailRefunds(emailRefundParams, emailRefundRequest, headers),
         EmailRefundResponse,
         () => validateError(convertObjectToClass(emailRefundRequest, EmailRefundRequest)),
@@ -166,7 +161,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, null, null, paymentReportRequest)
 
-      return this.callApi<PaymentReportResponse>(
+      return await this.callApi<PaymentReportResponse>(
         () => api.paymentReports.paymentReportRequest(paymentReportRequest, headers),
         PaymentReportResponse,
         null,
@@ -182,7 +177,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.GET)
 
-      return this.callApi<SettlementsResponse>(
+      return await this.callApi<SettlementsResponse>(
         () => api.settlements.get(settlementsRequest, headers),
         SettlementsResponse,
         null,
@@ -198,7 +193,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, null, getTokenRequest.checkoutTokenizationId, {})
 
-      return this.callApi<GetTokenResponse>(
+      return await this.callApi<GetTokenResponse>(
         () => api.tokenPayments.createGetToken(getTokenRequest, headers),
         GetTokenResponse,
         () => validateError(convertObjectToClass(getTokenRequest, GetTokenRequest)),
@@ -214,7 +209,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, null, null, mitPaymentRequest)
 
-      return this.callApi<MitPaymentResponse>(
+      return await this.callApi<MitPaymentResponse>(
         () => api.tokenPayments.createMitPayment(mitPaymentRequest, headers),
         MitPaymentResponse,
         () => validateError(convertObjectToClass(mitPaymentRequest, MitPaymentRequest)),
@@ -230,7 +225,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, null, null, mitPaymentRequest)
 
-      return this.callApi<MitPaymentResponse>(
+      return await this.callApi<MitPaymentResponse>(
         () => api.tokenPayments.createMitPaymentAuthorizationHold(mitPaymentRequest, headers),
         MitPaymentResponse,
         () => validateError(convertObjectToClass(mitPaymentRequest, MitPaymentRequest)),
@@ -248,7 +243,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, null, null, createCitPaymentRequest)
 
-      return this.callApi<CreateCitPaymentResponse>(
+      return await this.callApi<CreateCitPaymentResponse>(
         () => api.tokenPayments.createCitPaymentCharge(createCitPaymentRequest, headers),
         CreateCitPaymentResponse,
         () => validateError(convertObjectToClass(createCitPaymentRequest, CreateCitPaymentRequest)),
@@ -266,7 +261,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, null, null, createCitPaymentRequest)
 
-      return this.callApi<CreateCitPaymentResponse>(
+      return await this.callApi<CreateCitPaymentResponse>(
         () => api.tokenPayments.createCitPaymentAuthorizationHold(createCitPaymentRequest, headers),
         CreateCitPaymentResponse,
         () => validateError(convertObjectToClass(createCitPaymentRequest, CreateCitPaymentRequest)),
@@ -285,7 +280,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, mitPaymentParams.transactionId, null, mitPaymentRequest)
 
-      return this.callApi<MitPaymentResponse>(
+      return await this.callApi<MitPaymentResponse>(
         () => api.tokenPayments.createMitOrCitPaymentCommit(mitPaymentParams, mitPaymentRequest, headers),
         MitPaymentResponse,
         () => validateError(convertObjectToClass(mitPaymentRequest, MitPaymentRequest)),
@@ -304,7 +299,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, citPaymentParams.transactionId, null, citPaymentRequest)
 
-      return this.callApi<CreateCitPaymentResponse>(
+      return await this.callApi<CreateCitPaymentResponse>(
         () => api.tokenPayments.createMitOrCitPaymentCommit(citPaymentParams, citPaymentRequest, headers),
         CreateCitPaymentResponse,
         () => validateError(convertObjectToClass(citPaymentRequest, CreateCitPaymentRequest)),
@@ -322,7 +317,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.POST, revertPaymentAuthHoldRequest.transactionId, null, {})
 
-      return this.callApi<RevertPaymentAuthHoldResponse>(
+      return await this.callApi<RevertPaymentAuthHoldResponse>(
         () => api.tokenPayments.revertPaymentAuthorizationHold(revertPaymentAuthHoldRequest, headers),
         RevertPaymentAuthHoldResponse,
         () => validateError(convertObjectToClass(revertPaymentAuthHoldRequest, RevertPaymentAuthHoldRequest)),
@@ -336,7 +331,7 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
   public async createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse> {
     try {
-      return this.callApi<AddCardFormResponse>(
+      return await this.callApi<AddCardFormResponse>(
         () => api.tokenPayments.createAddCardFormRequest(addCardFormRequest),
         AddCardFormResponse,
         () => validateError(convertObjectToClass(addCardFormRequest, AddCardFormRequest)),
