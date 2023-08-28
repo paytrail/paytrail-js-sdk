@@ -59,22 +59,15 @@ export abstract class Paytrail {
         instance.status = responseStatus.SUCCESS
         instance.data = data
         break
+
       case responseMessage.VALIDATE_FAIL:
-        instance.message = dataError?.message
-        instance.status = dataError?.status
-        break
       case responseMessage.SIGNATURE_NULL:
-        instance.message = dataError?.message
-        instance.status = dataError?.status
-        break
       case responseMessage.EXCEPTION:
-        instance.message = dataError?.message
-        instance.status = dataError?.status
-        break
       case responseMessage.UNAUTHORIZED:
         instance.message = dataError?.message
         instance.status = dataError?.status
         break
+
       default:
         instance.message = responseMessage.SERVER_ERROR
         instance.status = responseStatus.SERVER_ERROR
@@ -85,7 +78,7 @@ export abstract class Paytrail {
 
   protected async callApi<T>(
     getData: () => Promise<any>,
-    targetClass: { new (): T },
+    targetClass: new () => T,
     validateMessagePayload?: () => Promise<any>,
     validateMessageParam?: () => Promise<any>,
     validateMessageQuery?: () => Promise<any>
@@ -94,17 +87,26 @@ export abstract class Paytrail {
 
     if (validateMessagePayload) {
       const errorValidatePayload = await validateMessagePayload()
-      message = errorValidatePayload ? (message += errorValidatePayload) : ''
+
+      if (errorValidatePayload) {
+        message += errorValidatePayload
+      }
     }
 
     if (validateMessageParam) {
       const errorValidateParam = await validateMessageParam()
-      message = errorValidateParam ? (message += errorValidateParam) : ''
+
+      if (errorValidateParam) {
+        message += errorValidateParam
+      }
     }
 
     if (validateMessageQuery) {
       const errorValidateQuery = await validateMessageQuery()
-      message = errorValidateQuery ? (message += errorValidateQuery) : ''
+
+      if (errorValidateQuery) {
+        message += errorValidateQuery
+      }
     }
 
     if (message) {
