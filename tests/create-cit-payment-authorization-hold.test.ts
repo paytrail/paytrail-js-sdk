@@ -135,7 +135,7 @@ describe('create-cit-payment-authorization-hold', () => {
         token,
         stamp: crypto.randomUUID(),
         reference: '9187445',
-        amount: -1590,
+        amount: 1590,
         currency: 'EUR',
         language: 'FI',
         items: [

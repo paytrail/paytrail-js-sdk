@@ -146,7 +146,7 @@ describe('create-mit-payment-commit', () => {
           token: 'c7441208-c2a1-4a10-8eb6-458bd8eaa64f',
           stamp: crypto.randomUUID(),
           reference: '9187445',
-          amount: -1590,
+          amount: 1590,
           currency: 'EUR',
           language: 'FI',
           items: [
