@@ -1,5 +1,4 @@
 import { Configuration } from './configuration'
-import { responseMessage, responseStatus } from './constants/message-response.constant'
 import { API_ENDPOINT, METHOD } from './constants/variable.constant'
 import { IPaytrail } from './interfaces/IPayTrail.interface'
 import {
@@ -63,41 +62,12 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     try {
       const headers = this.getHeaders(METHOD.GET)
 
-      // Validate payload
-      const validate = convertObjectToClass(listGroupedProvidersRequest, ListGroupedProvidersRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<ListGroupedProvidersResponse>(
-          responseMessage.VALIDATE_FAIL,
-          ListGroupedProvidersResponse,
-          null,
-          {
-            message: errorValidate,
-            status: responseStatus.VALIDATE_FAIL
-          }
-        )
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers)
-
-      if (error) {
-        return this.handleResponse<ListGroupedProvidersResponse>(
-          responseMessage.EXCEPTION,
-          ListGroupedProvidersResponse,
-          null,
-          {
-            message: error?.response?.data?.meta || error?.response?.data?.message,
-            status: error?.response?.status
-          }
-        )
-      }
-
-      return this.handleResponse<ListGroupedProvidersResponse>(
-        responseMessage.SUCCESS,
+      return this.callApi<ListGroupedProvidersResponse>(
+        () => api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers),
         ListGroupedProvidersResponse,
-        data
+        null,
+        null,
+        () => validateError(convertObjectToClass(listGroupedProvidersRequest, ListGroupedProvidersRequest))
       )
     } catch (error) {
       throw new Error(error?.message)
@@ -106,31 +76,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
   public async createPayment(createPaymentRequest: CreatePaymentRequest): Promise<CreatePaymentResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, '', '', createPaymentRequest)
+      const headers = this.getHeaders(METHOD.POST, null, null, createPaymentRequest)
 
-      // Validate payload
-      const validate = convertObjectToClass(createPaymentRequest, CreatePaymentRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<CreatePaymentResponse>(responseMessage.VALIDATE_FAIL, CreatePaymentResponse, null, {
-          message: errorValidate,
-          status: responseStatus.VALIDATE_FAIL
-        })
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.payments.create(createPaymentRequest, headers)
-
-      if (error) {
-        return this.handleResponse<CreatePaymentResponse>(responseMessage.EXCEPTION, CreatePaymentResponse, null, {
-          message: error?.response?.data?.meta || error?.response?.data?.message,
-          status: error?.response?.status
-        })
-      }
-
-      return this.handleResponse<CreatePaymentResponse>(responseMessage.SUCCESS, CreatePaymentResponse, data)
+      return this.callApi<CreatePaymentResponse>(
+        () => api.payments.create(createPaymentRequest, headers),
+        CreatePaymentResponse,
+        () => validateError(convertObjectToClass(createPaymentRequest, CreatePaymentRequest)),
+        null,
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -140,41 +94,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     createSiSPaymentResquest: CreateSiSPaymentRequest
   ): Promise<CreateSiSPaymentResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, '', '', createSiSPaymentResquest)
+      const headers = this.getHeaders(METHOD.POST, null, null, createSiSPaymentResquest)
 
-      // Validate payload
-      const validate = convertObjectToClass(createSiSPaymentResquest, CreateSiSPaymentRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<CreateSiSPaymentResponse>(
-          responseMessage.VALIDATE_FAIL,
-          CreateSiSPaymentResponse,
-          null,
-          {
-            message: errorValidate,
-            status: responseStatus.VALIDATE_FAIL
-          }
-        )
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.payments.createSiSPayment(createSiSPaymentResquest, headers)
-
-      if (error) {
-        return this.handleResponse<CreateSiSPaymentResponse>(
-          responseMessage.EXCEPTION,
-          CreateSiSPaymentResponse,
-          null,
-          {
-            message: error?.response?.data?.meta || error?.response?.data?.message,
-            status: error?.response?.status
-          }
-        )
-      }
-
-      return this.handleResponse<CreateSiSPaymentResponse>(responseMessage.SUCCESS, CreateSiSPaymentResponse, data)
+      return this.callApi<CreateSiSPaymentResponse>(
+        () => api.payments.createSiSPayment(createSiSPaymentResquest, headers),
+        CreateSiSPaymentResponse,
+        () => validateError(convertObjectToClass(createSiSPaymentResquest, CreateSiSPaymentRequest)),
+        null,
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -182,41 +110,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
   public async getPaymentStatus(getPaymentStatusRequest: GetPaymentStatusRequest): Promise<GetPaymentStatusResponse> {
     try {
-      // Create headers
       const headers = this.getHeaders(METHOD.GET, getPaymentStatusRequest.transactionId)
 
-      // Validate payload
-      const validate = convertObjectToClass(getPaymentStatusRequest, GetPaymentStatusRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<GetPaymentStatusResponse>(
-          responseMessage.VALIDATE_FAIL,
-          GetPaymentStatusResponse,
-          null,
-          {
-            message: errorValidate,
-            status: responseStatus.VALIDATE_FAIL
-          }
-        )
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.payments.getPaymentStatus(getPaymentStatusRequest, headers)
-
-      if (error) {
-        return this.handleResponse<GetPaymentStatusResponse>(
-          responseMessage.EXCEPTION,
-          GetPaymentStatusResponse,
-          null,
-          {
-            message: error?.response?.data?.meta || error?.response?.data?.message,
-            status: error?.response?.status
-          }
-        )
-      }
-
-      return this.handleResponse<GetPaymentStatusResponse>(responseMessage.SUCCESS, GetPaymentStatusResponse, data)
+      return this.callApi<GetPaymentStatusResponse>(
+        () => api.payments.getPaymentStatus(getPaymentStatusRequest, headers),
+        GetPaymentStatusResponse,
+        null,
+        () => validateError(convertObjectToClass(getPaymentStatusRequest, GetPaymentStatusRequest)),
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -227,39 +129,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     createRefundRequest: CreateRefundRequest
   ): Promise<CreateRefundResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, createRefundParams.transactionId, '', createRefundRequest)
+      const headers = this.getHeaders(METHOD.POST, createRefundParams.transactionId, null, createRefundRequest)
 
-      // Validate payload
-      const validateParam = convertObjectToClass(createRefundParams, CreateRefundParams)
-      const [errorValidateParam, isSuccessParam] = await validateError(validateParam)
-
-      const validatePayload = convertObjectToClass(createRefundParams, CreateRefundParams)
-      const [errorValidatePayload, isSuccessPayload] = await validateError(validatePayload)
-
-      if (errorValidateParam || errorValidatePayload) {
-        let message = ''
-
-        if (errorValidateParam) message += errorValidateParam
-        if (errorValidatePayload) message += errorValidatePayload
-
-        return this.handleResponse<CreateRefundResponse>(responseMessage.VALIDATE_FAIL, CreateRefundResponse, null, {
-          message: message,
-          status: responseStatus.VALIDATE_FAIL
-        })
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.payments.createRefund(createRefundParams, createRefundRequest, headers)
-
-      if (error) {
-        return this.handleResponse<CreateRefundResponse>(responseMessage.EXCEPTION, CreateRefundResponse, null, {
-          message: error?.response?.data?.meta || error?.response?.data?.message,
-          status: error?.response?.status
-        })
-      }
-
-      return this.handleResponse<CreateRefundResponse>(responseMessage.SUCCESS, CreateRefundResponse, data)
+      return this.callApi<CreateRefundResponse>(
+        () => api.payments.createRefund(createRefundParams, createRefundRequest, headers),
+        CreateRefundResponse,
+        () => validateError(convertObjectToClass(createRefundRequest, CreateRefundRequest)),
+        () => validateError(convertObjectToClass(createRefundParams, CreateRefundParams)),
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -270,39 +148,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     emailRefundRequest: EmailRefundRequest
   ): Promise<EmailRefundResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, emailRefundParams.transactionId, '', emailRefundRequest)
+      const headers = this.getHeaders(METHOD.POST, emailRefundParams.transactionId, null, emailRefundRequest)
 
-      // Validate payload
-      const validateParam = convertObjectToClass(emailRefundParams, EmailRefundParams)
-      const [errorValidateParam, isSuccessParam] = await validateError(validateParam)
-
-      const validatePayload = convertObjectToClass(emailRefundRequest, EmailRefundRequest)
-      const [errorValidatePayload, isSuccessPayload] = await validateError(validatePayload)
-
-      if (errorValidateParam || errorValidatePayload) {
-        let message = ''
-
-        if (errorValidateParam) message += errorValidateParam
-        if (errorValidatePayload) message += errorValidatePayload
-
-        return this.handleResponse<EmailRefundResponse>(responseMessage.VALIDATE_FAIL, EmailRefundResponse, null, {
-          message: message,
-          status: responseStatus.VALIDATE_FAIL
-        })
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.payments.emailRefunds(emailRefundParams, emailRefundRequest, headers)
-
-      if (error) {
-        return this.handleResponse<EmailRefundResponse>(responseMessage.EXCEPTION, EmailRefundResponse, null, {
-          message: error?.response?.data?.meta || error?.response?.data?.message,
-          status: error?.response?.status
-        })
-      }
-
-      return this.handleResponse<EmailRefundResponse>(responseMessage.SUCCESS, EmailRefundResponse, data)
+      return this.callApi<EmailRefundResponse>(
+        () => api.payments.emailRefunds(emailRefundParams, emailRefundRequest, headers),
+        EmailRefundResponse,
+        () => validateError(convertObjectToClass(emailRefundRequest, EmailRefundRequest)),
+        () => validateError(convertObjectToClass(emailRefundParams, EmailRefundParams)),
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -310,31 +164,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
   public async paymentReportRequest(paymentReportRequest: PaymentReportRequest): Promise<PaymentReportResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, '', '', paymentReportRequest)
+      const headers = this.getHeaders(METHOD.POST, null, null, paymentReportRequest)
 
-      // Validate payload
-      const validate = convertObjectToClass(paymentReportRequest, PaymentReportRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<PaymentReportResponse>(responseMessage.VALIDATE_FAIL, PaymentReportResponse, null, {
-          message: errorValidate,
-          status: responseStatus.VALIDATE_FAIL
-        })
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.paymentReports.paymentReportRequest(paymentReportRequest, headers)
-
-      if (error) {
-        return this.handleResponse<PaymentReportResponse>(responseMessage.EXCEPTION, PaymentReportResponse, null, {
-          message: error?.response?.data?.meta || error?.response?.data?.message,
-          status: error?.response?.status
-        })
-      }
-
-      return this.handleResponse<PaymentReportResponse>(responseMessage.SUCCESS, PaymentReportResponse, data)
+      return this.callApi<PaymentReportResponse>(
+        () => api.paymentReports.paymentReportRequest(paymentReportRequest, headers),
+        PaymentReportResponse,
+        null,
+        () => validateError(convertObjectToClass(paymentReportRequest, PaymentReportRequest)),
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -342,31 +180,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
   public async requestSettlements(settlementsRequest: SettlementsRequest): Promise<SettlementsResponse> {
     try {
-      // Create headers
       const headers = this.getHeaders(METHOD.GET)
 
-      // Validate payload
-      const validate = convertObjectToClass(settlementsRequest, SettlementsRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<SettlementsResponse>(responseMessage.VALIDATE_FAIL, SettlementsResponse, null, {
-          message: errorValidate,
-          status: responseStatus.VALIDATE_FAIL
-        })
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.settlements.get(settlementsRequest, headers)
-
-      if (error) {
-        return this.handleResponse<SettlementsResponse>(responseMessage.EXCEPTION, SettlementsResponse, null, {
-          message: error?.response?.data?.meta || error?.response?.data?.message,
-          status: error?.response?.status
-        })
-      }
-
-      return this.handleResponse<SettlementsResponse>(responseMessage.SUCCESS, SettlementsResponse, data)
+      return this.callApi<SettlementsResponse>(
+        () => api.settlements.get(settlementsRequest, headers),
+        SettlementsResponse,
+        null,
+        () => validateError(convertObjectToClass(settlementsRequest, SettlementsRequest)),
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -374,31 +196,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
   public async createGetTokenRequest(getTokenRequest: GetTokenRequest): Promise<GetTokenResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, '', getTokenRequest.checkoutTokenizationId, {})
+      const headers = this.getHeaders(METHOD.POST, null, getTokenRequest.checkoutTokenizationId, {})
 
-      // Validate payload
-      const validate = convertObjectToClass(getTokenRequest, GetTokenRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<GetTokenResponse>(responseMessage.VALIDATE_FAIL, GetTokenResponse, null, {
-          message: errorValidate,
-          status: responseStatus.VALIDATE_FAIL
-        })
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.createGetToken(getTokenRequest, headers)
-
-      if (error) {
-        return this.handleResponse<GetTokenResponse>(responseMessage.EXCEPTION, GetTokenResponse, null, {
-          message: error?.response?.data?.meta || error?.response?.data?.message,
-          status: error?.response?.status
-        })
-      }
-
-      return this.handleResponse<GetTokenResponse>(responseMessage.SUCCESS, GetTokenResponse, data)
+      return this.callApi<GetTokenResponse>(
+        () => api.tokenPayments.createGetToken(getTokenRequest, headers),
+        GetTokenResponse,
+        () => validateError(convertObjectToClass(getTokenRequest, GetTokenRequest)),
+        null,
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -406,31 +212,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
   public async createMitPaymentCharge(mitPaymentRequest: MitPaymentRequest): Promise<MitPaymentResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, '', '', mitPaymentRequest)
+      const headers = this.getHeaders(METHOD.POST, null, null, mitPaymentRequest)
 
-      // Validate payload
-      const validate = convertObjectToClass(mitPaymentRequest, MitPaymentRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<MitPaymentResponse>(responseMessage.VALIDATE_FAIL, MitPaymentResponse, null, {
-          message: errorValidate,
-          status: responseStatus.VALIDATE_FAIL
-        })
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.createMitPayment(mitPaymentRequest, headers)
-
-      if (error) {
-        return this.handleResponse<MitPaymentResponse>(responseMessage.EXCEPTION, MitPaymentResponse, null, {
-          message: error?.response?.data?.meta || error?.response?.data?.message,
-          status: error?.response?.status
-        })
-      }
-
-      return this.handleResponse<MitPaymentResponse>(responseMessage.SUCCESS, MitPaymentResponse, data)
+      return this.callApi<MitPaymentResponse>(
+        () => api.tokenPayments.createMitPayment(mitPaymentRequest, headers),
+        MitPaymentResponse,
+        () => validateError(convertObjectToClass(mitPaymentRequest, MitPaymentRequest)),
+        null,
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -438,31 +228,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
   public async createMitPaymentAuthorizationHold(mitPaymentRequest: MitPaymentRequest): Promise<MitPaymentResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, '', '', mitPaymentRequest)
+      const headers = this.getHeaders(METHOD.POST, null, null, mitPaymentRequest)
 
-      // Validate payload
-      const validate = convertObjectToClass(mitPaymentRequest, MitPaymentRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<MitPaymentResponse>(responseMessage.VALIDATE_FAIL, MitPaymentResponse, null, {
-          message: errorValidate,
-          status: responseStatus.VALIDATE_FAIL
-        })
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.createMitPaymentAuthorizationHold(mitPaymentRequest, headers)
-
-      if (error) {
-        return this.handleResponse<MitPaymentResponse>(responseMessage.EXCEPTION, MitPaymentResponse, null, {
-          message: error?.response?.data?.meta || error?.response?.data?.message,
-          status: error?.response?.status
-        })
-      }
-
-      return this.handleResponse<MitPaymentResponse>(responseMessage.SUCCESS, MitPaymentResponse, data)
+      return this.callApi<MitPaymentResponse>(
+        () => api.tokenPayments.createMitPaymentAuthorizationHold(mitPaymentRequest, headers),
+        MitPaymentResponse,
+        () => validateError(convertObjectToClass(mitPaymentRequest, MitPaymentRequest)),
+        null,
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -472,41 +246,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     createCitPaymentRequest: CreateCitPaymentRequest
   ): Promise<CreateCitPaymentResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, '', '', createCitPaymentRequest)
+      const headers = this.getHeaders(METHOD.POST, null, null, createCitPaymentRequest)
 
-      // Validate payload
-      const validate = convertObjectToClass(createCitPaymentRequest, CreateCitPaymentRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<CreateCitPaymentResponse>(
-          responseMessage.VALIDATE_FAIL,
-          CreateCitPaymentResponse,
-          null,
-          {
-            message: errorValidate,
-            status: responseStatus.VALIDATE_FAIL
-          }
-        )
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.createCitPaymentCharge(createCitPaymentRequest, headers)
-
-      if (error) {
-        return this.handleResponse<CreateCitPaymentResponse>(
-          responseMessage.EXCEPTION,
-          CreateCitPaymentResponse,
-          null,
-          {
-            message: error?.response?.data?.meta || error?.response?.data?.message,
-            status: error?.response?.status
-          }
-        )
-      }
-
-      return this.handleResponse<CreateCitPaymentResponse>(responseMessage.SUCCESS, CreateCitPaymentResponse, data)
+      return this.callApi<CreateCitPaymentResponse>(
+        () => api.tokenPayments.createCitPaymentCharge(createCitPaymentRequest, headers),
+        CreateCitPaymentResponse,
+        () => validateError(convertObjectToClass(createCitPaymentRequest, CreateCitPaymentRequest)),
+        null,
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -516,41 +264,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     createCitPaymentRequest: CreateCitPaymentRequest
   ): Promise<CreateCitPaymentResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, '', '', createCitPaymentRequest)
+      const headers = this.getHeaders(METHOD.POST, null, null, createCitPaymentRequest)
 
-      // Validate payload
-      const validate = convertObjectToClass(createCitPaymentRequest, CreateCitPaymentRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<CreateCitPaymentResponse>(
-          responseMessage.VALIDATE_FAIL,
-          CreateCitPaymentResponse,
-          null,
-          {
-            message: errorValidate,
-            status: responseStatus.VALIDATE_FAIL
-          }
-        )
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.createCitPaymentAuthorizationHold(createCitPaymentRequest, headers)
-
-      if (error) {
-        return this.handleResponse<CreateCitPaymentResponse>(
-          responseMessage.EXCEPTION,
-          CreateCitPaymentResponse,
-          null,
-          {
-            message: error?.response?.data?.meta || error?.response?.data?.message,
-            status: error?.response?.status
-          }
-        )
-      }
-
-      return this.handleResponse<CreateCitPaymentResponse>(responseMessage.SUCCESS, CreateCitPaymentResponse, data)
+      return this.callApi<CreateCitPaymentResponse>(
+        () => api.tokenPayments.createCitPaymentAuthorizationHold(createCitPaymentRequest, headers),
+        CreateCitPaymentResponse,
+        () => validateError(convertObjectToClass(createCitPaymentRequest, CreateCitPaymentRequest)),
+        null,
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -561,43 +283,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     mitPaymentRequest: MitPaymentRequest
   ): Promise<MitPaymentResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, mitPaymentParams.transactionId, '', mitPaymentRequest)
+      const headers = this.getHeaders(METHOD.POST, mitPaymentParams.transactionId, null, mitPaymentRequest)
 
-      // Validate payload
-      const validateParam = convertObjectToClass(mitPaymentParams, MitPaymentParams)
-      const [errorValidateParam, isSuccessParam] = await validateError(validateParam)
-
-      const validatePayload = convertObjectToClass(mitPaymentRequest, MitPaymentRequest)
-      const [errorValidatePayload, isSuccessPayload] = await validateError(validatePayload)
-
-      if (errorValidateParam || errorValidatePayload) {
-        let message = ''
-
-        if (errorValidateParam) message += errorValidateParam
-        if (errorValidatePayload) message += errorValidatePayload
-
-        return this.handleResponse<MitPaymentResponse>(responseMessage.VALIDATE_FAIL, MitPaymentResponse, null, {
-          message: message,
-          status: responseStatus.VALIDATE_FAIL
-        })
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.createMitOrCitPaymentCommit(
-        mitPaymentParams,
-        mitPaymentRequest,
-        headers
+      return this.callApi<MitPaymentResponse>(
+        () => api.tokenPayments.createMitOrCitPaymentCommit(mitPaymentParams, mitPaymentRequest, headers),
+        MitPaymentResponse,
+        () => validateError(convertObjectToClass(mitPaymentRequest, MitPaymentRequest)),
+        () => validateError(convertObjectToClass(mitPaymentParams, MitPaymentParams)),
+        null
       )
-
-      if (error) {
-        return this.handleResponse<MitPaymentResponse>(responseMessage.EXCEPTION, MitPaymentResponse, null, {
-          message: error?.response?.data?.meta || error?.response?.data?.message,
-          status: error?.response?.status
-        })
-      }
-
-      return this.handleResponse<MitPaymentResponse>(responseMessage.SUCCESS, MitPaymentResponse, data)
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -608,53 +302,15 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     citPaymentRequest: CreateCitPaymentRequest
   ): Promise<CreateCitPaymentResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, citPaymentParams.transactionId, '', citPaymentRequest)
+      const headers = this.getHeaders(METHOD.POST, citPaymentParams.transactionId, null, citPaymentRequest)
 
-      // Validate payload
-      const validateParam = convertObjectToClass(citPaymentParams, CreateCitPaymentParams)
-      const [errorValidateParam, isSuccessParam] = await validateError(validateParam)
-
-      const validatePayload = convertObjectToClass(citPaymentRequest, CreateCitPaymentRequest)
-      const [errorValidatePayload, isSuccessPayload] = await validateError(validatePayload)
-
-      if (errorValidateParam || errorValidatePayload) {
-        let message = ''
-
-        if (errorValidateParam) message += errorValidateParam
-        if (errorValidatePayload) message += errorValidatePayload
-
-        return this.handleResponse<CreateCitPaymentResponse>(
-          responseMessage.VALIDATE_FAIL,
-          CreateCitPaymentResponse,
-          null,
-          {
-            message: message,
-            status: responseStatus.VALIDATE_FAIL
-          }
-        )
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.createMitOrCitPaymentCommit(
-        citPaymentParams,
-        citPaymentRequest,
-        headers
+      return this.callApi<CreateCitPaymentResponse>(
+        () => api.tokenPayments.createMitOrCitPaymentCommit(citPaymentParams, citPaymentRequest, headers),
+        CreateCitPaymentResponse,
+        () => validateError(convertObjectToClass(citPaymentRequest, CreateCitPaymentRequest)),
+        () => validateError(convertObjectToClass(citPaymentParams, CreateCitPaymentParams)),
+        null
       )
-
-      if (error) {
-        return this.handleResponse<CreateCitPaymentResponse>(
-          responseMessage.EXCEPTION,
-          CreateCitPaymentResponse,
-          null,
-          {
-            message: error?.response?.data?.meta || error?.response?.data?.message,
-            status: error?.response?.status
-          }
-        )
-      }
-
-      return this.handleResponse<CreateCitPaymentResponse>(responseMessage.SUCCESS, CreateCitPaymentResponse, data)
     } catch (error) {
       throw new Error(error?.message)
     }
@@ -664,47 +320,14 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
     revertPaymentAuthHoldRequest: RevertPaymentAuthHoldRequest
   ): Promise<RevertPaymentAuthHoldResponse> {
     try {
-      // Create headers
-      const headers = this.getHeaders(METHOD.POST, revertPaymentAuthHoldRequest.transactionId, '', {})
+      const headers = this.getHeaders(METHOD.POST, revertPaymentAuthHoldRequest.transactionId, null, {})
 
-      // Validate payload
-      const validate = convertObjectToClass(revertPaymentAuthHoldRequest, RevertPaymentAuthHoldRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<RevertPaymentAuthHoldResponse>(
-          responseMessage.VALIDATE_FAIL,
-          RevertPaymentAuthHoldResponse,
-          null,
-          {
-            message: errorValidate,
-            status: responseStatus.VALIDATE_FAIL
-          }
-        )
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.revertPaymentAuthorizationHold(
-        revertPaymentAuthHoldRequest,
-        headers
-      )
-
-      if (error) {
-        return this.handleResponse<RevertPaymentAuthHoldResponse>(
-          responseMessage.EXCEPTION,
-          RevertPaymentAuthHoldResponse,
-          null,
-          {
-            message: error?.response?.data?.meta || error?.response?.data?.message,
-            status: error?.response?.status
-          }
-        )
-      }
-
-      return this.handleResponse<RevertPaymentAuthHoldResponse>(
-        responseMessage.SUCCESS,
+      return this.callApi<RevertPaymentAuthHoldResponse>(
+        () => api.tokenPayments.revertPaymentAuthorizationHold(revertPaymentAuthHoldRequest, headers),
         RevertPaymentAuthHoldResponse,
-        data
+        () => validateError(convertObjectToClass(revertPaymentAuthHoldRequest, RevertPaymentAuthHoldRequest)),
+        null,
+        null
       )
     } catch (error) {
       throw new Error(error?.message)
@@ -713,28 +336,13 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
 
   public async createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse> {
     try {
-      // Validate payload
-      const validate = convertObjectToClass(addCardFormRequest, AddCardFormRequest)
-      const [errorValidate, isSuccess] = await validateError(validate)
-
-      if (errorValidate) {
-        return this.handleResponse<AddCardFormResponse>(responseMessage.VALIDATE_FAIL, AddCardFormResponse, null, {
-          message: errorValidate,
-          status: responseStatus.VALIDATE_FAIL
-        })
-      }
-
-      // Execute to Paytrail API
-      const [error, data] = await api.tokenPayments.createAddCardFormRequest(addCardFormRequest)
-
-      if (error) {
-        return this.handleResponse<AddCardFormResponse>(responseMessage.EXCEPTION, AddCardFormResponse, null, {
-          message: error?.response?.data?.meta || error?.response?.data?.message,
-          status: error?.response?.status
-        })
-      }
-
-      return this.handleResponse<AddCardFormResponse>(responseMessage.SUCCESS, AddCardFormResponse, data)
+      return this.callApi<AddCardFormResponse>(
+        () => api.tokenPayments.createAddCardFormRequest(addCardFormRequest),
+        AddCardFormResponse,
+        () => validateError(convertObjectToClass(addCardFormRequest, AddCardFormRequest)),
+        null,
+        null
+      )
     } catch (error) {
       throw new Error(error?.message)
     }

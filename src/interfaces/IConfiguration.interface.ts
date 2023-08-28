@@ -1,5 +1,5 @@
 export interface ConfigurationParameters {
-  merchantId?: string
+  merchantId?: number
   secretKey?: string
   platformName?: string
 }

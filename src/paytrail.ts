@@ -3,7 +3,7 @@ import { responseMessage, responseStatus } from './constants/message-response.co
 import { Signature } from './utils/signature.util'
 
 export abstract class Paytrail {
-  protected merchantId?: string
+  protected merchantId?: number
   protected secretKey?: string
   protected platformName?: string
 
@@ -13,24 +13,15 @@ export abstract class Paytrail {
     this.platformName = param.platformName
   }
 
-  public abstract validateHmac(
-    hparams: { [key: string]: string },
-    body: { [key: string]: string | number | object } | '',
-    signature: string,
-    secretKey: string,
-    encType: string
-  ): boolean
-
   protected getHeaders(
     method: string,
-    transactionId = '',
-    checkoutTokenizationId = '',
+    transactionId?: string | null,
+    checkoutTokenizationId?: string | null,
     body: { [key: string]: string | number | object } | '' | object = ''
-  ): { [key: string]: string } {
+  ): { [key: string]: string | number } {
     const currentDate = new Date().toISOString()
 
-    // Header for calculation HMAC
-    const headers: { [key: string]: string } = {
+    const headers: { [key: string]: string | number } = {
       'checkout-account': this.merchantId,
       'checkout-algorithm': 'sha256',
       'checkout-method': method.toUpperCase(),
@@ -46,7 +37,6 @@ export abstract class Paytrail {
       headers['checkout-tokenization-id'] = checkoutTokenizationId
     }
 
-    // Caculation HMAC
     const hmac = Signature.calculateHmac(this.secretKey, headers, body, 'sha256')
 
     if (hmac) headers['signature'] = hmac
@@ -91,5 +81,48 @@ export abstract class Paytrail {
     }
 
     return instance as T
+  }
+
+  protected async callApi<T>(
+    getData: () => Promise<any>,
+    targetClass: { new (): T },
+    validateMessagePayload?: () => Promise<any>,
+    validateMessageParam?: () => Promise<any>,
+    validateMessageQuery?: () => Promise<any>
+  ): Promise<T> {
+    let message = ''
+
+    if (validateMessagePayload) {
+      const errorValidatePayload = await validateMessagePayload()
+      message = errorValidatePayload ? (message += errorValidatePayload) : ''
+    }
+
+    if (validateMessageParam) {
+      const errorValidateParam = await validateMessageParam()
+      message = errorValidateParam ? (message += errorValidateParam) : ''
+    }
+
+    if (validateMessageQuery) {
+      const errorValidateQuery = await validateMessageQuery()
+      message = errorValidateQuery ? (message += errorValidateQuery) : ''
+    }
+
+    if (message) {
+      return this.handleResponse<T>(responseMessage.VALIDATE_FAIL, targetClass, null, {
+        message,
+        status: responseStatus.VALIDATE_FAIL
+      })
+    }
+
+    const [error, data] = await getData()
+
+    if (error) {
+      return this.handleResponse<T>(responseMessage.EXCEPTION, targetClass, null, {
+        message: error?.response?.data?.meta || error?.response?.data?.message,
+        status: error?.response?.status
+      })
+    }
+
+    return this.handleResponse<T>(responseMessage.SUCCESS, targetClass, data)
   }
 }
