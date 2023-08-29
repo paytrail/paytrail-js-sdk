@@ -6,6 +6,23 @@ describe('email-refund', () => {
   let client: PaytrailClient
   let transactionId: string
 
+  const standardData = {
+    amount: 1590,
+    email: 'recipient@example.com',
+    callbackUrls: {
+      success: 'https://ecom.example.org/refund/success',
+      cancel: 'https://ecom.example.org/refund/cancel'
+    }
+  }
+  const nonStandardData = {
+    amount: -1590,
+    email: 'recipient@example.com',
+    callbackUrls: {
+      success: 'https://ecom.example.org/refund/success',
+      cancel: 'https://ecom.example.org/refund/cancel'
+    }
+  }
+
   beforeEach(async () => {
     client = new PaytrailClient({
       merchantId: 375917,
@@ -56,14 +73,7 @@ describe('email-refund', () => {
       {
         transactionId
       },
-      {
-        amount: 1590,
-        email: 'recipient@example.com',
-        callbackUrls: {
-          success: 'https://ecom.example.org/refund/success',
-          cancel: 'https://ecom.example.org/refund/cancel'
-        }
-      }
+      standardData
     )
 
     expect(data.status).toEqual(200)
@@ -75,14 +85,7 @@ describe('email-refund', () => {
       {
         transactionId
       },
-      {
-        amount: -1590,
-        email: 'recipient@example.com',
-        callbackUrls: {
-          success: 'https://ecom.example.org/refund/success',
-          cancel: 'https://ecom.example.org/refund/cancel'
-        }
-      }
+      nonStandardData
     )
 
     expect(data.status).toEqual(400)
@@ -93,14 +96,7 @@ describe('email-refund', () => {
       {
         transactionId: '9dd69e18-3fc3-11ee-b592-d35f161da10a'
       },
-      {
-        amount: 1590,
-        email: 'recipient@example.com',
-        callbackUrls: {
-          success: 'https://ecom.example.org/refund/success',
-          cancel: 'https://ecom.example.org/refund/cancel'
-        }
-      }
+      standardData
     )
 
     expect(data.status).toEqual(404)
@@ -117,14 +113,7 @@ describe('email-refund', () => {
       {
         transactionId: '9dd69e18-3fc3-11ee-b592-d35f161da10a'
       },
-      {
-        amount: 1590,
-        email: 'recipient@example.com',
-        callbackUrls: {
-          success: 'https://ecom.example.org/refund/success',
-          cancel: 'https://ecom.example.org/refund/cancel'
-        }
-      }
+      standardData
     )
 
     expect(data.status).toEqual(401)
@@ -139,14 +128,7 @@ describe('email-refund', () => {
         {
           transactionId: '9dd69e18-3fc3-11ee-b592-d35f161da10a'
         },
-        {
-          amount: 1590,
-          email: 'recipient@example.com',
-          callbackUrls: {
-            success: 'https://ecom.example.org/refund/success',
-            cancel: 'https://ecom.example.org/refund/cancel'
-          }
-        }
+        standardData
       )
     } catch (error) {
       expect(error.message).toBe('API error')

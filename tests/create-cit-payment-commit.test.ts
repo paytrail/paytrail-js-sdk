@@ -5,7 +5,35 @@ import * as crypto from 'crypto'
 describe('create-cit-payment-commit', () => {
   let client: PaytrailClient
 
-  beforeEach(async () => {
+  const standardData = {
+    token: 'c7441208-c2a1-4a10-8eb6-458bd8eaa64f',
+    stamp: crypto.randomUUID(),
+    reference: '9187445',
+    amount: 1590,
+    currency: 'EUR',
+    language: 'FI',
+    items: [
+      {
+        unitPrice: 1590,
+        units: 1,
+        vatPercentage: 24,
+        productCode: '#927502759',
+        description: 'Cat ladder',
+        category: 'Pet supplies',
+        merchant: '695874',
+        stamp: crypto.randomUUID(),
+        reference: '9187445'
+      }
+    ],
+    customer: {
+      email: 'erja.esimerkki@example.org'
+    },
+    redirectUrls: {
+      success: 'https://ecom.example.org/success',
+      cancel: 'https://ecom.example.org/cancel'
+    }
+  }
+  const nonStandardData = beforeEach(async () => {
     client = new PaytrailClient({
       merchantId: 695861,
       secretKey: 'MONISAIPPUAKAUPPIAS',
@@ -18,34 +46,7 @@ describe('create-cit-payment-commit', () => {
       {
         transactionId: '0e056dd8-408f-11ee-9cb4-e3059a523029'
       },
-      {
-        token: 'c7441208-c2a1-4a10-8eb6-458bd8eaa64f',
-        stamp: crypto.randomUUID(),
-        reference: '9187445',
-        amount: 1590,
-        currency: 'EUR',
-        language: 'FI',
-        items: [
-          {
-            unitPrice: 1590,
-            units: 1,
-            vatPercentage: 24,
-            productCode: '#927502759',
-            description: 'Cat ladder',
-            category: 'Pet supplies',
-            merchant: '695874',
-            stamp: crypto.randomUUID(),
-            reference: '9187445'
-          }
-        ],
-        customer: {
-          email: 'erja.esimerkki@example.org'
-        },
-        redirectUrls: {
-          success: 'https://ecom.example.org/success',
-          cancel: 'https://ecom.example.org/cancel'
-        }
-      }
+      standardData
     )
 
     expect(data.status).toEqual(200)
@@ -56,34 +57,7 @@ describe('create-cit-payment-commit', () => {
       {
         transactionId: '0e056dd8-408f-11ee-9cb4-e3059a523029'
       },
-      {
-        token: 'c7441208-c2a1-4a10-8eb6-458bd8eaa64f',
-        stamp: crypto.randomUUID(),
-        reference: '9187445',
-        amount: -1590,
-        currency: 'EUR',
-        language: 'FI',
-        items: [
-          {
-            unitPrice: 1590,
-            units: 1,
-            vatPercentage: 24,
-            productCode: '#927502759',
-            description: 'Cat ladder',
-            category: 'Pet supplies',
-            merchant: '695874',
-            stamp: crypto.randomUUID(),
-            reference: '9187445'
-          }
-        ],
-        customer: {
-          email: 'erja.esimerkki@example.org'
-        },
-        redirectUrls: {
-          success: 'https://ecom.example.org/success',
-          cancel: 'https://ecom.example.org/cancel'
-        }
-      }
+      nonStandardData
     )
 
     expect(data.status).toEqual(400)
@@ -100,34 +74,7 @@ describe('create-cit-payment-commit', () => {
       {
         transactionId: '0e056dd8-408f-11ee-9cb4-e3059a523029'
       },
-      {
-        token: 'c7441208-c2a1-4a10-8eb6-458bd8eaa64f',
-        stamp: crypto.randomUUID(),
-        reference: '9187445',
-        amount: 1590,
-        currency: 'EUR',
-        language: 'FI',
-        items: [
-          {
-            unitPrice: 1590,
-            units: 1,
-            vatPercentage: 24,
-            productCode: '#927502759',
-            description: 'Cat ladder',
-            category: 'Pet supplies',
-            merchant: '695874',
-            stamp: crypto.randomUUID(),
-            reference: '9187445'
-          }
-        ],
-        customer: {
-          email: 'erja.esimerkki@example.org'
-        },
-        redirectUrls: {
-          success: 'https://ecom.example.org/success',
-          cancel: 'https://ecom.example.org/cancel'
-        }
-      }
+      standardData
     )
 
     expect(data.status).toEqual(401)
@@ -142,34 +89,7 @@ describe('create-cit-payment-commit', () => {
         {
           transactionId: '0e056dd8-408f-11ee-9cb4-e3059a523029'
         },
-        {
-          token: 'c7441208-c2a1-4a10-8eb6-458bd8eaa64f',
-          stamp: crypto.randomUUID(),
-          reference: '9187445',
-          amount: 1590,
-          currency: 'EUR',
-          language: 'FI',
-          items: [
-            {
-              unitPrice: 1590,
-              units: 1,
-              vatPercentage: 24,
-              productCode: '#927502759',
-              description: 'Cat ladder',
-              category: 'Pet supplies',
-              merchant: '695874',
-              stamp: crypto.randomUUID(),
-              reference: '9187445'
-            }
-          ],
-          customer: {
-            email: 'erja.esimerkki@example.org'
-          },
-          redirectUrls: {
-            success: 'https://ecom.example.org/success',
-            cancel: 'https://ecom.example.org/cancel'
-          }
-        }
+        standardData
       )
     } catch (error) {
       expect(error.message).toBe('API error')

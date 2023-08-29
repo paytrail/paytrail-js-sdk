@@ -6,6 +6,61 @@ describe('create-mit-payment-charge', () => {
   let client: PaytrailClient
   let token: string
 
+  const standardData = {
+    stamp: crypto.randomUUID(),
+    reference: '9187445',
+    amount: 1590,
+    currency: 'EUR',
+    language: 'FI',
+    items: [
+      {
+        unitPrice: 1590,
+        units: 1,
+        vatPercentage: 24,
+        productCode: '#927502759',
+        description: 'Cat ladder',
+        category: 'Pet supplies',
+        merchant: '695874',
+        stamp: crypto.randomUUID(),
+        reference: '9187445'
+      }
+    ],
+    customer: {
+      email: 'erja.esimerkki@example.org'
+    },
+    redirectUrls: {
+      success: 'https://ecom.example.org/success',
+      cancel: 'https://ecom.example.org/cancel'
+    }
+  }
+  const nonStandardData = {
+    stamp: crypto.randomUUID(),
+    reference: '9187445',
+    amount: -1590,
+    currency: 'EUR',
+    language: 'FI',
+    items: [
+      {
+        unitPrice: 1590,
+        units: 1,
+        vatPercentage: 24,
+        productCode: '#927502759',
+        description: 'Cat ladder',
+        category: 'Pet supplies',
+        merchant: '695874',
+        stamp: crypto.randomUUID(),
+        reference: '9187445'
+      }
+    ],
+    customer: {
+      email: 'erja.esimerkki@example.org'
+    },
+    redirectUrls: {
+      success: 'https://ecom.example.org/success',
+      cancel: 'https://ecom.example.org/cancel'
+    }
+  }
+
   beforeEach(async () => {
     client = new PaytrailClient({
       merchantId: 695861,
@@ -23,32 +78,8 @@ describe('create-mit-payment-charge', () => {
 
   it('should return status 200', async () => {
     const data = await client.createMitPaymentCharge({
-      token,
-      stamp: crypto.randomUUID(),
-      reference: '9187445',
-      amount: 1590,
-      currency: 'EUR',
-      language: 'FI',
-      items: [
-        {
-          unitPrice: 1590,
-          units: 1,
-          vatPercentage: 24,
-          productCode: '#927502759',
-          description: 'Cat ladder',
-          category: 'Pet supplies',
-          merchant: '695874',
-          stamp: crypto.randomUUID(),
-          reference: '9187445'
-        }
-      ],
-      customer: {
-        email: 'erja.esimerkki@example.org'
-      },
-      redirectUrls: {
-        success: 'https://ecom.example.org/success',
-        cancel: 'https://ecom.example.org/cancel'
-      }
+      ...standardData,
+      token
     })
 
     expect(data.status).toEqual(200)
@@ -56,32 +87,8 @@ describe('create-mit-payment-charge', () => {
 
   it('should return status 400', async () => {
     const data = await client.createMitPaymentCharge({
-      token,
-      stamp: crypto.randomUUID(),
-      reference: '9187445',
-      amount: -1590,
-      currency: 'EUR',
-      language: 'FI',
-      items: [
-        {
-          unitPrice: 1590,
-          units: 1,
-          vatPercentage: 24,
-          productCode: '#927502759',
-          description: 'Cat ladder',
-          category: 'Pet supplies',
-          merchant: '695874',
-          stamp: crypto.randomUUID(),
-          reference: '9187445'
-        }
-      ],
-      customer: {
-        email: 'erja.esimerkki@example.org'
-      },
-      redirectUrls: {
-        success: 'https://ecom.example.org/success',
-        cancel: 'https://ecom.example.org/cancel'
-      }
+      ...nonStandardData,
+      token
     })
 
     expect(data.status).toEqual(400)
@@ -95,32 +102,8 @@ describe('create-mit-payment-charge', () => {
     })
 
     const data = await client.createMitPaymentCharge({
-      token,
-      stamp: crypto.randomUUID(),
-      reference: '9187445',
-      amount: 1590,
-      currency: 'EUR',
-      language: 'FI',
-      items: [
-        {
-          unitPrice: 1590,
-          units: 1,
-          vatPercentage: 24,
-          productCode: '#927502759',
-          description: 'Cat ladder',
-          category: 'Pet supplies',
-          merchant: '695874',
-          stamp: crypto.randomUUID(),
-          reference: '9187445'
-        }
-      ],
-      customer: {
-        email: 'erja.esimerkki@example.org'
-      },
-      redirectUrls: {
-        success: 'https://ecom.example.org/success',
-        cancel: 'https://ecom.example.org/cancel'
-      }
+      ...standardData,
+      token
     })
 
     expect(data.status).toEqual(401)
@@ -132,32 +115,8 @@ describe('create-mit-payment-charge', () => {
 
     try {
       await client.createMitPaymentCharge({
-        token,
-        stamp: crypto.randomUUID(),
-        reference: '9187445',
-        amount: 1590,
-        currency: 'EUR',
-        language: 'FI',
-        items: [
-          {
-            unitPrice: 1590,
-            units: 1,
-            vatPercentage: 24,
-            productCode: '#927502759',
-            description: 'Cat ladder',
-            category: 'Pet supplies',
-            merchant: '695874',
-            stamp: crypto.randomUUID(),
-            reference: '9187445'
-          }
-        ],
-        customer: {
-          email: 'erja.esimerkki@example.org'
-        },
-        redirectUrls: {
-          success: 'https://ecom.example.org/success',
-          cancel: 'https://ecom.example.org/cancel'
-        }
+        ...standardData,
+        token
       })
     } catch (error) {
       expect(error.message).toBe('API error')

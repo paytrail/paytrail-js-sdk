@@ -4,6 +4,19 @@ import { PaytrailClient } from './../src/paytrail-client'
 describe('request-settlements', () => {
   let client: PaytrailClient
 
+  const standardData = {
+    bankReference: '45667372',
+    startDate: '2023-07-16',
+    endDate: '2023-08-16',
+    limit: 10
+  }
+  const nonStandardData = {
+    bankReference: '45667372',
+    startDate: '2023-07-16',
+    endDate: '2023-08-16',
+    limit: -10
+  }
+
   beforeEach(() => {
     client = new PaytrailClient({
       merchantId: 695861,
@@ -13,23 +26,13 @@ describe('request-settlements', () => {
   })
 
   it('should return status 200', async () => {
-    const data = await client.requestSettlements({
-      bankReference: '45667372',
-      startDate: '2023-07-16',
-      endDate: '2023-08-16',
-      limit: 10
-    })
+    const data = await client.requestSettlements(standardData)
 
     expect(data.status).toEqual(200)
   })
 
   it('should return status 400', async () => {
-    const data = await client.requestSettlements({
-      bankReference: '45667372',
-      startDate: '2023-07-16',
-      endDate: '2023-08-16',
-      limit: -10
-    })
+    const data = await client.requestSettlements(nonStandardData)
 
     expect(data.status).toEqual(400)
   })
@@ -41,12 +44,7 @@ describe('request-settlements', () => {
       platformName: 'test'
     })
 
-    const data = await client.requestSettlements({
-      bankReference: '45667372',
-      startDate: '2023-07-16',
-      endDate: '2023-08-16',
-      limit: 10
-    })
+    const data = await client.requestSettlements(standardData)
 
     expect(data.status).toEqual(401)
   })
@@ -56,12 +54,7 @@ describe('request-settlements', () => {
     jest.spyOn(api.settlements, 'get').mockRejectedValue(mockError)
 
     try {
-      await client.requestSettlements({
-        bankReference: '45667372',
-        startDate: '2023-07-16',
-        endDate: '2023-08-16',
-        limit: 10
-      })
+      await client.requestSettlements(standardData)
     } catch (error) {
       expect(error.message).toBe('API error')
     }
