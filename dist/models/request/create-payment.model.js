@@ -29,8 +29,10 @@ __decorate([
 ], CreatePaymentRequest.prototype, "reference", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsInt)(),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.Min)(0),
+    (0, class_validator_1.Min)(1),
+    (0, class_validator_1.Max)(99999999),
     __metadata("design:type", Number)
 ], CreatePaymentRequest.prototype, "amount", void 0);
 __decorate([

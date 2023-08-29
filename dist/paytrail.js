@@ -1,7 +1,16 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Paytrail = void 0;
-const exception_1 = require("./exceptions/exception");
+const message_response_constant_1 = require("./constants/message-response.constant");
 const signature_util_1 = require("./utils/signature.util");
 class Paytrail {
     constructor(param) {
@@ -9,9 +18,8 @@ class Paytrail {
         this.secretKey = param.secretKey;
         this.platformName = param.platformName;
     }
-    getHeaders(method, transactionId = '', checkoutTokenizationId = '', body = '') {
+    getHeaders(method, transactionId, checkoutTokenizationId, body = '') {
         const currentDate = new Date().toISOString();
-        // Header for calculation HMAC
         const headers = {
             'checkout-account': this.merchantId,
             'checkout-algorithm': 'sha256',
@@ -25,19 +33,70 @@ class Paytrail {
         if (checkoutTokenizationId) {
             headers['checkout-tokenization-id'] = checkoutTokenizationId;
         }
-        // Caculation HMAC
         const hmac = signature_util_1.Signature.calculateHmac(this.secretKey, headers, body, 'sha256');
         if (hmac)
             headers['signature'] = hmac;
         headers['platform-name'] = this.platformName;
         return headers;
     }
-    validateRequestItem(item) {
-        const [isPassValidate, message] = item.validate();
-        if (!isPassValidate) {
-            throw new exception_1.ValidateException(message, 400);
+    handleResponse(type, targetClass, data, dataError) {
+        const instance = new targetClass();
+        switch (type) {
+            case message_response_constant_1.responseMessage.SUCCESS:
+                instance.message = message_response_constant_1.responseMessage.SUCCESS;
+                instance.status = message_response_constant_1.responseStatus.SUCCESS;
+                instance.data = data;
+                break;
+            case message_response_constant_1.responseMessage.VALIDATE_FAIL:
+            case message_response_constant_1.responseMessage.SIGNATURE_NULL:
+            case message_response_constant_1.responseMessage.EXCEPTION:
+            case message_response_constant_1.responseMessage.UNAUTHORIZED:
+                instance.message = dataError === null || dataError === void 0 ? void 0 : dataError.message;
+                instance.status = dataError === null || dataError === void 0 ? void 0 : dataError.status;
+                break;
+            default:
+                instance.message = message_response_constant_1.responseMessage.SERVER_ERROR;
+                instance.status = message_response_constant_1.responseStatus.SERVER_ERROR;
         }
-        return true;
+        return instance;
+    }
+    callApi(getData, targetClass, validateMessagePayload, validateMessageParam, validateMessageQuery) {
+        var _a, _b, _c, _d, _e;
+        return __awaiter(this, void 0, void 0, function* () {
+            let message = '';
+            if (validateMessagePayload) {
+                const errorValidatePayload = yield validateMessagePayload();
+                if (errorValidatePayload) {
+                    message += errorValidatePayload;
+                }
+            }
+            if (validateMessageParam) {
+                const errorValidateParam = yield validateMessageParam();
+                if (errorValidateParam) {
+                    message += errorValidateParam;
+                }
+            }
+            if (validateMessageQuery) {
+                const errorValidateQuery = yield validateMessageQuery();
+                if (errorValidateQuery) {
+                    message += errorValidateQuery;
+                }
+            }
+            if (message) {
+                return this.handleResponse(message_response_constant_1.responseMessage.VALIDATE_FAIL, targetClass, null, {
+                    message,
+                    status: message_response_constant_1.responseStatus.VALIDATE_FAIL
+                });
+            }
+            const [error, data] = yield getData();
+            if (error) {
+                return this.handleResponse(message_response_constant_1.responseMessage.EXCEPTION, targetClass, null, {
+                    message: ((_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.meta) || ((_d = (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.message),
+                    status: (_e = error === null || error === void 0 ? void 0 : error.response) === null || _e === void 0 ? void 0 : _e.status
+                });
+            }
+            return this.handleResponse(message_response_constant_1.responseMessage.SUCCESS, targetClass, data);
+        });
     }
 }
 exports.Paytrail = Paytrail;

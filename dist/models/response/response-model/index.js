@@ -19,3 +19,6 @@ __exportStar(require("./form-field.model"), exports);
 __exportStar(require("./payment-method-group-data-with-providers.model"), exports);
 __exportStar(require("./payment-method-group-data.model"), exports);
 __exportStar(require("./provider.model"), exports);
+__exportStar(require("./response.model"), exports);
+__exportStar(require("./card.model"), exports);
+__exportStar(require("./customer.model"), exports);
