@@ -1,9 +1,9 @@
 import { Commission } from './commission.model';
 export declare class Item {
-    unitPrice?: number;
-    units?: number;
-    vatPercentage?: number;
-    productCode?: string;
+    unitPrice: number;
+    units: number;
+    vatPercentage: number;
+    productCode: string;
     description?: string;
     category?: string;
     orderId?: string;

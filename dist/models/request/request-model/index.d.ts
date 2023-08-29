@@ -6,3 +6,6 @@ export * from './item.model';
 export * from './payment-method-group.model';
 export * from './refund-item.model';
 export * from './shop-in-shop-item.model';
+export * from './report-field.model';
+export * from './request-type.model';
+export * from './payment-status.model';

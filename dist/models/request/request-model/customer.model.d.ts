@@ -1,5 +1,5 @@
 export declare class Customer {
-    email?: string;
+    email: string;
     firstName?: string;
     lastName?: string;
     phone?: string;

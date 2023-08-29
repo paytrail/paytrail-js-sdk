@@ -2,10 +2,10 @@ import { ConfigurationParameters } from './interfaces/IConfiguration.interface';
 export declare class Configuration {
     /**
      * Paytrail account ID
-     * @type {string}
+     * @type {number}
      * @memberof Configuration
      */
-    merchantId?: string;
+    merchantId?: number;
     /**
      * Parameter for API Security
      * @type {string}

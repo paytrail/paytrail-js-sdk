@@ -1,4 +1,4 @@
 export declare class CallbackUrl {
-    success?: string;
-    cancel?: string;
+    success: string;
+    cancel: string;
 }

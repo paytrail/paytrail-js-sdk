@@ -9,29 +9,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.api = void 0;
+exports.api = exports.requests = void 0;
 const axios_1 = require("axios");
 const variable_constant_1 = require("../constants/variable.constant");
 const handle_request_util_1 = require("./handle-request.util");
+const convert_object_keys_util_1 = require("./convert-object-keys.util");
 const apiEndpoint = variable_constant_1.API_ENDPOINT;
-// Config Axios
 axios_1.default.interceptors.request.use((config) => {
     config.headers['Content-Type'] = 'application/json; charset=utf-8';
     return config;
 });
-const requests = {
+exports.requests = {
     get: (url, headers) => __awaiter(void 0, void 0, void 0, function* () {
-        if (headers) {
-            return (0, axios_1.default)({
-                method: 'get',
-                url,
-                headers
-            });
-        }
         return (0, axios_1.default)({
             method: 'get',
-            url
-        });
+            url,
+            headers
+        }).then((res) => res.data);
     }),
     post: (url, body, headers) => __awaiter(void 0, void 0, void 0, function* () {
         if (headers) {
@@ -47,49 +41,6 @@ const requests = {
             url,
             data: body
         }).then((res) => res.data);
-    }),
-    delete: (url, headers) => __awaiter(void 0, void 0, void 0, function* () {
-        if (headers) {
-            return (0, axios_1.default)({
-                method: 'delete',
-                url,
-                headers
-            }).then((res) => res.data);
-        }
-        return (0, axios_1.default)({
-            method: 'delete',
-            url
-        }).then((res) => res.data);
-    }),
-    put: (url, body, headers) => __awaiter(void 0, void 0, void 0, function* () {
-        if (headers) {
-            return (0, axios_1.default)({
-                method: 'put',
-                url,
-                headers,
-                data: body
-            }).then((res) => res.data);
-        }
-        return (0, axios_1.default)({
-            method: 'put',
-            url,
-            data: body
-        }).then((res) => res.data);
-    }),
-    patch: (url, body, headers) => __awaiter(void 0, void 0, void 0, function* () {
-        if (headers) {
-            return (0, axios_1.default)({
-                method: 'patch',
-                url,
-                headers,
-                data: body
-            }).then((res) => res.data);
-        }
-        return (0, axios_1.default)({
-            method: 'patch',
-            url,
-            data: body
-        }).then((res) => res.data);
     })
 };
 const convertQuery = (param) => {
@@ -97,16 +48,36 @@ const convertQuery = (param) => {
         .map((key) => `${key}=${param[key]}`)
         .join('&');
 };
-// Execute Paytrail API
 const merchants = {
-    listGroupedProviders: (payload, headers) => (0, handle_request_util_1.handleRequest)(requests.get(`${apiEndpoint}/merchants/grouped-payment-providers?${convertQuery(payload)}`, headers))
+    listGroupedProviders: (query, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.get(`${apiEndpoint}/merchants/grouped-payment-providers?${convertQuery(query)}`, headers))
 };
-// Execute Paytrail API
 const payments = {
-    create: (payload, headers) => (0, handle_request_util_1.handleRequest)(requests.post(`${apiEndpoint}/payments`, payload, headers)),
-    createSiSPayment: (payload, headers) => (0, handle_request_util_1.handleRequest)(requests.post(`${apiEndpoint}/payments`, payload, headers))
+    create: (payload, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments`, payload, headers)),
+    createSiSPayment: (payload, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments`, payload, headers)),
+    getPaymentStatus: (param, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.get(`${apiEndpoint}/payments/${param.transactionId}`, headers)),
+    createRefund: (params, payload, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund`, payload, headers)),
+    emailRefunds: (params, payload, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund/email`, payload, headers))
+};
+const paymentReports = {
+    paymentReportRequest: (payload, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments/report`, payload, headers))
+};
+const settlements = {
+    get: (query, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.get(`${apiEndpoint}/settlements?${convertQuery(query)}`, headers))
+};
+const tokenPayments = {
+    createGetToken: (param, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/tokenization/${param.checkoutTokenizationId}`, {}, headers)),
+    createMitPayment: (payload, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments/token/mit/charge`, payload, headers)),
+    createMitPaymentAuthorizationHold: (payload, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments/token/mit/authorization-hold`, payload, headers)),
+    createCitPaymentCharge: (payload, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments/token/cit/charge`, payload, headers)),
+    createCitPaymentAuthorizationHold: (payload, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments/token/cit/authorization-hold`, payload, headers)),
+    createMitOrCitPaymentCommit: (params, payload, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/commit`, payload, headers)),
+    revertPaymentAuthorizationHold: (params, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/revert`, {}, headers)),
+    createAddCardFormRequest: (payload) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/tokenization/addcard-form`, (0, convert_object_keys_util_1.convertObjectKeys)(payload)))
 };
 exports.api = {
     merchants,
-    payments
+    payments,
+    paymentReports,
+    settlements,
+    tokenPayments
 };

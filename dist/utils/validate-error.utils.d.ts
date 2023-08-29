@@ -1,1 +1,1 @@
-export declare const validateError: (target: object) => Promise<string[] | boolean[]>;
+export declare const validateError: (target: object) => Promise<string>;
