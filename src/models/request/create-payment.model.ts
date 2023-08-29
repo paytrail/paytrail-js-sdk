@@ -19,26 +19,26 @@ import { PaymentMethodGroup } from './request-model/payment-method-group.model'
 export class CreatePaymentRequest {
   @IsNotEmpty()
   @IsString()
-  public stamp?: string
+  public stamp: string
 
   @IsNotEmpty()
   @IsString()
-  public reference?: string
+  public reference: string
 
   @IsNumber()
   @IsInt()
   @IsNotEmpty()
   @Min(1)
   @Max(99999999)
-  public amount?: number
+  public amount: number
 
   @IsNotEmpty()
   @IsString()
-  public currency?: string
+  public currency: string
 
   @IsNotEmpty()
   @IsString()
-  public language?: string
+  public language: string
 
   @IsString()
   @IsOptional()
@@ -51,7 +51,7 @@ export class CreatePaymentRequest {
 
   @IsNotEmpty()
   @ValidateNested()
-  public customer?: Customer
+  public customer: Customer
 
   @IsOptional()
   @ValidateNested()
@@ -67,7 +67,7 @@ export class CreatePaymentRequest {
 
   @ValidateNested()
   @IsNotEmpty()
-  public redirectUrls?: CallbackUrl
+  public redirectUrls: CallbackUrl
 
   @IsOptional()
   @ValidateNested()
