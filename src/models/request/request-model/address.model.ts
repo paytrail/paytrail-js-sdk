@@ -4,17 +4,17 @@ export class Address {
   @IsString()
   @IsNotEmpty()
   @Length(1, 50)
-  public streetAddress?: string
+  public streetAddress: string
 
   @IsString()
   @IsNotEmpty()
   @Length(1, 15)
-  public postalCode?: string
+  public postalCode: string
 
   @IsString()
   @IsNotEmpty()
   @Length(1, 30)
-  public city?: string
+  public city: string
 
   @IsString()
   @IsOptional()
@@ -22,5 +22,5 @@ export class Address {
 
   @IsString()
   @IsNotEmpty()
-  public country?: string
+  public country: string
 }

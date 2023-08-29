@@ -7,13 +7,13 @@ export class ShopInShopItem {
   public orderId?: string
 
   @IsNotEmpty()
-  public stamp?: string
+  public stamp: string
 
   @IsNotEmpty()
-  public reference?: string
+  public reference: string
 
   @IsNotEmpty()
-  public merchant?: string
+  public merchant: string
 
   @ValidateNested()
   public commission?: Commission

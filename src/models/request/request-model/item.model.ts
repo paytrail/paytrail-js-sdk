@@ -5,20 +5,20 @@ export class Item {
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
-  public unitPrice?: number
+  public unitPrice: number
 
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
-  public units?: number
+  public units: number
 
   @IsNotEmpty()
   @IsNumber()
-  public vatPercentage?: number
+  public vatPercentage: number
 
   @IsNotEmpty()
   @Length(1, 100)
-  public productCode?: string
+  public productCode: string
 
   @Length(0, 1000)
   @IsOptional()
