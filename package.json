@@ -1,5 +1,5 @@
 {
-  "name": "paytrail-javascript-sdk",
+  "name": "paytrail-sdk",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -13,7 +13,9 @@
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write ."
   },
-  "keywords": ["paytrail"],
+  "keywords": [
+    "paytrail"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {

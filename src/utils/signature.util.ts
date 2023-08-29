@@ -1,5 +1,4 @@
 import * as crypto from 'crypto'
-import { HmacException } from '../exceptions/exception'
 
 export class Signature {
   private static supportedEnc: string[] = ['sha256', 'sha512']
@@ -10,10 +9,6 @@ export class Signature {
     body: { [key: string]: string | number | object } | '' | object,
     encType = 'sha256'
   ) => {
-    // if (!this.supportedEnc.includes(encType)) {
-    //   throw new HmacException('Not supported encryption', 400)
-    // }
-
     const hmacPayload = Object.keys(hparams)
       .sort()
       .map((key) => [key, hparams[key]].join(':'))

@@ -41,5 +41,6 @@ export class AddCardFormRequest {
   checkoutCallbackCancelUrl?: string
 
   @IsString()
+  @IsOptional()
   language?: string
 }

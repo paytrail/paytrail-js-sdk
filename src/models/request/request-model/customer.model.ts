@@ -5,7 +5,7 @@ export class Customer {
   @Length(1, 200)
   @IsString()
   @IsEmail()
-  public email?: string
+  public email: string
 
   @IsString()
   @Length(1, 50)

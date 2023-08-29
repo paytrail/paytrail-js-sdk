@@ -7,15 +7,15 @@ export class RefundItem {
   public amount?: number
 
   @IsNotEmpty()
-  public stamp?: string
+  public stamp: string
 
   @IsNotEmpty()
-  public refundStamp?: string
+  public refundStamp: string
 
   @IsNotEmpty()
-  public refundReference?: string
+  public refundReference: string
 
   @IsNotEmpty()
   @ValidateNested()
-  public commission?: Commission
+  public commission: Commission
 }

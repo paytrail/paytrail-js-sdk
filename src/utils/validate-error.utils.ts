@@ -7,8 +7,8 @@ export const validateError = async (target: object) => {
       return Object.values(error.constraints)
     })
 
-    return [JSON.stringify(errorMessages), undefined]
+    return JSON.stringify(errorMessages)
   } else {
-    return [undefined, true]
+    return null
   }
 }
