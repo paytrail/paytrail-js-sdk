@@ -1,21 +1,50 @@
-import { IsNotEmpty, IsNumber, Min, ValidateNested } from 'class-validator'
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator'
 import { Commission } from './commission.model'
 
+/**
+ * Class RefundItem
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=refunditem
+ *
+ */
 export class RefundItem {
+  /**
+   * Total amount to refund this item, in currency's minor units.
+   */
+  @IsNotEmpty()
   @IsNumber()
   @Min(0)
-  public amount?: number
+  public amount: number
 
+  /**
+   * Unique stamp of the refund item.
+   */
   @IsNotEmpty()
+  @IsString()
   public stamp: string
 
-  @IsNotEmpty()
-  public refundStamp: string
+  /**
+   * Merchant unique identifier for the refund.
+   * Only for Shop-in-Shop payments, do not use for normal payments.
+   */
+  @IsOptional()
+  @IsString()
+  public refundStamp?: string
 
-  @IsNotEmpty()
-  public refundReference: string
+  /**
+   * Refund reference.
+   * Only for Shop-in-Shop payments, do not use for normal payments.
+   */
+  @IsOptional()
+  @IsString()
+  public refundReference?: string
 
-  @IsNotEmpty()
+  /**
+   * Shop-in-Shop commission return.
+   * In refunds, the given amount is returned from the given commission account to the item merchant account.
+   * Only for Shop-in-Shop payments, do not use for normal payments.
+   */
+  @IsOptional()
   @ValidateNested()
-  public commission: Commission
+  public commission?: Commission
 }

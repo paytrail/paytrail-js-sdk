@@ -40,6 +40,7 @@ export interface IPaytrail {
    *          Returns also a localized text with a link to the terms of payment.
    * @param {ListGroupedProvidersRequest} listGroupedProvidersRequest
    * @see https://docs.paytrail.com/#/?id=list-grouped-providers
+   * @throws Error
    */
   listGroupedProviders(listGroupedProvidersRequest: ListGroupedProvidersRequest): Promise<ListGroupedProvidersResponse>
 
@@ -52,6 +53,7 @@ export interface IPaytrail {
    *          Once the payment has been completed the client browser will return to the merchant provided redirect URL.
    * @param {CreatePaymentRequest} createPaymentResquest
    * @see https://docs.paytrail.com/#/?id=create
+   * @throws Error
    */
   createPayment(createPaymentResquest: CreatePaymentRequest): Promise<CreatePaymentResponse>
 
@@ -60,6 +62,7 @@ export interface IPaytrail {
    * @summary Create a shop-in-shop payment request.
    * @param {CreateSiSPaymentRequest} createSiSPaymentResquest
    * @see https://docs.paytrail.com/#/?id=create
+   * @throws Error
    */
   createShopInShopPayment(createSiSPaymentResquest: CreateSiSPaymentRequest): Promise<CreateSiSPaymentResponse>
 
@@ -70,6 +73,7 @@ export interface IPaytrail {
    *           Note! The transaction id needs to be sent on checkout-transaction-id header as well.
    * @param {GetPaymentStatusRequest} getPaymentStatusRequest
    * @see https://docs.paytrail.com/#/?id=get
+   * @throws Error
    */
   getPaymentStatus(getPaymentStatusRequest: GetPaymentStatusRequest): Promise<GetPaymentStatusResponse>
 
@@ -79,6 +83,7 @@ export interface IPaytrail {
    * @param {CreateRefundParams} createRefundParams
    * @param {CreateRefundRequest} createRefundRequest
    * @see https://docs.paytrail.com/#/?id=refund
+   * @throws Error
    */
   createRefund(
     createRefundParams: CreateRefundParams,
@@ -91,6 +96,7 @@ export interface IPaytrail {
    * @param {EmailRefundParams} emailRefundParams
    * @param {EmailRefundRequest} emailRefundRequest
    * @see https://docs.paytrail.com/#/?id=email-refunds
+   * @throws Error
    */
   emailRefund(
     emailRefundParams: EmailRefundParams,
@@ -102,6 +108,7 @@ export interface IPaytrail {
    * @summary HTTP POST /payments/report results in a callback containing the payment report.
    * @param {PaymentReportRequest} paymentReportRequest
    * @see https://docs.paytrail.com/#/?id=email-refunds
+   * @throws Error
    */
   paymentReportRequest(paymentReportRequest: PaymentReportRequest): Promise<PaymentReportResponse>
 
@@ -111,6 +118,7 @@ export interface IPaytrail {
    *          Maximum of 100 settlement IDs are returned, starting from the most recent settelements
    * @param {SettlementsRequest} settlementsRequest
    * @see https://docs.paytrail.com/#/?id=settlements
+   * @throws Error
    */
   requestSettlements(settlementsRequest: SettlementsRequest): Promise<SettlementsResponse>
 
@@ -120,6 +128,7 @@ export interface IPaytrail {
    *          from the success redirect URL parameters, or the callback URL request if given.
    * @param {GetTokenRequest} getTokenRequest
    * @see https://docs.paytrail.com/#/?id=get-token
+   * @throws Error
    */
   createGetTokenRequest(getTokenRequest: GetTokenRequest): Promise<GetTokenResponse>
 
@@ -128,6 +137,7 @@ export interface IPaytrail {
    * @summary HTTP POST /payments/token/{mit|cit}/{authorization-hold|charge} creates either an authorization hold or direct charge for MIT and CIT payments.
    * @param {MitPaymentRequest} mitPaymentRequest
    * @see https://docs.paytrail.com/#/?id=charging-a-token
+   * @throws Error
    */
   createMitPaymentCharge(mitPaymentRequest: MitPaymentRequest): Promise<MitPaymentResponse>
 
@@ -136,6 +146,7 @@ export interface IPaytrail {
    * @summary HTTP POST /payments/token/{mit|cit}/{authorization-hold|charge} creates either an authorization hold or direct charge for MIT and CIT payments.
    * @param {MitPaymentRequest} mitPaymentRequest
    * @see https://docs.paytrail.com/#/?id=charging-a-token
+   * @throws Error
    */
   createMitPaymentAuthorizationHold(mitPaymentRequest: MitPaymentRequest): Promise<MitPaymentResponse>
 
@@ -144,6 +155,7 @@ export interface IPaytrail {
    * @summary HTTP POST /payments/token/{mit|cit}/{authorization-hold|charge} creates either an authorization hold or direct charge for MIT and CIT payments.
    * @param {CreateCitPaymentRequest} createCitPaymentRequest
    * @see https://docs.paytrail.com/#/?id=charging-a-token
+   * @throws Error
    */
   createCitPaymentCharge(createCitPaymentRequest: CreateCitPaymentRequest): Promise<CreateCitPaymentResponse>
 
@@ -152,6 +164,7 @@ export interface IPaytrail {
    * @summary HTTP POST /payments/token/{mit|cit}/{authorization-hold|charge} creates either an authorization hold or direct charge for MIT and CIT payments.
    * @param {CreateCitPaymentRequest} createCitPaymentRequest
    * @see https://docs.paytrail.com/#/?id=charging-a-token
+   * @throws Error
    */
   createCitPaymentAuthorizationHold(createCitPaymentRequest: CreateCitPaymentRequest): Promise<CreateCitPaymentResponse>
 
@@ -162,6 +175,7 @@ export interface IPaytrail {
    * @param {MitPaymentRequest} mitPaymentRequest
    * @param {MitPaymentParams} mitPaymentParams
    * @see https://docs.paytrail.com/#/?id=charging-a-token
+   * @throws Error
    */
   createMitPaymentCommit(
     mitPaymentParams: MitPaymentParams,
@@ -175,6 +189,7 @@ export interface IPaytrail {
    * @param {CreateCitPaymentRequest} mitPaymentRequest
    * @param {CreateCitPaymentParams} citPaymentParams
    * @see https://docs.paytrail.com/#/?id=charging-a-token
+   * @throws Error
    */
   createCitPaymentCommit(
     citPaymentParams: CreateCitPaymentParams,
@@ -187,6 +202,7 @@ export interface IPaytrail {
    *          A successful revert will remove the authorization hold from the payer's card.
    * @param {RevertPaymentAuthHoldRequest} revertPaymentAuthHoldRequest
    * @see https://docs.paytrail.com/#/?id=charging-a-token
+   * @throws Error
    */
   revertPaymentAuthorizationHold(
     revertPaymentAuthHoldRequest: RevertPaymentAuthHoldRequest
@@ -199,6 +215,7 @@ export interface IPaytrail {
    *          where user will input credit card information.
    * @param {AddCardFormRequest} addCardFormRequest
    * @see https://docs.paytrail.com/#/?id=add-card-form
+   * @throws Error
    */
   createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse>
 }

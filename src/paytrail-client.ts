@@ -38,7 +38,16 @@ import { convertObjectToClass } from './utils/convert-object-to-class.utils'
 import { Signature } from './utils/signature.util'
 import { validateError } from './utils/validate-error.utils'
 
+/**
+ * Class PaytrailClient
+ *
+ * The PaytrailClient is the connector class for the API.
+ *
+ */
 export class PaytrailClient extends Paytrail implements IPaytrail {
+  /**
+   * The Paytrail API endpoint.
+   */
   public API_ENDPOINT: string = API_ENDPOINT
 
   public validateHmac(
