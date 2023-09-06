@@ -1,7 +1,16 @@
 import { IPaytrail } from './interfaces/IPayTrail.interface';
 import { AddCardFormRequest, AddCardFormResponse, CreateCitPaymentParams, CreateCitPaymentRequest, CreateCitPaymentResponse, CreatePaymentRequest, CreatePaymentResponse, CreateRefundParams, CreateRefundRequest, CreateRefundResponse, CreateSiSPaymentRequest, CreateSiSPaymentResponse, EmailRefundParams, EmailRefundRequest, EmailRefundResponse, GetPaymentStatusRequest, GetPaymentStatusResponse, GetTokenRequest, GetTokenResponse, ListGroupedProvidersRequest, ListGroupedProvidersResponse, MitPaymentParams, MitPaymentRequest, MitPaymentResponse, PaymentReportRequest, PaymentReportResponse, RevertPaymentAuthHoldRequest, RevertPaymentAuthHoldResponse, SettlementsRequest, SettlementsResponse } from './models';
 import { Paytrail } from './paytrail';
+/**
+ * Class PaytrailClient
+ *
+ * The PaytrailClient is the connector class for the API.
+ *
+ */
 export declare class PaytrailClient extends Paytrail implements IPaytrail {
+    /**
+     * The Paytrail API endpoint.
+     */
     API_ENDPOINT: string;
     validateHmac(hparams: {
         [key: string]: string;

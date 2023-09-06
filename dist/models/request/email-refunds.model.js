@@ -12,6 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmailRefundParams = exports.EmailRefundRequest = void 0;
 const class_validator_1 = require("class-validator");
 const create_refund_model_1 = require("./create-refund.model");
+/**
+ * Class EmailRefundRequest
+ *
+ * @see https://paytrail.github.io/api-documentation/#/examples?id=email-refund-request-body
+ */
 class EmailRefundRequest extends create_refund_model_1.CreateRefundRequest {
 }
 exports.EmailRefundRequest = EmailRefundRequest;
@@ -20,6 +25,9 @@ __decorate([
     (0, class_validator_1.IsEmail)(),
     __metadata("design:type", String)
 ], EmailRefundRequest.prototype, "email", void 0);
+/**
+ * Class EmailRefundParams
+ */
 class EmailRefundParams {
 }
 exports.EmailRefundParams = EmailRefundParams;

@@ -11,6 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AddCardFormRequest = void 0;
 const class_validator_1 = require("class-validator");
+/**
+ * Class AddCardFormRequest
+ *
+ * @see https://docs.paytrail.com/#/?id=add-card-form
+ *
+ */
 class AddCardFormRequest {
 }
 exports.AddCardFormRequest = AddCardFormRequest;

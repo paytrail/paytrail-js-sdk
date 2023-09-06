@@ -11,6 +11,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Address = void 0;
 const class_validator_1 = require("class-validator");
+/**
+ * This class defines address details for a payment request.
+ * @see {@link https://paytrail.github.io/api-documentation/#/?id=address}
+ */
 class Address {
 }
 exports.Address = Address;

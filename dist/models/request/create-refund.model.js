@@ -12,6 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateRefundParams = exports.CreateRefundRequest = void 0;
 const class_validator_1 = require("class-validator");
 const request_model_1 = require("./request-model");
+/**
+ * Class CreateRefundRequest
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=http-request-body
+ */
 class CreateRefundRequest {
 }
 exports.CreateRefundRequest = CreateRefundRequest;
@@ -46,6 +51,11 @@ __decorate([
     (0, class_validator_1.ValidateNested)(),
     __metadata("design:type", request_model_1.CallbackUrl)
 ], CreateRefundRequest.prototype, "callbackUrls", void 0);
+/**
+ * Class CreateRefundParams
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=http-request-body
+ */
 class CreateRefundParams {
 }
 exports.CreateRefundParams = CreateRefundParams;

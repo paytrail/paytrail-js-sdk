@@ -13,6 +13,11 @@ exports.PaymentReportRequest = void 0;
 const class_validator_1 = require("class-validator");
 const request_type_model_1 = require("./request-model/request-type.model");
 const payment_status_model_1 = require("./request-model/payment-status.model");
+/**
+ * Class PaymentReportRequest
+ *
+ * @see https://docs.paytrail.com/#/?id=payment-report-request
+ */
 class PaymentReportRequest {
 }
 exports.PaymentReportRequest = PaymentReportRequest;

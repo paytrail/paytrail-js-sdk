@@ -17,9 +17,18 @@ const axios_util_1 = require("./utils/axios.util");
 const convert_object_to_class_utils_1 = require("./utils/convert-object-to-class.utils");
 const signature_util_1 = require("./utils/signature.util");
 const validate_error_utils_1 = require("./utils/validate-error.utils");
+/**
+ * Class PaytrailClient
+ *
+ * The PaytrailClient is the connector class for the API.
+ *
+ */
 class PaytrailClient extends paytrail_1.Paytrail {
     constructor() {
         super(...arguments);
+        /**
+         * The Paytrail API endpoint.
+         */
         this.API_ENDPOINT = variable_constant_1.API_ENDPOINT;
     }
     validateHmac(hparams, body, signature, secretKey, encType) {

@@ -12,6 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateCitPaymentParams = exports.CreateCitPaymentRequest = void 0;
 const class_validator_1 = require("class-validator");
 const create_payment_model_1 = require("./create-payment.model");
+/**
+ * Class CreateCitPaymentRequest
+ *
+ * This class is used to create a CIT payment request object for
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=request4
+ */
 class CreateCitPaymentRequest extends create_payment_model_1.CreatePaymentRequest {
 }
 exports.CreateCitPaymentRequest = CreateCitPaymentRequest;

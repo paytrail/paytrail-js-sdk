@@ -1,3 +1,10 @@
+/**
+ * Enum ReportFields
+ *
+ * Limit the fields that will be included in the report. Leaving this empty will include all fields
+ * @see https://docs.paytrail.com/#/?id=payment-report-request-by-settlement-id
+ *
+ */
 export declare enum ReportFields {
     ENTRYDATE = "entryDate",
     CREATED = "created",

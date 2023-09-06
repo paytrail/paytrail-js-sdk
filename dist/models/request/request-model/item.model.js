@@ -12,6 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Item = void 0;
 const class_validator_1 = require("class-validator");
 const commission_model_1 = require("./commission.model");
+/**
+ * Class Item
+ *
+ * This class defines payment item details.
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=item
+ */
 class Item {
 }
 exports.Item = Item;
@@ -38,6 +45,11 @@ __decorate([
     __metadata("design:type", String)
 ], Item.prototype, "productCode", void 0);
 __decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], Item.prototype, "deliveryDate", void 0);
+__decorate([
     (0, class_validator_1.Length)(0, 1000),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
@@ -49,6 +61,7 @@ __decorate([
 ], Item.prototype, "category", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], Item.prototype, "orderId", void 0);
 __decorate([
