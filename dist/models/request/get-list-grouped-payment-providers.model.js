@@ -12,6 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ListGroupedProvidersRequest = void 0;
 const class_validator_1 = require("class-validator");
 const payment_method_group_model_1 = require("./request-model/payment-method-group.model");
+/**
+ * Class ListGroupedProvidersRequest
+ *
+ * @see https://docs.paytrail.com/#/?id=list-grouped-providers
+ */
 class ListGroupedProvidersRequest {
 }
 exports.ListGroupedProvidersRequest = ListGroupedProvidersRequest;

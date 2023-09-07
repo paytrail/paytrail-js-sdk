@@ -11,6 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RevertPaymentAuthHoldRequest = void 0;
 const class_validator_1 = require("class-validator");
+/**
+ * Class RevertPaymentAuthHoldRequest
+ *
+ * @see https://docs.paytrail.com/#/?id=settlements
+ */
 class RevertPaymentAuthHoldRequest {
 }
 exports.RevertPaymentAuthHoldRequest = RevertPaymentAuthHoldRequest;

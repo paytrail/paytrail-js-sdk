@@ -11,6 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Customer = void 0;
 const class_validator_1 = require("class-validator");
+/**
+ * Class Customer
+ *
+ * The customer class defines the customer details object.
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=customer
+ */
 class Customer {
 }
 exports.Customer = Customer;

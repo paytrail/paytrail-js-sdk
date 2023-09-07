@@ -11,6 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CallbackUrl = void 0;
 const class_validator_1 = require("class-validator");
+/**
+ * Class CallbackUrl
+ *
+ * This class defines callback url details.
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=callbackurl
+ */
 class CallbackUrl {
 }
 exports.CallbackUrl = CallbackUrl;

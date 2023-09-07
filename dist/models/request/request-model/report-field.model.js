@@ -1,6 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReportFields = void 0;
+/**
+ * Enum ReportFields
+ *
+ * Limit the fields that will be included in the report. Leaving this empty will include all fields
+ * @see https://docs.paytrail.com/#/?id=payment-report-request-by-settlement-id
+ *
+ */
 var ReportFields;
 (function (ReportFields) {
     ReportFields["ENTRYDATE"] = "entryDate";

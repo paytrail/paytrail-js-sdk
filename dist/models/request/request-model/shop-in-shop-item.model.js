@@ -12,6 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ShopInShopItem = void 0;
 const class_validator_1 = require("class-validator");
 const commission_model_1 = require("./commission.model");
+/**
+ * Class ShopInShopItem
+ */
 class ShopInShopItem {
 }
 exports.ShopInShopItem = ShopInShopItem;

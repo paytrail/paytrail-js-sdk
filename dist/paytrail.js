@@ -18,6 +18,17 @@ class Paytrail {
         this.secretKey = param.secretKey;
         this.platformName = param.platformName;
     }
+    /**
+     * Format request headers.
+     *
+     * @param {string} method - The request method. GET or POST.
+     * @param {string | null} transactionId - Paytrail transaction ID when accessing a single transaction.
+     *                                       Not required for a new payment request.
+     * @param {string | null} checkoutTokenizationId - Paytrail tokenization ID for getToken request.
+     * @param {Record<string, string | number | object> | ''} body - The request body.
+     *
+     * @returns {Record<string, string | number>} An object representing the request headers.
+     */
     getHeaders(method, transactionId, checkoutTokenizationId, body = '') {
         const currentDate = new Date().toISOString();
         const headers = {
@@ -39,6 +50,16 @@ class Paytrail {
         headers['platform-name'] = this.platformName;
         return headers;
     }
+    /**
+     * Handle API response and return an instance of the specified class.
+     *
+     * @param {string} type - The response type.
+     * @param {T} targetClass - The target class to instantiate.
+     * @param {any} data - The response data.
+     * @param {{ message: string | boolean; status: number }} dataError - Error data.
+     *
+     * @returns {T} An instance of the specified class.
+     */
     handleResponse(type, targetClass, data, dataError) {
         const instance = new targetClass();
         switch (type) {
@@ -60,6 +81,17 @@ class Paytrail {
         }
         return instance;
     }
+    /**
+     * Call an API, validate the response, and return an instance of the specified class.
+     *
+     * @param {() => Promise<any>} getData - A function that fetches data from the API.
+     * @param {new () => T} targetClass - The target class to instantiate.
+     * @param {() => Promise<any>} validateMessagePayload - A function to validate the message payload.
+     * @param {() => Promise<any>} validateMessageParam - A function to validate message parameters.
+     * @param {() => Promise<any>} validateMessageQuery - A function to validate message queries.
+     *
+     * @returns {Promise<T>} A promise that resolves to an instance of the specified class.
+     */
     callApi(getData, targetClass, validateMessagePayload, validateMessageParam, validateMessageQuery) {
         var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {

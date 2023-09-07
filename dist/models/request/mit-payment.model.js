@@ -12,6 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MitPaymentParams = exports.MitPaymentRequest = void 0;
 const class_validator_1 = require("class-validator");
 const create_payment_model_1 = require("./create-payment.model");
+/**
+ * Class MitPaymentRequest
+ *
+ * This class is used to create a MIT payment request object
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=request4
+ */
 class MitPaymentRequest extends create_payment_model_1.CreatePaymentRequest {
 }
 exports.MitPaymentRequest = MitPaymentRequest;
@@ -20,6 +27,11 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], MitPaymentRequest.prototype, "token", void 0);
+/**
+ * Class MitPaymentParams
+ *
+ * @see https://docs.paytrail.com/#/?id=get-token
+ */
 class MitPaymentParams {
 }
 exports.MitPaymentParams = MitPaymentParams;

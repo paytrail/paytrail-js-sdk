@@ -11,6 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetPaymentStatusRequest = void 0;
 const class_validator_1 = require("class-validator");
+/**
+ * Class GetPaymentStatusRequest
+ *
+ * @see https://docs.paytrail.com/#/?id=get
+ */
 class GetPaymentStatusRequest {
 }
 exports.GetPaymentStatusRequest = GetPaymentStatusRequest;
