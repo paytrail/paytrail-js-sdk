@@ -1,4 +1,17 @@
+/**
+ * Class CallbackUrl
+ *
+ * This class defines callback url details.
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=callbackurl
+ */
 export declare class CallbackUrl {
-    success?: string;
-    cancel?: string;
+    /**
+     * The success url.
+     */
+    success: string;
+    /**
+     * The cancellation url.
+     */
+    cancel: string;
 }

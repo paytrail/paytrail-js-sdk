@@ -22,3 +22,6 @@ __exportStar(require("./item.model"), exports);
 __exportStar(require("./payment-method-group.model"), exports);
 __exportStar(require("./refund-item.model"), exports);
 __exportStar(require("./shop-in-shop-item.model"), exports);
+__exportStar(require("./report-field.model"), exports);
+__exportStar(require("./request-type.model"), exports);
+__exportStar(require("./payment-status.model"), exports);

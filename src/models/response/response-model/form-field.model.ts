@@ -1,4 +1,14 @@
+/**
+ * Class FormField
+ */
 export class FormField {
-  public name: string = ''
-  public value: string = ''
+  /**
+   * Name of the input
+   */
+  public name: string
+
+  /**
+   * Value of the input
+   */
+  public value: string
 }

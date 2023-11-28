@@ -12,20 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateError = void 0;
 const class_validator_1 = require("class-validator");
 const validateError = (target) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const errors = yield (0, class_validator_1.validate)(target);
-        if (errors.length > 0) {
-            const errorMessages = errors.flatMap((error) => {
-                return Object.values(error.constraints || []);
-            });
-            return [JSON.stringify(errorMessages), undefined];
-        }
-        else {
-            return [undefined, true];
-        }
+    const errors = yield (0, class_validator_1.validate)(target);
+    if (errors.length > 0) {
+        const errorMessages = errors.flatMap((error) => {
+            return Object.values(error.constraints);
+        });
+        return JSON.stringify(errorMessages);
     }
-    catch (error) {
-        return [error.message, undefined];
+    else {
+        return null;
     }
 });
 exports.validateError = validateError;

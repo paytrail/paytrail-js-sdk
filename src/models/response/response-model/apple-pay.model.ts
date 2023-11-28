@@ -1,5 +1,11 @@
 import { FormField } from './form-field.model'
 
+/**
+ * Class ApplePay
+ */
 export class ApplePay {
-  public parameters: FormField[] = []
+  /**
+   * Parameters.
+   */
+  public parameters: FormField[]
 }

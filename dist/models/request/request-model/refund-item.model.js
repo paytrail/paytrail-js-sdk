@@ -12,28 +12,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RefundItem = void 0;
 const class_validator_1 = require("class-validator");
 const commission_model_1 = require("./commission.model");
+/**
+ * Class RefundItem
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=refunditem
+ *
+ */
 class RefundItem {
 }
 exports.RefundItem = RefundItem;
 __decorate([
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.Min)(0),
     __metadata("design:type", Number)
 ], RefundItem.prototype, "amount", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], RefundItem.prototype, "stamp", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], RefundItem.prototype, "refundStamp", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], RefundItem.prototype, "refundReference", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
     __metadata("design:type", commission_model_1.Commission)
 ], RefundItem.prototype, "commission", void 0);

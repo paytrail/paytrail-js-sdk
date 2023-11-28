@@ -11,77 +11,213 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaytrailClient = void 0;
 const variable_constant_1 = require("./constants/variable.constant");
-const exception_1 = require("./exceptions/exception");
 const models_1 = require("./models");
 const paytrail_1 = require("./paytrail");
 const axios_util_1 = require("./utils/axios.util");
 const convert_object_to_class_utils_1 = require("./utils/convert-object-to-class.utils");
 const signature_util_1 = require("./utils/signature.util");
 const validate_error_utils_1 = require("./utils/validate-error.utils");
+/**
+ * Class PaytrailClient
+ *
+ * The PaytrailClient is the connector class for the API.
+ *
+ */
 class PaytrailClient extends paytrail_1.Paytrail {
-    constructor(configuration) {
-        super(configuration);
+    constructor() {
+        super(...arguments);
+        /**
+         * The Paytrail API endpoint.
+         */
         this.API_ENDPOINT = variable_constant_1.API_ENDPOINT;
     }
     validateHmac(hparams, body, signature, secretKey, encType) {
         return signature_util_1.Signature.validateHmac(hparams, body, signature, secretKey, encType);
     }
     listGroupedProviders(listGroupedProvidersRequest) {
-        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
-            // Create headers
-            const headers = this.getHeaders(variable_constant_1.METHOD.GET);
-            // Validate payload
-            const validate = (0, convert_object_to_class_utils_1.convertObjectToClass)(listGroupedProvidersRequest, models_1.ListGroupedProvidersRequest);
-            const [errorValidate, isSuccess] = yield (0, validate_error_utils_1.validateError)(validate);
-            if (errorValidate) {
-                throw new exception_1.ValidateException(JSON.stringify(errorValidate), 400);
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.GET);
+                return yield this.callApi(() => axios_util_1.api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers), models_1.ListGroupedProvidersResponse, null, null, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(listGroupedProvidersRequest, models_1.ListGroupedProvidersRequest)));
             }
-            // Execute to Paytrail API
-            const [error, res] = yield axios_util_1.api.merchants.listGroupedProviders(listGroupedProvidersRequest, headers);
-            if (error) {
-                throw new exception_1.RequestException((_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.message, (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.status);
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
             }
-            const data = res === null || res === void 0 ? void 0 : res.data;
-            return data;
         });
     }
     createPayment(createPaymentRequest) {
-        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
-            // Create headers
-            const headers = this.getHeaders(variable_constant_1.METHOD.POST, '', '', createPaymentRequest);
-            // Validate payload
-            const validate = (0, convert_object_to_class_utils_1.convertObjectToClass)(createPaymentRequest, models_1.CreatePaymentRequest);
-            const [errorValidate, isSuccess] = yield (0, validate_error_utils_1.validateError)(validate);
-            if (errorValidate) {
-                throw new exception_1.ValidateException(JSON.stringify(errorValidate), 400);
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, null, null, createPaymentRequest);
+                return yield this.callApi(() => axios_util_1.api.payments.create(createPaymentRequest, headers), models_1.CreatePaymentResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(createPaymentRequest, models_1.CreatePaymentRequest)), null, null);
             }
-            // Execute to Paytrail API
-            const [error, data] = yield axios_util_1.api.payments.create(createPaymentRequest, headers);
-            if (error) {
-                throw new exception_1.RequestException((_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.meta, (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.status);
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
             }
-            return data;
         });
     }
-    createSiSPayment(createSiSPaymentResquest) {
-        var _a, _b, _c;
+    createShopInShopPayment(createSiSPaymentResquest) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Create headers
-            const headers = this.getHeaders(variable_constant_1.METHOD.POST, '', '', createSiSPaymentResquest);
-            // Validate payload
-            const validate = (0, convert_object_to_class_utils_1.convertObjectToClass)(createSiSPaymentResquest, models_1.CreateSiSPaymentRequest);
-            const [errorValidate, isSuccess] = yield (0, validate_error_utils_1.validateError)(validate);
-            if (errorValidate) {
-                throw new exception_1.ValidateException(JSON.stringify(errorValidate), 400);
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, null, null, createSiSPaymentResquest);
+                return yield this.callApi(() => axios_util_1.api.payments.createSiSPayment(createSiSPaymentResquest, headers), models_1.CreateSiSPaymentResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(createSiSPaymentResquest, models_1.CreateSiSPaymentRequest)), null, null);
             }
-            // Execute to Paytrail API
-            const [error, data] = yield axios_util_1.api.payments.create(createSiSPaymentResquest, headers);
-            if (error) {
-                throw new exception_1.RequestException((_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.meta, (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.status);
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
             }
-            return data;
+        });
+    }
+    getPaymentStatus(getPaymentStatusRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.GET, getPaymentStatusRequest.transactionId);
+                return yield this.callApi(() => axios_util_1.api.payments.getPaymentStatus(getPaymentStatusRequest, headers), models_1.GetPaymentStatusResponse, null, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(getPaymentStatusRequest, models_1.GetPaymentStatusRequest)), null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    createRefund(createRefundParams, createRefundRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, createRefundParams.transactionId, null, createRefundRequest);
+                return yield this.callApi(() => axios_util_1.api.payments.createRefund(createRefundParams, createRefundRequest, headers), models_1.CreateRefundResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(createRefundRequest, models_1.CreateRefundRequest)), () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(createRefundParams, models_1.CreateRefundParams)), null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    emailRefund(emailRefundParams, emailRefundRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, emailRefundParams.transactionId, null, emailRefundRequest);
+                return yield this.callApi(() => axios_util_1.api.payments.emailRefunds(emailRefundParams, emailRefundRequest, headers), models_1.EmailRefundResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(emailRefundRequest, models_1.EmailRefundRequest)), () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(emailRefundParams, models_1.EmailRefundParams)), null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    paymentReportRequest(paymentReportRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, null, null, paymentReportRequest);
+                return yield this.callApi(() => axios_util_1.api.paymentReports.paymentReportRequest(paymentReportRequest, headers), models_1.PaymentReportResponse, null, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(paymentReportRequest, models_1.PaymentReportRequest)), null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    requestSettlements(settlementsRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.GET);
+                return yield this.callApi(() => axios_util_1.api.settlements.get(settlementsRequest, headers), models_1.SettlementsResponse, null, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(settlementsRequest, models_1.SettlementsRequest)), null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    createGetTokenRequest(getTokenRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, null, getTokenRequest.checkoutTokenizationId, {});
+                return yield this.callApi(() => axios_util_1.api.tokenPayments.createGetToken(getTokenRequest, headers), models_1.GetTokenResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(getTokenRequest, models_1.GetTokenRequest)), null, null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    createMitPaymentCharge(mitPaymentRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, null, null, mitPaymentRequest);
+                return yield this.callApi(() => axios_util_1.api.tokenPayments.createMitPayment(mitPaymentRequest, headers), models_1.MitPaymentResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(mitPaymentRequest, models_1.MitPaymentRequest)), null, null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    createMitPaymentAuthorizationHold(mitPaymentRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, null, null, mitPaymentRequest);
+                return yield this.callApi(() => axios_util_1.api.tokenPayments.createMitPaymentAuthorizationHold(mitPaymentRequest, headers), models_1.MitPaymentResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(mitPaymentRequest, models_1.MitPaymentRequest)), null, null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    createCitPaymentCharge(createCitPaymentRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, null, null, createCitPaymentRequest);
+                return yield this.callApi(() => axios_util_1.api.tokenPayments.createCitPaymentCharge(createCitPaymentRequest, headers), models_1.CreateCitPaymentResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(createCitPaymentRequest, models_1.CreateCitPaymentRequest)), null, null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    createCitPaymentAuthorizationHold(createCitPaymentRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, null, null, createCitPaymentRequest);
+                return yield this.callApi(() => axios_util_1.api.tokenPayments.createCitPaymentAuthorizationHold(createCitPaymentRequest, headers), models_1.CreateCitPaymentResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(createCitPaymentRequest, models_1.CreateCitPaymentRequest)), null, null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    createMitPaymentCommit(mitPaymentParams, mitPaymentRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, mitPaymentParams.transactionId, null, mitPaymentRequest);
+                return yield this.callApi(() => axios_util_1.api.tokenPayments.createMitOrCitPaymentCommit(mitPaymentParams, mitPaymentRequest, headers), models_1.MitPaymentResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(mitPaymentRequest, models_1.MitPaymentRequest)), () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(mitPaymentParams, models_1.MitPaymentParams)), null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    createCitPaymentCommit(citPaymentParams, citPaymentRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, citPaymentParams.transactionId, null, citPaymentRequest);
+                return yield this.callApi(() => axios_util_1.api.tokenPayments.createMitOrCitPaymentCommit(citPaymentParams, citPaymentRequest, headers), models_1.CreateCitPaymentResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(citPaymentRequest, models_1.CreateCitPaymentRequest)), () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(citPaymentParams, models_1.CreateCitPaymentParams)), null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    revertPaymentAuthorizationHold(revertPaymentAuthHoldRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const headers = this.getHeaders(variable_constant_1.METHOD.POST, revertPaymentAuthHoldRequest.transactionId, null, {});
+                return yield this.callApi(() => axios_util_1.api.tokenPayments.revertPaymentAuthorizationHold(revertPaymentAuthHoldRequest, headers), models_1.RevertPaymentAuthHoldResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(revertPaymentAuthHoldRequest, models_1.RevertPaymentAuthHoldRequest)), null, null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
+        });
+    }
+    createAddCardFormRequest(addCardFormRequest) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.callApi(() => axios_util_1.api.tokenPayments.createAddCardFormRequest(addCardFormRequest), models_1.AddCardFormResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(addCardFormRequest, models_1.AddCardFormRequest)), null, null);
+            }
+            catch (error) {
+                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+            }
         });
     }
 }

@@ -1,32 +1,43 @@
 import axios from 'axios'
 import { API_ENDPOINT } from '../constants/variable.constant'
-import { CreatePaymentRequest, CreateSiSPaymentRequest, ListGroupedProvidersRequest } from '../models'
+import {
+  AddCardFormRequest,
+  CreateCitPaymentParams,
+  CreateCitPaymentRequest,
+  CreatePaymentRequest,
+  CreateRefundParams,
+  CreateRefundRequest,
+  CreateSiSPaymentRequest,
+  EmailRefundParams,
+  EmailRefundRequest,
+  GetPaymentStatusRequest,
+  GetTokenRequest,
+  ListGroupedProvidersRequest,
+  MitPaymentParams,
+  MitPaymentRequest,
+  RevertPaymentAuthHoldRequest,
+  SettlementsRequest
+} from '../models'
 import { handleRequest } from './handle-request.util'
+import { PaymentReportRequest } from '../models/request/payment-report-request.model'
+import { convertObjectKeys } from './convert-object-keys.util'
 
 const apiEndpoint = API_ENDPOINT
 
-// Config Axios
 axios.interceptors.request.use((config) => {
   config.headers['Content-Type'] = 'application/json; charset=utf-8'
   return config
 })
 
-const requests = {
-  get: async (url: string, headers: { [key: string]: string }) => {
-    if (headers) {
-      return axios({
-        method: 'get',
-        url,
-        headers
-      })
-    }
-
+export const requests = {
+  get: async (url: string, headers: { [key: string]: string | number }) => {
     return axios({
       method: 'get',
-      url
-    })
+      url,
+      headers
+    }).then((res) => res.data)
   },
-  post: async (url: string, body: object, headers: { [key: string]: string }) => {
+  post: async (url: string, body: object, headers?: { [key: string]: string | number }) => {
     if (headers) {
       return axios({
         method: 'post',
@@ -41,52 +52,6 @@ const requests = {
       url,
       data: body
     }).then((res) => res.data)
-  },
-  delete: async (url: string, headers: { [key: string]: string }) => {
-    if (headers) {
-      return axios({
-        method: 'delete',
-        url,
-        headers
-      }).then((res) => res.data)
-    }
-
-    return axios({
-      method: 'delete',
-      url
-    }).then((res) => res.data)
-  },
-  put: async (url: string, body: object, headers: { [key: string]: string }) => {
-    if (headers) {
-      return axios({
-        method: 'put',
-        url,
-        headers,
-        data: body
-      }).then((res) => res.data)
-    }
-
-    return axios({
-      method: 'put',
-      url,
-      data: body
-    }).then((res) => res.data)
-  },
-  patch: async (url: string, body: object, headers: { [key: string]: string }) => {
-    if (headers) {
-      return axios({
-        method: 'patch',
-        url,
-        headers,
-        data: body
-      }).then((res) => res.data)
-    }
-
-    return axios({
-      method: 'patch',
-      url,
-      data: body
-    }).then((res) => res.data)
   }
 }
 
@@ -96,21 +61,63 @@ const convertQuery = (param: any): string => {
     .join('&')
 }
 
-// Execute Paytrail API
 const merchants = {
-  listGroupedProviders: (payload: ListGroupedProvidersRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.get(`${apiEndpoint}/merchants/grouped-payment-providers?${convertQuery(payload)}`, headers))
+  listGroupedProviders: (query: ListGroupedProvidersRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.get(`${apiEndpoint}/merchants/grouped-payment-providers?${convertQuery(query)}`, headers))
 }
 
-// Execute Paytrail API
 const payments = {
-  create: (payload: CreatePaymentRequest, headers: { [key: string]: string }) =>
+  create: (payload: CreatePaymentRequest, headers: { [key: string]: string | number }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments`, payload, headers)),
-  createSiSPayment: (payload: CreateSiSPaymentRequest, headers: { [key: string]: string }) =>
-    handleRequest(requests.post(`${apiEndpoint}/payments`, payload, headers))
+  createSiSPayment: (payload: CreateSiSPaymentRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments`, payload, headers)),
+  getPaymentStatus: (param: GetPaymentStatusRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.get(`${apiEndpoint}/payments/${param.transactionId}`, headers)),
+  createRefund: (
+    params: CreateRefundParams,
+    payload: CreateRefundRequest,
+    headers: { [key: string]: string | number }
+  ) => handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund`, payload, headers)),
+  emailRefunds: (params: EmailRefundParams, payload: EmailRefundRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund/email`, payload, headers))
+}
+
+const paymentReports = {
+  paymentReportRequest: (payload: PaymentReportRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/report`, payload, headers))
+}
+
+const settlements = {
+  get: (query: SettlementsRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.get(`${apiEndpoint}/settlements?${convertQuery(query)}`, headers))
+}
+
+const tokenPayments = {
+  createGetToken: (param: GetTokenRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.post(`${apiEndpoint}/tokenization/${param.checkoutTokenizationId}`, {}, headers)),
+  createMitPayment: (payload: MitPaymentRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/mit/charge`, payload, headers)),
+  createMitPaymentAuthorizationHold: (payload: MitPaymentRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/mit/authorization-hold`, payload, headers)),
+  createCitPaymentCharge: (payload: CreateCitPaymentRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/cit/charge`, payload, headers)),
+  createCitPaymentAuthorizationHold: (payload: CreateCitPaymentRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/token/cit/authorization-hold`, payload, headers)),
+  createMitOrCitPaymentCommit: (
+    params: MitPaymentParams | CreateCitPaymentParams,
+    payload: MitPaymentRequest | CreateCitPaymentRequest,
+    headers: { [key: string]: string | number }
+  ) => handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/commit`, payload, headers)),
+  revertPaymentAuthorizationHold: (params: RevertPaymentAuthHoldRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/revert`, {}, headers)),
+  createAddCardFormRequest: (payload: AddCardFormRequest) =>
+    handleRequest(requests.post(`${apiEndpoint}/tokenization/addcard-form`, convertObjectKeys(payload)))
 }
 
 export const api = {
   merchants,
-  payments
+  payments,
+  paymentReports,
+  settlements,
+  tokenPayments
 }

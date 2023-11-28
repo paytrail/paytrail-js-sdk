@@ -1,14 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreatePaymentResponse = void 0;
-class CreatePaymentResponse {
-    constructor() {
-        this.transactionId = '';
-        this.href = '';
-        this.terms = '';
-        this.groups = [];
-        this.reference = '';
-        this.providers = [];
-    }
+exports.CreatePaymentData = exports.CreatePaymentResponse = void 0;
+const response_model_1 = require("./response-model");
+/**
+ * Class CreatePaymentResponse
+ */
+class CreatePaymentResponse extends response_model_1.Response {
 }
 exports.CreatePaymentResponse = CreatePaymentResponse;
+class CreatePaymentData {
+}
+exports.CreatePaymentData = CreatePaymentData;

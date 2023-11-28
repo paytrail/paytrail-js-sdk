@@ -6,14 +6,9 @@
     "noImplicitAny": true,
     "outDir": "dist",
     "rootDir": "./src",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "typeRoots": ["node_modules/@types"],
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": true
   },
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
+  "exclude": ["dist", "node_modules", "tests", "jest.config.ts"]
 }

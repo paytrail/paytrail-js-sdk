@@ -1,20 +1,17 @@
 import { ConfigurationParameters } from './interfaces/IConfiguration.interface';
 export declare class Configuration {
     /**
-     * Paytrail account ID
-     * @type {string}
+     * The merchant id.
      * @memberof Configuration
      */
-    merchantId?: string;
+    merchantId?: number;
     /**
-     * Parameter for API Security
-     * @type {string}
+     * The merchant secret key.
      * @memberof Configuration
      */
     secretKey?: string;
     /**
-     * Platform and integrator information helps customer service to provide better assistance for the merchants using the integration.
-     * @type {string}
+     * Platform name for the API.
      * @memberof Configuration
      */
     platformName?: string;

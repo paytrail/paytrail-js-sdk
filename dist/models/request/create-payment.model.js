@@ -14,6 +14,13 @@ const class_validator_1 = require("class-validator");
 const customer_model_1 = require("./request-model/customer.model");
 const address_model_1 = require("./request-model/address.model");
 const callback_url_model_1 = require("./request-model/callback-url.model");
+/**
+ * Class CreatePaymentRequest
+ *
+ * This class is used to create a payment request object
+ *
+ * @see https://paytrail.github.io/api-documentation/#/?id=create-request-body
+ */
 class CreatePaymentRequest {
 }
 exports.CreatePaymentRequest = CreatePaymentRequest;
@@ -29,8 +36,10 @@ __decorate([
 ], CreatePaymentRequest.prototype, "reference", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsInt)(),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.Min)(0),
+    (0, class_validator_1.Min)(1),
+    (0, class_validator_1.Max)(99999999),
     __metadata("design:type", Number)
 ], CreatePaymentRequest.prototype, "amount", void 0);
 __decorate([
@@ -57,17 +66,30 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.ValidateNested)(),
-    __metadata("design:type", customer_model_1.Customer)
+    __metadata("design:type", customer_model_1.Customer
+    /**
+     * Delivery address.
+     */
+    )
 ], CreatePaymentRequest.prototype, "customer", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
-    __metadata("design:type", address_model_1.Address)
+    __metadata("design:type", address_model_1.Address
+    /**
+     * Invoicing address.
+     */
+    )
 ], CreatePaymentRequest.prototype, "deliveryAddress", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
-    __metadata("design:type", address_model_1.Address)
+    __metadata("design:type", address_model_1.Address
+    /**
+     * If paid with invoice payment method, the invoice will not be activated automatically immediately.
+     * Currently only supported with Walley/Collector.
+     */
+    )
 ], CreatePaymentRequest.prototype, "invoicingAddress", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
@@ -77,12 +99,20 @@ __decorate([
 __decorate([
     (0, class_validator_1.ValidateNested)(),
     (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", callback_url_model_1.CallbackUrl)
+    __metadata("design:type", callback_url_model_1.CallbackUrl
+    /**
+     * Which url to ping after this payment is paid or cancelled.
+     */
+    )
 ], CreatePaymentRequest.prototype, "redirectUrls", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
-    __metadata("design:type", callback_url_model_1.CallbackUrl)
+    __metadata("design:type", callback_url_model_1.CallbackUrl
+    /**
+     * Callback URL polling delay in seconds.
+     */
+    )
 ], CreatePaymentRequest.prototype, "callbackUrls", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
