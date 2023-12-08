@@ -16,7 +16,7 @@ To use the payment service, you need to sign up for a Paytrail account. Transact
 
 ### General requirements
 
-- NodeJS v19.0.0 or later
+- NodeJS v20.0.0 or later
 
 ### Development requirements
 
