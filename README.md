@@ -27,19 +27,19 @@ To use the payment service, you need to sign up for a Paytrail account. Transact
 Install with npm:
 
 ```
-npm install paytrail-js-sdk
+npm install @paytrail/paytrail-js-sdk
 ```
 
 Install with yarn:
 
 ```
-yarn add paytrail-js-sdk
+yarn add @paytrail/paytrail-js-sdk
 ```
 
 ## Usage
 
 ```javascript
-const { PaytrailClient, PaymentMethodGroup } = require('paytrail-js-sdk')
+const { PaytrailClient, PaymentMethodGroup } = require('@paytrail/paytrail-js-sdk')
 
 const client = new PaytrailClient({
   merchantId: 123456,
