@@ -1,5 +1,7 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Length, Min, ValidateNested } from 'class-validator'
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, Min, ValidateNested } from 'class-validator'
 import { Commission } from './commission.model'
+import { Type } from 'class-transformer';
+import 'reflect-metadata'
 
 /**
  * Class Item
@@ -29,8 +31,12 @@ export class Item {
   /**
    * The VAT percentage.
    */
-  @IsNotEmpty()
-  @IsNumber()
+  @IsNumber(
+    { maxDecimalPlaces: 1 },
+    { message: 'VAT percentage values between 0 and 100 are allowed with one number in decimal part' }
+  )
+  @Min(0, { message: 'VAT percentage values between 0 and 100 are allowed with one number in decimal part' })
+  @Max(100, { message: 'VAT percentage values between 0 and 100 are allowed with one number in decimal part' })
   public vatPercentage: number
 
   /**
@@ -103,5 +109,6 @@ export class Item {
    */
   @IsOptional()
   @ValidateNested()
+  @Type(() => Commission)
   public commission?: Commission
 }

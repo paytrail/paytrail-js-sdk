@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { Commission } from './commission.model'
-
+import { Type } from 'class-transformer';
+import 'reflect-metadata'
 /**
  * Class ShopInShopItem
  */
@@ -34,5 +35,6 @@ export class ShopInShopItem {
    * Shop-in-Shop commission. Do not use for normal payments.
    */
   @ValidateNested()
+  @Type(() => Commission)
   public commission?: Commission
 }
