@@ -15,7 +15,8 @@ import { Customer } from './request-model/customer.model'
 import { Address } from './request-model/address.model'
 import { CallbackUrl } from './request-model/callback-url.model'
 import { PaymentMethodGroup } from './request-model/payment-method-group.model'
-
+import { Type } from 'class-transformer';
+import 'reflect-metadata'
 /**
  * Class CreatePaymentRequest
  *
@@ -73,16 +74,18 @@ export class CreatePaymentRequest {
   /**
    * Array of items. Always required for Shop-in-Shop payments. Required if VAT calculations are wanted in settlement reports.
    */
-  @IsOptional()
   @IsArray()
+  @IsOptional()
   @ValidateNested({ each: true })
+  @Type(() => Item)
   public items?: Item[]
 
   /**
    * Customer information.
    */
   @IsNotEmpty()
-  @ValidateNested()
+  @ValidateNested({ each: true })
+  @Type(() => Customer)
   public customer: Customer
 
   /**
@@ -90,6 +93,7 @@ export class CreatePaymentRequest {
    */
   @IsOptional()
   @ValidateNested()
+  @Type(() => Address)
   public deliveryAddress?: Address
 
   /**
@@ -97,6 +101,7 @@ export class CreatePaymentRequest {
    */
   @IsOptional()
   @ValidateNested()
+  @Type(() => Address)
   public invoicingAddress?: Address
 
   /**
@@ -112,6 +117,7 @@ export class CreatePaymentRequest {
    */
   @ValidateNested()
   @IsNotEmpty()
+  @Type(() => CallbackUrl)
   public redirectUrls: CallbackUrl
 
   /**
@@ -119,6 +125,7 @@ export class CreatePaymentRequest {
    */
   @IsOptional()
   @ValidateNested()
+  @Type(() => CallbackUrl)
   public callbackUrls?: CallbackUrl
 
   /**

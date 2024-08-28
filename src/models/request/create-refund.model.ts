@@ -1,5 +1,7 @@
 import { IsArray, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator'
 import { CallbackUrl, RefundItem } from './request-model'
+import { Type } from 'class-transformer';
+import 'reflect-metadata'
 
 /**
  * Class CreateRefundRequest
@@ -41,6 +43,7 @@ export class CreateRefundRequest {
   @IsArray()
   @ValidateNested()
   @IsOptional()
+  @Type(() => RefundItem)
   items?: RefundItem[]
 
   /**
@@ -50,6 +53,7 @@ export class CreateRefundRequest {
    */
   @IsNotEmpty()
   @ValidateNested()
+  @Type(() => CallbackUrl)
   callbackUrls: CallbackUrl
 }
 

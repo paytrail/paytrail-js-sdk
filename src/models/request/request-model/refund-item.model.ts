@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator'
 import { Commission } from './commission.model'
-
+import { Type } from 'class-transformer';
+import 'reflect-metadata'
 /**
  * Class RefundItem
  *
@@ -46,5 +47,6 @@ export class RefundItem {
    */
   @IsOptional()
   @ValidateNested()
+  @Type(() => Commission)
   public commission?: Commission
 }
