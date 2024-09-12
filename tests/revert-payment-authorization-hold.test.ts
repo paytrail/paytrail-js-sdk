@@ -15,7 +15,7 @@ describe('revert-payment-authorization-hold', () => {
 
     const token = await client
       .createGetTokenRequest({
-        checkoutTokenizationId: '818c478e-5682-46bf-97fd-b9c2b93a3fcd'
+        checkoutTokenizationId: '1d0a51f6-a60c-477b-94e2-403a0ed37199'
       })
       .then((res) => res.data.token)
       .catch(() => '')
