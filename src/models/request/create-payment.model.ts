@@ -8,6 +8,7 @@ import {
   IsString,
   Max,
   Min,
+  IsEnum,
   ValidateNested
 } from 'class-validator'
 import { Item } from './request-model/item.model'
@@ -138,9 +139,9 @@ export class CreatePaymentRequest {
   /**
    * Return only given groups.
    */
-  @IsOptional()
   @IsArray()
-  @ValidateNested()
+  @IsOptional()
+  @IsEnum(PaymentMethodGroup, { each: true })
   public groups?: PaymentMethodGroup[]
 
   /**
