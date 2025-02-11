@@ -1,3 +1,5 @@
-export const handleRequest = <T>(promise: Promise<T>) => {
-  return promise.then((data) => [undefined, data] as const).catch((err) => [err, undefined] as const)
+export const handleRequest = <T>(promise: Promise<T>): Promise<readonly [any, T | undefined]> => {
+  return promise
+    .then((data): readonly [undefined, T] => [undefined, data] as const)
+    .catch((err): readonly [any, undefined] => [err, undefined] as const)
 }

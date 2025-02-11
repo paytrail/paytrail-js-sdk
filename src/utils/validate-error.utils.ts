@@ -20,7 +20,7 @@ export const validateError = async (target: object) => {
 
   if (errors.length > 0) {
     const errorMessages = extractValidationErrors(errors)
-  
+
     return JSON.stringify(errorMessages)
   } else {
     return null
