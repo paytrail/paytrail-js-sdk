@@ -16,7 +16,7 @@ import { Customer } from './request-model/customer.model'
 import { Address } from './request-model/address.model'
 import { CallbackUrl } from './request-model/callback-url.model'
 import { PaymentMethodGroup } from './request-model/payment-method-group.model'
-import { Type } from 'class-transformer';
+import { Type } from 'class-transformer'
 import 'reflect-metadata'
 /**
  * Class CreatePaymentRequest

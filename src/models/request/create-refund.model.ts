@@ -1,6 +1,6 @@
 import { IsArray, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator'
 import { CallbackUrl, RefundItem } from './request-model'
-import { Type } from 'class-transformer';
+import { Type } from 'class-transformer'
 import 'reflect-metadata'
 
 /**
