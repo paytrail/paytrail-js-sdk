@@ -1,4 +1,5 @@
 import { Card, CustomerDetail, Response } from './response-model'
+import { NetworkToken } from './response-model/network-token.model'
 
 /**
  * Class GetTokenResponse
@@ -20,7 +21,7 @@ export class GetTokenData {
   token: string
 
   /**
-   * Masked card details. Present if verification was successful.
+   * Masked card details.
    */
   card: Card
 
@@ -28,4 +29,9 @@ export class GetTokenData {
    * Customer details.
    */
   customer: CustomerDetail
+
+  /**
+   * Additional network token details.Present if token is of type network token.
+   */
+  network_token?: NetworkToken
 }
