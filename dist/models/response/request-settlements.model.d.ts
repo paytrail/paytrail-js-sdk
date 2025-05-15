@@ -6,7 +6,7 @@ export declare class SettlementsResponse extends Response {
     /**
      * Data response.
      */
-    data: SettlementsData;
+    data?: SettlementsData;
 }
 /**
  * Class SettlementsData

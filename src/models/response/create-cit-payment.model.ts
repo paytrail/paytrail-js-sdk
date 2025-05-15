@@ -7,7 +7,7 @@ export class CreateCitPaymentResponse extends Response {
   /**
    * Data response.
    */
-  data: CreateCitPaymentData
+  data?: CreateCitPaymentData
 }
 
 /**

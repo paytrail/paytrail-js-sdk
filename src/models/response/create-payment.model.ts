@@ -10,7 +10,7 @@ export class CreatePaymentResponse extends Response {
   /**
    * Data response.
    */
-  data: CreatePaymentData
+  data?: CreatePaymentData
 }
 
 export class CreatePaymentData {

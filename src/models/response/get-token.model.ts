@@ -8,7 +8,7 @@ export class GetTokenResponse extends Response {
   /**
    * Data response.
    */
-  data: GetTokenData
+  data?: GetTokenData
 }
 
 /**

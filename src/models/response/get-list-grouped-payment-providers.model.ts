@@ -9,7 +9,7 @@ export class ListGroupedProvidersResponse extends Response {
   /**
    * Data response.
    */
-  data: ListGroupedProvidersData
+  data?: ListGroupedProvidersData
 }
 
 /**
