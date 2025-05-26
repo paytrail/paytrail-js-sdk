@@ -339,16 +339,33 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   }
 
   public async createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse> {
+    // eslint-disable-next-line no-useless-catch
     try {
       return await this.callApi<AddCardFormResponse>(
-        () => api.tokenPayments.createAddCardFormRequest(addCardFormRequest),
+        async () => {
+          try {
+            const data = await api.tokenPayments.createAddCardFormRequest(addCardFormRequest)
+            // If the response is { data: { redirectUrl } }
+            if (data && 'data' in data && data.data && 'redirectUrl' in data.data) {
+              return [undefined, data.data]
+            }
+            return [undefined, data]
+          } catch (error) {
+            // If error is an object with status, pass it as the first tuple element
+            if (error && typeof error === 'object' && 'status' in error) {
+              return [error, undefined]
+            }
+            // Otherwise, treat as generic error
+            return [error, undefined]
+          }
+        },
         AddCardFormResponse,
         () => validateError(convertObjectToClass(addCardFormRequest, AddCardFormRequest)),
         null,
         null
       )
     } catch (error) {
-      throw new Error(error?.message)
+      throw error
     }
   }
 }
