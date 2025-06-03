@@ -7,7 +7,7 @@ export class GetPaymentStatusResponse extends Response {
   /**
    * Data response.
    */
-  data: GetPaymentStatusData
+  data?: GetPaymentStatusData
 }
 
 /**

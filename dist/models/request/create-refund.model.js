@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateRefundParams = exports.CreateRefundRequest = void 0;
 const class_validator_1 = require("class-validator");
 const request_model_1 = require("./request-model");
+const class_transformer_1 = require("class-transformer");
+require("reflect-metadata");
 /**
  * Class CreateRefundRequest
  *
@@ -44,11 +46,13 @@ __decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ValidateNested)(),
     (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => request_model_1.RefundItem),
     __metadata("design:type", Array)
 ], CreateRefundRequest.prototype, "items", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => request_model_1.CallbackUrl),
     __metadata("design:type", request_model_1.CallbackUrl)
 ], CreateRefundRequest.prototype, "callbackUrls", void 0);
 /**

@@ -9,7 +9,7 @@ export declare class CreatePaymentResponse extends Response {
     /**
      * Data response.
      */
-    data: CreatePaymentData;
+    data?: CreatePaymentData;
 }
 export declare class CreatePaymentData {
     /**
