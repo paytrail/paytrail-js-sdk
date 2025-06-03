@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Item = void 0;
 const class_validator_1 = require("class-validator");
 const commission_model_1 = require("./commission.model");
+const class_transformer_1 = require("class-transformer");
+require("reflect-metadata");
 /**
  * Class Item
  *
@@ -35,8 +37,9 @@ __decorate([
     __metadata("design:type", Number)
 ], Item.prototype, "units", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNumber)({ maxDecimalPlaces: 1 }, { message: 'VAT percentage values between 0 and 100 are allowed with one number in decimal part' }),
+    (0, class_validator_1.Min)(0, { message: 'VAT percentage values between 0 and 100 are allowed with one number in decimal part' }),
+    (0, class_validator_1.Max)(100, { message: 'VAT percentage values between 0 and 100 are allowed with one number in decimal part' }),
     __metadata("design:type", Number)
 ], Item.prototype, "vatPercentage", void 0);
 __decorate([
@@ -82,5 +85,6 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => commission_model_1.Commission),
     __metadata("design:type", commission_model_1.Commission)
 ], Item.prototype, "commission", void 0);
