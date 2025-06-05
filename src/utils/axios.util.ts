@@ -1,7 +1,8 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { API_ENDPOINT } from '../constants/variable.constant'
 import {
   AddCardFormRequest,
+  AddCardFormResponse,
   CreateCitPaymentParams,
   CreateCitPaymentRequest,
   CreatePaymentRequest,
@@ -110,8 +111,63 @@ const tokenPayments = {
   ) => handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/commit`, payload, headers)),
   revertPaymentAuthorizationHold: (params: RevertPaymentAuthHoldRequest, headers: { [key: string]: string | number }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/revert`, {}, headers)),
-  createAddCardFormRequest: (payload: AddCardFormRequest) =>
-    handleRequest(requests.post(`${apiEndpoint}/tokenization/addcard-form`, convertObjectKeys(payload)))
+  createAddCardFormRequest: async (payload: AddCardFormRequest): Promise<AddCardFormResponse> => {
+    const [err, res] = await handleRequest(
+      axios({
+        method: 'post',
+        url: `${apiEndpoint}/tokenization/addcard-form`,
+        data: convertObjectKeys(payload),
+        maxRedirects: 0,
+        validateStatus: (status: number) => status >= 200 && status < 400
+      })
+    )
+
+    if (err) {
+      // If the error has a response and status, throw an object with status for test compatibility
+      if (err && err.response && err.response.status) {
+        throw { status: err.response.status, message: err.response.data?.message || err.message }
+      }
+      throw err
+    }
+
+    // Get the redirect URL from the response headers or data
+    // Check if res is an AxiosResponse or a plain object
+    let redirectUrl: string | undefined = undefined
+    if (
+      res &&
+      typeof res === 'object' &&
+      'headers' in res &&
+      res.headers &&
+      res.headers.redirects &&
+      res.headers.redirects.redirectUrl
+    ) {
+      redirectUrl = res.headers.redirects.redirectUrl
+    } else if (
+      res &&
+      typeof res === 'object' &&
+      'headers' in res &&
+      res.headers &&
+      (res as AxiosResponse).headers.location
+    ) {
+      redirectUrl = (res as AxiosResponse).headers.location
+    } else if (typeof res === 'string') {
+      // Extract URL from HTML anchor tag
+      const match = (res as string).match(/href=["']([^"']+)["']/)
+      if (match) {
+        redirectUrl = match[1]
+      }
+    } else if (res && typeof res === 'object' && res.data && typeof res.data.redirectUrl === 'string') {
+      // Fallback: check for data.redirectUrl property
+      redirectUrl = res.data.redirectUrl
+    }
+
+    // If redirectUrl is missing, undefined, or not a valid string, treat as error
+    if (!redirectUrl || typeof redirectUrl !== 'string' || redirectUrl.trim() === '') {
+      throw { status: 500, message: 'Missing or invalid redirectUrl in response' }
+    }
+    // Return only the redirectUrl object, let handleResponse wrap it
+    return { data: { redirectUrl }, message: 'Success', status: 200 }
+  }
 }
 
 export const api = {
