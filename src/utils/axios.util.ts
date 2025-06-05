@@ -3,7 +3,6 @@ import { API_ENDPOINT } from '../constants/variable.constant'
 import {
   AddCardFormRequest,
   AddCardFormResponse,
-  AddCardFormData,
   CreateCitPaymentParams,
   CreateCitPaymentRequest,
   CreatePaymentRequest,
