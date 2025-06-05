@@ -7,7 +7,7 @@ export declare class EmailRefundResponse extends Response {
     /**
      * Data response.
      */
-    data: EmailRefundData;
+    data?: EmailRefundData;
 }
 /**
  * Class EmailRefundData

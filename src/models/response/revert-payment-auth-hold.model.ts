@@ -7,7 +7,7 @@ export class RevertPaymentAuthHoldResponse extends Response {
   /**
    * Data response.
    */
-  data: RevertPaymentAuthHoldData
+  data?: RevertPaymentAuthHoldData
 }
 
 /**

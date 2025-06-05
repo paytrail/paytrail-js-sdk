@@ -11,9 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreatePaymentRequest = void 0;
 const class_validator_1 = require("class-validator");
+const item_model_1 = require("./request-model/item.model");
 const customer_model_1 = require("./request-model/customer.model");
 const address_model_1 = require("./request-model/address.model");
 const callback_url_model_1 = require("./request-model/callback-url.model");
+const payment_method_group_model_1 = require("./request-model/payment-method-group.model");
+const class_transformer_1 = require("class-transformer");
+require("reflect-metadata");
 /**
  * Class CreatePaymentRequest
  *
@@ -58,14 +62,16 @@ __decorate([
     __metadata("design:type", String)
 ], CreatePaymentRequest.prototype, "orderId", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => item_model_1.Item),
     __metadata("design:type", Array)
 ], CreatePaymentRequest.prototype, "items", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.ValidateNested)(),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => customer_model_1.Customer),
     __metadata("design:type", customer_model_1.Customer
     /**
      * Delivery address.
@@ -75,6 +81,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => address_model_1.Address),
     __metadata("design:type", address_model_1.Address
     /**
      * Invoicing address.
@@ -84,6 +91,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => address_model_1.Address),
     __metadata("design:type", address_model_1.Address
     /**
      * If paid with invoice payment method, the invoice will not be activated automatically immediately.
@@ -99,6 +107,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.ValidateNested)(),
     (0, class_validator_1.IsNotEmpty)(),
+    (0, class_transformer_1.Type)(() => callback_url_model_1.CallbackUrl),
     __metadata("design:type", callback_url_model_1.CallbackUrl
     /**
      * Which url to ping after this payment is paid or cancelled.
@@ -108,6 +117,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => callback_url_model_1.CallbackUrl),
     __metadata("design:type", callback_url_model_1.CallbackUrl
     /**
      * Callback URL polling delay in seconds.
@@ -120,9 +130,9 @@ __decorate([
     __metadata("design:type", Number)
 ], CreatePaymentRequest.prototype, "callbackDelay", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ValidateNested)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(payment_method_group_model_1.PaymentMethodGroup, { each: true }),
     __metadata("design:type", Array)
 ], CreatePaymentRequest.prototype, "groups", void 0);
 __decorate([

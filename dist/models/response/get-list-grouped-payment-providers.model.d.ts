@@ -8,7 +8,7 @@ export declare class ListGroupedProvidersResponse extends Response {
     /**
      * Data response.
      */
-    data: ListGroupedProvidersData;
+    data?: ListGroupedProvidersData;
 }
 /**
  * Class ListGroupedProvidersData

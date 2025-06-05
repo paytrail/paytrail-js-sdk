@@ -6,7 +6,7 @@ export declare class RevertPaymentAuthHoldResponse extends Response {
     /**
      * Data response.
      */
-    data: RevertPaymentAuthHoldData;
+    data?: RevertPaymentAuthHoldData;
 }
 /**
  * Class RevertPaymentAuthHoldData

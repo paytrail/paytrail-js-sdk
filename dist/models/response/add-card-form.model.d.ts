@@ -6,7 +6,7 @@ export declare class AddCardFormResponse extends Response {
     /**
      * Data response.
      */
-    data: AddCardFormData;
+    data?: AddCardFormData;
 }
 /**
  * Class AddCardFormData

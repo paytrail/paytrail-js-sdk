@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, Min, ValidateNested } from 'class-validator'
 import { Commission } from './commission.model'
-import { Type } from 'class-transformer';
+import { Type } from 'class-transformer'
 import 'reflect-metadata'
 
 /**

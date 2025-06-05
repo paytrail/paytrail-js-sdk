@@ -6,7 +6,7 @@ export declare class MitPaymentResponse extends Response {
     /**
      * Data response.
      */
-    data: MitPaymentData;
+    data?: MitPaymentData;
 }
 /**
  * Class MitPaymentData
