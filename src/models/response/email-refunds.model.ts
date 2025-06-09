@@ -8,7 +8,7 @@ export class EmailRefundResponse extends Response {
   /**
    * Data response.
    */
-  data: EmailRefundData
+  data?: EmailRefundData
 }
 
 /**

@@ -9,7 +9,7 @@ export declare class CreateSiSPaymentResponse extends Response {
     /**
      * Data response.
      */
-    data: CreateSiSPaymentData;
+    data?: CreateSiSPaymentData;
 }
 /**
  * Class CreateSiSPaymentData

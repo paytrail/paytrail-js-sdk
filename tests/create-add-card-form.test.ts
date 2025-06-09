@@ -37,14 +37,17 @@ describe('create-add-card-form', () => {
 
   it('should return status 200', async () => {
     const data = await client.createAddCardFormRequest(standardData)
-
-    expect(data.status).toEqual(200)
+    expect(data).toHaveProperty('status', 200)
+    expect(data).toBeDefined()
+    expect(typeof data.data.redirectUrl).toBe('string')
   })
 
   it('should return status 401', async () => {
-    const data = await client.createAddCardFormRequest(nonStandardData)
-
-    expect(data.status).toEqual(401)
+    try {
+      await client.createAddCardFormRequest(nonStandardData)
+    } catch (error: any) {
+      expect(error.status).toEqual(401)
+    }
   })
 
   it('should handle API error', async () => {

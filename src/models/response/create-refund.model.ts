@@ -7,7 +7,7 @@ export class CreateRefundResponse extends Response {
   /**
    * Data response.
    */
-  data: CreateRefundData
+  data?: CreateRefundData
 }
 
 /**

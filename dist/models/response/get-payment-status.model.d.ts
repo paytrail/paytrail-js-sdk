@@ -6,7 +6,7 @@ export declare class GetPaymentStatusResponse extends Response {
     /**
      * Data response.
      */
-    data: GetPaymentStatusData;
+    data?: GetPaymentStatusData;
 }
 /**
  * Class GetPaymentStatusData

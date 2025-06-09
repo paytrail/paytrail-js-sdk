@@ -1,4 +1,5 @@
 import { Commission } from './commission.model';
+import 'reflect-metadata';
 /**
  * Class ShopInShopItem
  */

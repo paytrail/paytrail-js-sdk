@@ -7,7 +7,7 @@ export class SettlementsResponse extends Response {
   /**
    * Data response.
    */
-  data: SettlementsData
+  data?: SettlementsData
 }
 
 /**

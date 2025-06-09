@@ -10,16 +10,16 @@ describe('paymen-report-request', () => {
     requestType: RequestType.JSON,
     callbackUrl: 'https://ecom.example.org/refund/success',
     paymentStatus: PaymentStatus.DEFAULT,
-    startDate: '2023-07-16T02:32:23.894Z',
-    endDate: '2023-08-16T02:32:23.894Z',
+    startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString(),
+    endDate: new Date().toISOString(),
     limit: 5000
   }
   const nonStandardData = {
     requestType: RequestType.JSON,
     callbackUrl: 'https://ecom.example.org/refund/success',
     paymentStatus: PaymentStatus.DEFAULT,
-    startDate: '2023-07-16T02:32:23.894Z',
-    endDate: '2023-08-16T02:32:23.894Z',
+    startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString(),
+    endDate: new Date().toISOString(),
     limit: -5000
   }
 
@@ -33,7 +33,6 @@ describe('paymen-report-request', () => {
 
   it('should return status 200', async () => {
     const data = await client.paymentReportRequest(standardData)
-
     expect(data.status).toEqual(200)
   })
 

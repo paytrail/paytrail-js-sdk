@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RefundItem = void 0;
 const class_validator_1 = require("class-validator");
 const commission_model_1 = require("./commission.model");
+const class_transformer_1 = require("class-transformer");
+require("reflect-metadata");
 /**
  * Class RefundItem
  *
@@ -45,5 +47,6 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => commission_model_1.Commission),
     __metadata("design:type", commission_model_1.Commission)
 ], RefundItem.prototype, "commission", void 0);

@@ -1,4 +1,5 @@
 import { CallbackUrl, RefundItem } from './request-model';
+import 'reflect-metadata';
 /**
  * Class CreateRefundRequest
  *
