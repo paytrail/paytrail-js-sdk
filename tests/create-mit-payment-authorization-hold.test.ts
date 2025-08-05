@@ -1,65 +1,70 @@
 import { api } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import { MitPaymentRequest } from '../src/models/request/mit-payment.model'
+import { Item } from '../src/models/request/request-model/item.model'
+import { Customer } from '../src/models/request/request-model/customer.model'
+import { CallbackUrl } from '../src/models/request/request-model/callback-url.model'
 import * as crypto from 'crypto'
 
 describe('create-mit-payment-authorization-hold', () => {
   let client: PaytrailClient
   let token: string
 
-  const standardData = {
-    stamp: crypto.randomUUID(),
-    reference: '9187445',
-    amount: 1590,
-    currency: 'EUR',
-    language: 'FI',
-    items: [
-      {
-        unitPrice: 1590,
-        units: 1,
-        vatPercentage: 24,
-        productCode: '#927502759',
-        description: 'Cat ladder',
-        category: 'Pet supplies',
-        merchant: '695874',
-        stamp: crypto.randomUUID(),
-        reference: '9187445'
-      }
-    ],
-    customer: {
-      email: 'erja.esimerkki@example.org'
-    },
-    redirectUrls: {
-      success: 'https://ecom.example.org/success',
-      cancel: 'https://ecom.example.org/cancel'
-    }
-  }
-  const nonStandardData = {
-    stamp: crypto.randomUUID(),
-    reference: '9187445',
-    amount: -1590,
-    currency: 'EUR',
-    language: 'FI',
-    items: [
-      {
-        unitPrice: 1590,
-        units: 1,
-        vatPercentage: 24,
-        productCode: '#927502759',
-        description: 'Cat ladder',
-        category: 'Pet supplies',
-        merchant: '695874',
-        stamp: crypto.randomUUID(),
-        reference: '9187445'
-      }
-    ],
-    customer: {
-      email: 'erja.esimerkki@example.org'
-    },
-    redirectUrls: {
-      success: 'https://ecom.example.org/success',
-      cancel: 'https://ecom.example.org/cancel'
-    }
-  }
+  const standardData = new MitPaymentRequest()
+  standardData.stamp = crypto.randomUUID()
+  standardData.reference = '9187445'
+  standardData.amount = 1590
+  standardData.currency = 'EUR'
+  standardData.language = 'FI'
+  
+  const item = new Item()
+  item.unitPrice = 1590
+  item.units = 1
+  item.vatPercentage = 24
+  item.productCode = '#927502759'
+  item.description = 'Cat ladder'
+  item.category = 'Pet supplies'
+  item.merchant = '695874'
+  item.stamp = crypto.randomUUID()
+  item.reference = '9187445'
+  standardData.items = [item]
+
+  const customer = new Customer()
+  customer.email = 'erja.esimerkki@example.org'
+  standardData.customer = customer
+
+  const redirectUrls = new CallbackUrl()
+  redirectUrls.success = 'https://ecom.example.org/success'
+  redirectUrls.cancel = 'https://ecom.example.org/cancel'
+  standardData.redirectUrls = redirectUrls
+
+  const nonStandardData = new MitPaymentRequest()
+  nonStandardData.stamp = crypto.randomUUID()
+  nonStandardData.reference = '9187445'
+  nonStandardData.amount = -1590
+  nonStandardData.currency = 'EUR'
+  nonStandardData.language = 'FI'
+  
+  const nonStandardItem = new Item()
+  nonStandardItem.unitPrice = 1590
+  nonStandardItem.units = 1
+  nonStandardItem.vatPercentage = 24
+  nonStandardItem.productCode = '#927502759'
+  nonStandardItem.description = 'Cat ladder'
+  nonStandardItem.category = 'Pet supplies'
+  nonStandardItem.merchant = '695874'
+  nonStandardItem.stamp = crypto.randomUUID()
+  nonStandardItem.reference = '9187445'
+  nonStandardData.items = [nonStandardItem]
+
+  const nonStandardCustomer = new Customer()
+  nonStandardCustomer.email = 'erja.esimerkki@example.org'
+  nonStandardData.customer = nonStandardCustomer
+
+  const nonStandardRedirectUrls = new CallbackUrl()
+  nonStandardRedirectUrls.success = 'https://ecom.example.org/success'
+  nonStandardRedirectUrls.cancel = 'https://ecom.example.org/cancel'
+  nonStandardData.redirectUrls = nonStandardRedirectUrls
 
   beforeEach(async () => {
     client = new PaytrailClient({
@@ -77,19 +82,15 @@ describe('create-mit-payment-authorization-hold', () => {
   })
 
   it('should return status 200', async () => {
-    const data = await client.createMitPaymentAuthorizationHold({
-      ...standardData,
-      token
-    })
+    standardData.token = token
+    const data = await client.createMitPaymentAuthorizationHold(standardData)
 
     expect(data.status).toEqual(200)
   })
 
   it('should return status 400', async () => {
-    const data = await client.createMitPaymentAuthorizationHold({
-      ...nonStandardData,
-      token
-    })
+    nonStandardData.token = token
+    const data = await client.createMitPaymentAuthorizationHold(nonStandardData)
 
     expect(data.status).toEqual(400)
   })
@@ -101,10 +102,8 @@ describe('create-mit-payment-authorization-hold', () => {
       platformName: 'test'
     })
 
-    const data = await client.createMitPaymentAuthorizationHold({
-      ...standardData,
-      token
-    })
+    standardData.token = token
+    const data = await client.createMitPaymentAuthorizationHold(standardData)
 
     expect(data.status).toEqual(401)
   })
@@ -114,10 +113,8 @@ describe('create-mit-payment-authorization-hold', () => {
     jest.spyOn(api.tokenPayments, 'createMitPaymentAuthorizationHold').mockRejectedValue(mockError)
 
     try {
-      await client.createMitPaymentAuthorizationHold({
-        ...standardData,
-        token
-      })
+      standardData.token = token
+      await client.createMitPaymentAuthorizationHold(standardData)
     } catch (error) {
       expect(error.message).toBe('API error')
     }

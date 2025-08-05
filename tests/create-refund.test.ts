@@ -1,29 +1,32 @@
 import { api, requests } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import { CreateRefundRequest, CreateRefundParams } from '../src/models/request/create-refund.model'
+import { CallbackUrl } from '../src/models/request/request-model/callback-url.model'
 import * as crypto from 'crypto'
 
 describe('create-refund', () => {
   let client: PaytrailClient
   let transactionId: string
 
-  const standardData = {
-    amount: 1590,
-    refundStamp: crypto.randomUUID(),
-    refundReference: '9187445',
-    callbackUrls: {
-      success: 'https://ecom.example.org/refund/success',
-      cancel: 'https://ecom.example.org/refund/cancel'
-    }
-  }
-  const nonStandardData = {
-    amount: -1590,
-    refundStamp: crypto.randomUUID(),
-    refundReference: '9187445',
-    callbackUrls: {
-      success: 'https://ecom.example.org/refund/success',
-      cancel: 'https://ecom.example.org/refund/cancel'
-    }
-  }
+  const standardData = new CreateRefundRequest()
+  standardData.amount = 1590
+  standardData.refundStamp = crypto.randomUUID()
+  standardData.refundReference = '9187445'
+  
+  const callbackUrls = new CallbackUrl()
+  callbackUrls.success = 'https://ecom.example.org/refund/success'
+  callbackUrls.cancel = 'https://ecom.example.org/refund/cancel'
+  standardData.callbackUrls = callbackUrls
+
+  const nonStandardData = new CreateRefundRequest()
+  nonStandardData.amount = -1590
+  nonStandardData.refundStamp = crypto.randomUUID()
+  nonStandardData.refundReference = '9187445'
+  
+  const nonStandardCallbackUrls = new CallbackUrl()
+  nonStandardCallbackUrls.success = 'https://ecom.example.org/refund/success'
+  nonStandardCallbackUrls.cancel = 'https://ecom.example.org/refund/cancel'
+  nonStandardData.callbackUrls = nonStandardCallbackUrls
 
   beforeEach(async () => {
     client = new PaytrailClient({
@@ -71,35 +74,29 @@ describe('create-refund', () => {
       transactionId: '258ad3a5-9711-44c3-be65-64a0ef462ba3'
     })
 
-    const data = await client.createRefund(
-      {
-        transactionId
-      },
-      standardData
-    )
+    const params = new CreateRefundParams()
+    params.transactionId = transactionId
+
+    const data = await client.createRefund(params, standardData)
 
     expect(data.status).toEqual(200)
     postMock.mockRestore()
   })
 
   it('should return status 400', async () => {
-    const data = await client.createRefund(
-      {
-        transactionId
-      },
-      nonStandardData
-    )
+    const params = new CreateRefundParams()
+    params.transactionId = transactionId
+
+    const data = await client.createRefund(params, nonStandardData)
 
     expect(data.status).toEqual(400)
   })
 
   it('should return status 404', async () => {
-    const data = await client.createRefund(
-      {
-        transactionId: '9dd69e18-3fc3-11ee-b592-d35f161da10a'
-      },
-      standardData
-    )
+    const params = new CreateRefundParams()
+    params.transactionId = '9dd69e18-3fc3-11ee-b592-d35f161da10a'
+
+    const data = await client.createRefund(params, standardData)
 
     expect(data.status).toEqual(404)
   })
@@ -111,12 +108,10 @@ describe('create-refund', () => {
       platformName: 'test'
     })
 
-    const data = await client.createRefund(
-      {
-        transactionId
-      },
-      standardData
-    )
+    const params = new CreateRefundParams()
+    params.transactionId = transactionId
+
+    const data = await client.createRefund(params, standardData)
 
     expect(data.status).toEqual(401)
   })
@@ -126,12 +121,10 @@ describe('create-refund', () => {
     jest.spyOn(api.payments, 'createRefund').mockRejectedValue(mockError)
 
     try {
-      await client.createRefund(
-        {
-          transactionId
-        },
-        standardData
-      )
+      const params = new CreateRefundParams()
+      params.transactionId = transactionId
+
+      await client.createRefund(params, standardData)
     } catch (error) {
       expect(error.message).toBe('API error')
     }

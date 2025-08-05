@@ -14,19 +14,21 @@ describe('list-grouped-providers', () => {
   })
 
   it('should return status 200', async () => {
-    const data = await client.listGroupedProviders({
-      amount: 1,
-      groups: [PaymentMethodGroup.Mobile, PaymentMethodGroup.CreditCard]
-    })
+    const request = new ListGroupedProvidersRequest()
+    request.amount = 1
+    request.groups = [PaymentMethodGroup.Mobile, PaymentMethodGroup.CreditCard]
+
+    const data = await client.listGroupedProviders(request)
 
     expect(data.status).toEqual(200)
   })
 
   it('should return status 400', async () => {
-    const data = await client.listGroupedProviders({
-      amount: -1,
-      groups: [PaymentMethodGroup.Mobile, PaymentMethodGroup.CreditCard]
-    })
+    const request = new ListGroupedProvidersRequest()
+    request.amount = -1
+    request.groups = [PaymentMethodGroup.Mobile, PaymentMethodGroup.CreditCard]
+
+    const data = await client.listGroupedProviders(request)
 
     expect(data.status).toEqual(400)
   })
@@ -38,10 +40,11 @@ describe('list-grouped-providers', () => {
       platformName: 'test'
     })
 
-    const data = await client.listGroupedProviders({
-      amount: 1,
-      groups: [PaymentMethodGroup.Mobile, PaymentMethodGroup.CreditCard]
-    })
+    const request = new ListGroupedProvidersRequest()
+    request.amount = 1
+    request.groups = [PaymentMethodGroup.Mobile, PaymentMethodGroup.CreditCard]
+
+    const data = await client.listGroupedProviders(request)
 
     expect(data.status).toEqual(401)
   })
@@ -50,10 +53,9 @@ describe('list-grouped-providers', () => {
     const mockError = new Error('API error')
     jest.spyOn(api.merchants, 'listGroupedProviders').mockRejectedValue(mockError)
 
-    const request: ListGroupedProvidersRequest = {
-      amount: 1,
-      groups: [PaymentMethodGroup.Mobile, PaymentMethodGroup.CreditCard]
-    }
+    const request: ListGroupedProvidersRequest = new ListGroupedProvidersRequest()
+    request.amount = 1
+    request.groups = [PaymentMethodGroup.Mobile, PaymentMethodGroup.CreditCard]
 
     try {
       await client.listGroupedProviders(request)
