@@ -1,5 +1,7 @@
-import { IsNotEmpty, IsNumber, Min, Max } from 'class-validator'
+import { IsNotEmpty, IsNumber, Min, Max, IsOptional, ValidateNested } from 'class-validator'
 import { Item } from './item.model'
+import { Type } from 'class-transformer'
+import { Commission } from './commission.model'
 import 'reflect-metadata'
 
 /**
@@ -39,4 +41,12 @@ export class ShopInShopItem extends Item {
    */
   @IsNotEmpty()
   public merchant: string
+
+  /**
+   * Shop-in-Shop commission. Optional for Shop-in-Shop payments only.
+   */
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => Commission)
+  public commission?: Commission
 }
