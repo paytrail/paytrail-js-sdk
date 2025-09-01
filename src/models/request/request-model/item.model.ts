@@ -1,6 +1,5 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator'
 import 'reflect-metadata'
-import { IsValidUnitPrice } from '../../../validators/unit-price.validator'
 
  
 
@@ -21,7 +20,6 @@ export class Item {
    */
   @IsNotEmpty()
   @IsNumber()
-  @IsValidUnitPrice()
   public unitPrice: number
 
   /**
