@@ -1,5 +1,6 @@
 import { api } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import { GetPaymentStatusRequest } from '../src/models/request/get-payment-status.model'
 import * as crypto from 'crypto'
 
 describe('get-payment-status', () => {
@@ -46,25 +47,28 @@ describe('get-payment-status', () => {
   })
 
   it('should return status 200', async () => {
-    const data = await client.getPaymentStatus({
-      transactionId
-    })
+    const request = new GetPaymentStatusRequest()
+    request.transactionId = transactionId
+
+    const data = await client.getPaymentStatus(request)
 
     expect(data.status).toEqual(200)
   })
 
   it('should return status 400', async () => {
-    const data = await client.getPaymentStatus({
-      transactionId: 'ff47f86d2-3bde-11ee-b003-67223adb8e7d'
-    })
+    const request = new GetPaymentStatusRequest()
+    request.transactionId = 'ff47f86d2-3bde-11ee-b003-67223adb8e7d'
+
+    const data = await client.getPaymentStatus(request)
 
     expect(data.status).toEqual(400)
   })
 
   it('should return status 404', async () => {
-    const data = await client.getPaymentStatus({
-      transactionId: 'f47f86d2-3bde-11ee-b003-67223adb8e7d'
-    })
+    const request = new GetPaymentStatusRequest()
+    request.transactionId = 'f47f86d2-3bde-11ee-b003-67223adb8e7d'
+
+    const data = await client.getPaymentStatus(request)
 
     expect(data.status).toEqual(404)
   })
@@ -76,9 +80,10 @@ describe('get-payment-status', () => {
       platformName: 'test'
     })
 
-    const data = await client.getPaymentStatus({
-      transactionId
-    })
+    const request = new GetPaymentStatusRequest()
+    request.transactionId = transactionId
+
+    const data = await client.getPaymentStatus(request)
 
     expect(data.status).toEqual(401)
   })

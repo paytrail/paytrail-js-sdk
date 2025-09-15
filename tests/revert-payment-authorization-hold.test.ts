@@ -1,5 +1,6 @@
 import { api } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import { RevertPaymentAuthHoldRequest } from '../src/models/request/revert-payment-auth-hold.model'
 import * as crypto from 'crypto'
 
 describe('revert-payment-authorization-hold', () => {
@@ -54,25 +55,28 @@ describe('revert-payment-authorization-hold', () => {
   })
 
   it('should return status 200', async () => {
-    const data = await client.revertPaymentAuthorizationHold({
-      transactionId
-    })
+    const request = new RevertPaymentAuthHoldRequest()
+    request.transactionId = transactionId
+
+    const data = await client.revertPaymentAuthorizationHold(request)
 
     expect(data.status).toEqual(200)
   })
 
   it('should return status 400', async () => {
-    const data = await client.revertPaymentAuthorizationHold({
-      transactionId: '009a0d546-416d-11ee-a5c4-8b35d0c46e58'
-    })
+    const request = new RevertPaymentAuthHoldRequest()
+    request.transactionId = '009a0d546-416d-11ee-a5c4-8b35d0c46e58'
+
+    const data = await client.revertPaymentAuthorizationHold(request)
 
     expect(data.status).toEqual(400)
   })
 
   it('should return status 404', async () => {
-    const data = await client.revertPaymentAuthorizationHold({
-      transactionId: '9dd69e18-3fc3-11ee-b592-d35f161da10a'
-    })
+    const request = new RevertPaymentAuthHoldRequest()
+    request.transactionId = '9dd69e18-3fc3-11ee-b592-d35f161da10a'
+
+    const data = await client.revertPaymentAuthorizationHold(request)
 
     expect(data.status).toEqual(404)
   })
@@ -84,9 +88,10 @@ describe('revert-payment-authorization-hold', () => {
       platformName: 'test'
     })
 
-    const data = await client.revertPaymentAuthorizationHold({
-      transactionId
-    })
+    const request = new RevertPaymentAuthHoldRequest()
+    request.transactionId = transactionId
+
+    const data = await client.revertPaymentAuthorizationHold(request)
 
     expect(data.status).toEqual(401)
   })
@@ -96,9 +101,10 @@ describe('revert-payment-authorization-hold', () => {
     jest.spyOn(api.tokenPayments, 'revertPaymentAuthorizationHold').mockRejectedValue(mockError)
 
     try {
-      await client.revertPaymentAuthorizationHold({
-        transactionId
-      })
+      const request = new RevertPaymentAuthHoldRequest()
+      request.transactionId = transactionId
+
+      await client.revertPaymentAuthorizationHold(request)
     } catch (error) {
       expect(error.message).toBe('API error')
     }

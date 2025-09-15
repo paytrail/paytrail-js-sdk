@@ -18,6 +18,7 @@ import { CallbackUrl } from './request-model/callback-url.model'
 import { PaymentMethodGroup } from './request-model/payment-method-group.model'
 import { Type } from 'class-transformer'
 import 'reflect-metadata'
+import { ValidateItemPrices } from '../../validators/create-payment.validator'
 /**
  * Class CreatePaymentRequest
  *
@@ -79,6 +80,7 @@ export class CreatePaymentRequest {
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => Item)
+  @ValidateItemPrices()
   public items?: Item[]
 
   /**

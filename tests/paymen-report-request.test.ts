@@ -1,27 +1,27 @@
 import { RequestType } from '../src/models'
 import { PaymentStatus } from '../src/models/request/request-model/payment-status.model'
+import { PaymentReportRequest } from '../src/models/request/payment-report-request.model'
 import { api } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
 
 describe('paymen-report-request', () => {
   let client: PaytrailClient
 
-  const standardData = {
-    requestType: RequestType.JSON,
-    callbackUrl: 'https://ecom.example.org/refund/success',
-    paymentStatus: PaymentStatus.DEFAULT,
-    startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString(),
-    endDate: new Date().toISOString(),
-    limit: 5000
-  }
-  const nonStandardData = {
-    requestType: RequestType.JSON,
-    callbackUrl: 'https://ecom.example.org/refund/success',
-    paymentStatus: PaymentStatus.DEFAULT,
-    startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString(),
-    endDate: new Date().toISOString(),
-    limit: -5000
-  }
+  const standardData = new PaymentReportRequest()
+  standardData.requestType = RequestType.JSON
+  standardData.callbackUrl = 'https://ecom.example.org/refund/success'
+  standardData.paymentStatus = PaymentStatus.DEFAULT
+  standardData.startDate = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString()
+  standardData.endDate = new Date().toISOString()
+  standardData.limit = 5000
+
+  const nonStandardData = new PaymentReportRequest()
+  nonStandardData.requestType = RequestType.JSON
+  nonStandardData.callbackUrl = 'https://ecom.example.org/refund/success'
+  nonStandardData.paymentStatus = PaymentStatus.DEFAULT
+  nonStandardData.startDate = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString()
+  nonStandardData.endDate = new Date().toISOString()
+  nonStandardData.limit = -5000
 
   beforeEach(async () => {
     client = new PaytrailClient({

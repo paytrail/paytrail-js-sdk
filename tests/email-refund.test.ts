@@ -1,27 +1,30 @@
 import { api, requests } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import { EmailRefundRequest, EmailRefundParams } from '../src/models/request/email-refunds.model'
+import { CallbackUrl } from '../src/models/request/request-model/callback-url.model'
 import * as crypto from 'crypto'
 
 describe('email-refund', () => {
   let client: PaytrailClient
   let transactionId: string
 
-  const standardData = {
-    amount: 1590,
-    email: 'recipient@example.com',
-    callbackUrls: {
-      success: 'https://ecom.example.org/refund/success',
-      cancel: 'https://ecom.example.org/refund/cancel'
-    }
-  }
-  const nonStandardData = {
-    amount: -1590,
-    email: 'recipient@example.com',
-    callbackUrls: {
-      success: 'https://ecom.example.org/refund/success',
-      cancel: 'https://ecom.example.org/refund/cancel'
-    }
-  }
+  const standardData = new EmailRefundRequest()
+  standardData.amount = 1590
+  standardData.email = 'recipient@example.com'
+  
+  const callbackUrls = new CallbackUrl()
+  callbackUrls.success = 'https://ecom.example.org/refund/success'
+  callbackUrls.cancel = 'https://ecom.example.org/refund/cancel'
+  standardData.callbackUrls = callbackUrls
+
+  const nonStandardData = new EmailRefundRequest()
+  nonStandardData.amount = -1590
+  nonStandardData.email = 'recipient@example.com'
+  
+  const nonStandardCallbackUrls = new CallbackUrl()
+  nonStandardCallbackUrls.success = 'https://ecom.example.org/refund/success'
+  nonStandardCallbackUrls.cancel = 'https://ecom.example.org/refund/cancel'
+  nonStandardData.callbackUrls = nonStandardCallbackUrls
 
   beforeEach(async () => {
     client = new PaytrailClient({
@@ -69,35 +72,29 @@ describe('email-refund', () => {
       transactionId: '258ad3a5-9711-44c3-be65-64a0ef462ba3'
     })
 
-    const data = await client.emailRefund(
-      {
-        transactionId
-      },
-      standardData
-    )
+    const params = new EmailRefundParams()
+    params.transactionId = transactionId
+
+    const data = await client.emailRefund(params, standardData)
 
     expect(data.status).toEqual(200)
     postMock.mockRestore()
   })
 
   it('should return status 400', async () => {
-    const data = await client.emailRefund(
-      {
-        transactionId
-      },
-      nonStandardData
-    )
+    const params = new EmailRefundParams()
+    params.transactionId = transactionId
+
+    const data = await client.emailRefund(params, nonStandardData)
 
     expect(data.status).toEqual(400)
   })
 
   it('should return status 404', async () => {
-    const data = await client.emailRefund(
-      {
-        transactionId: '9dd69e18-3fc3-11ee-b592-d35f161da10a'
-      },
-      standardData
-    )
+    const params = new EmailRefundParams()
+    params.transactionId = '9dd69e18-3fc3-11ee-b592-d35f161da10a'
+
+    const data = await client.emailRefund(params, standardData)
 
     expect(data.status).toEqual(404)
   })
@@ -109,12 +106,10 @@ describe('email-refund', () => {
       platformName: 'test'
     })
 
-    const data = await client.emailRefund(
-      {
-        transactionId: '9dd69e18-3fc3-11ee-b592-d35f161da10a'
-      },
-      standardData
-    )
+    const params = new EmailRefundParams()
+    params.transactionId = '9dd69e18-3fc3-11ee-b592-d35f161da10a'
+
+    const data = await client.emailRefund(params, standardData)
 
     expect(data.status).toEqual(401)
   })
@@ -124,12 +119,10 @@ describe('email-refund', () => {
     jest.spyOn(api.payments, 'emailRefunds').mockRejectedValue(mockError)
 
     try {
-      await client.emailRefund(
-        {
-          transactionId: '9dd69e18-3fc3-11ee-b592-d35f161da10a'
-        },
-        standardData
-      )
+      const params = new EmailRefundParams()
+      params.transactionId = '9dd69e18-3fc3-11ee-b592-d35f161da10a'
+
+      await client.emailRefund(params, standardData)
     } catch (error) {
       expect(error.message).toBe('API error')
     }

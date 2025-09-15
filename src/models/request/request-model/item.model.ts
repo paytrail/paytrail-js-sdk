@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, Min, ValidateNested } from 'class-validator'
-import { Commission } from './commission.model'
-import { Type } from 'class-transformer'
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator'
 import 'reflect-metadata'
+
+ 
 
 /**
  * Class Item
@@ -14,10 +14,12 @@ export class Item {
   /**
    * Price per unit, VAT included, in each country's
    * minor unit, e.g. for Euros use cents.
+   * Min value -2147483648, max value 2147483647.
+   * Negative values are not allowed when usePricesWithoutVat is true
+   * or for Shop-in-Shop items.
    */
   @IsNotEmpty()
   @IsNumber()
-  @Min(0)
   public unitPrice: number
 
   /**
@@ -103,12 +105,4 @@ export class Item {
   @Length(0, 50)
   public merchant?: string
 
-  /**
-   * Shop-in-Shop commission.
-   * Do not use for normal payments.
-   */
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => Commission)
-  public commission?: Commission
 }

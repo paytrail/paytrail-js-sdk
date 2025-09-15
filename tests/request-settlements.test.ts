@@ -1,21 +1,21 @@
 import { api } from '../src/utils/axios.util'
 import { PaytrailClient } from './../src/paytrail-client'
+import { SettlementsRequest } from '../src/models/request/request-settlements.model'
 
 describe('request-settlements', () => {
   let client: PaytrailClient
 
-  const standardData = {
-    bankReference: '45667372',
-    startDate: '2023-07-16',
-    endDate: '2023-08-16',
-    limit: 10
-  }
-  const nonStandardData = {
-    bankReference: '45667372',
-    startDate: '2023-07-16',
-    endDate: '2023-08-16',
-    limit: -10
-  }
+  const standardData = new SettlementsRequest()
+  standardData.bankReference = '45667372'
+  standardData.startDate = '2023-07-16'
+  standardData.endDate = '2023-08-16'
+  standardData.limit = 10
+
+  const nonStandardData = new SettlementsRequest()
+  nonStandardData.bankReference = '45667372'
+  nonStandardData.startDate = '2023-07-16'
+  nonStandardData.endDate = '2023-08-16'
+  nonStandardData.limit = -10
 
   beforeEach(() => {
     client = new PaytrailClient({
