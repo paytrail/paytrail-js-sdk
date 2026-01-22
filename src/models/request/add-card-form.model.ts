@@ -10,37 +10,37 @@ export class AddCardFormRequest {
   /**
    * Paytrail account ID.
    */
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  checkoutAccount: number
+  checkoutAccount?: number
 
   /**
    * Used signature algorithm. The same as used by merchant when creating the payment.
    */
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  checkoutAlgorithm: string
+  checkoutAlgorithm?: string
 
   /**
    * HTTP verb of the request. Always POST for addcard-form.
    */
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  checkoutMethod: string
+  checkoutMethod?: string
 
   /**
    * Unique identifier for this request.
    */
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  checkoutNonce: string
+  checkoutNonce?: string
 
   /**
    * ISO 8601 date time.
    */
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  checkoutTimestamp: string
+  checkoutTimestamp?: string
 
   /**
    * Merchant's url for user redirect on successful card addition.
@@ -59,9 +59,9 @@ export class AddCardFormRequest {
   /**
    * Signature calculated from 'checkout-' prefixed POST parameters the same way as calculating signature from headers.
    */
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  signature: string
+  signature?: string
 
   /**
    * Merchant's url called on successful card addition.

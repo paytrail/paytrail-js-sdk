@@ -6,26 +6,26 @@ describe('create-add-card-form', () => {
   let client: PaytrailClient
 
   const standardData = new AddCardFormRequest()
-  standardData.checkoutAccount = 375917
-  standardData.checkoutAlgorithm = 'sha256'
-  standardData.checkoutMethod = 'POST'
-  standardData.checkoutNonce = '6501220b16b7'
-  standardData.checkoutTimestamp = '2023-08-22T04:05:20.253Z'
   standardData.checkoutRedirectSuccessUrl = 'https://somedomain.com/success'
   standardData.checkoutRedirectCancelUrl = 'https://somedomain.com/cancel'
-  standardData.signature = '542e780c253761ed64333d5485391ddd4f55d5e00b7bdc7f60f0f0d15516f889'
   standardData.language = 'EN'
+  // standardData.checkoutAccount = 375917
+  // standardData.checkoutAlgorithm = 'sha256'
+  // standardData.checkoutMethod = 'POST'
+  // standardData.checkoutNonce = '6501220b16b7'
+  // standardData.checkoutTimestamp = '2023-08-22T04:05:20.253Z'
+  // standardData.signature = '542e780c253761ed64333d5485391ddd4f55d5e00b7bdc7f60f0f0d15516f889'
 
   const nonStandardData = new AddCardFormRequest()
-  nonStandardData.checkoutAccount = 375917
-  nonStandardData.checkoutAlgorithm = 'sha256'
-  nonStandardData.checkoutMethod = 'POST'
-  nonStandardData.checkoutNonce = '6501220b16b7'
-  nonStandardData.checkoutTimestamp = '2023-08-22T04:05:20.253Z'
   nonStandardData.checkoutRedirectSuccessUrl = 'https://somedomain.com/success'
   nonStandardData.checkoutRedirectCancelUrl = 'https://somedomain.com/cancel'
-  nonStandardData.signature = '542e780c253761ed64333d5485391ddd4f55d5e00b7bdc7f60f0f0d15516f888'
   nonStandardData.language = 'EN'
+  // nonStandardData.checkoutAccount = 375917
+  // nonStandardData.checkoutAlgorithm = 'sha256'
+  // nonStandardData.checkoutMethod = 'POST'
+  // nonStandardData.checkoutNonce = '6501220b16b7'
+  // nonStandardData.checkoutTimestamp = '2023-08-22T04:05:20.253Z'
+  // nonStandardData.signature = '542e780c253761ed64333d5485391ddd4f55d5e00b7bdc7f60f0f0d15516f888'
 
   beforeEach(() => {
     client = new PaytrailClient({
