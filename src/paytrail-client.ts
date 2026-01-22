@@ -34,6 +34,7 @@ import {
 } from './models'
 import { Paytrail } from './paytrail'
 import { api } from './utils/axios.util'
+import { convertObjectKeys } from './utils/convert-object-keys.util'
 import { convertObjectToClass } from './utils/convert-object-to-class.utils'
 import { Signature } from './utils/signature.util'
 import { validateError } from './utils/validate-error.utils'
@@ -339,33 +340,36 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   }
 
   public async createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse> {
-    // eslint-disable-next-line no-useless-catch
     try {
+      const currentDate = new Date().toISOString()
+
+      addCardFormRequest.checkoutAccount = this.merchantId
+      addCardFormRequest.checkoutAlgorithm = 'sha256'
+      addCardFormRequest.checkoutMethod = METHOD.POST
+      addCardFormRequest.checkoutNonce = Signature.encodeMD5(currentDate)
+      addCardFormRequest.checkoutTimestamp = currentDate
+
+      const converted = convertObjectKeys(addCardFormRequest)
+
+      const hparams: { [key: string]: string | number } = {}
+      Object.keys(converted).forEach((key) => {
+        if (key.startsWith('checkout-') && converted[key] !== undefined && converted[key] !== null) {
+          hparams[key] = converted[key]
+        }
+      })
+
+      const hmac = Signature.calculateHmac(this.secretKey, hparams, '', 'sha256')
+      addCardFormRequest.signature = hmac
+
       return await this.callApi<AddCardFormResponse>(
-        async () => {
-          try {
-            const data = await api.tokenPayments.createAddCardFormRequest(addCardFormRequest)
-            // If the response is { data: { redirectUrl } }
-            if (data && 'data' in data && data.data && 'redirectUrl' in data.data) {
-              return [undefined, data.data]
-            }
-            return [undefined, data]
-          } catch (error) {
-            // If error is an object with status, pass it as the first tuple element
-            if (error && typeof error === 'object' && 'status' in error) {
-              return [error, undefined]
-            }
-            // Otherwise, treat as generic error
-            return [error, undefined]
-          }
-        },
+        () => api.tokenPayments.createAddCardFormRequest(addCardFormRequest),
         AddCardFormResponse,
         () => validateError(convertObjectToClass(addCardFormRequest, AddCardFormRequest)),
         null,
         null
       )
     } catch (error) {
-      throw error
+      throw new Error(error?.message)
     }
   }
 }
