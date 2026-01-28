@@ -1,3 +1,4 @@
+import { responseMessage, responseStatus } from './constants/message-response.constant'
 import { API_ENDPOINT, METHOD } from './constants/variable.constant'
 import { IPaytrail } from './interfaces/IPayTrail.interface'
 import {
@@ -34,6 +35,7 @@ import {
 } from './models'
 import { Paytrail } from './paytrail'
 import { api } from './utils/axios.util'
+import { convertObjectKeys } from './utils/convert-object-keys.util'
 import { convertObjectToClass } from './utils/convert-object-to-class.utils'
 import { Signature } from './utils/signature.util'
 import { validateError } from './utils/validate-error.utils'
@@ -339,31 +341,39 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   }
 
   public async createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse> {
-    // eslint-disable-next-line no-useless-catch
+    const err = await validateError(convertObjectToClass(addCardFormRequest, AddCardFormRequest))
+
+    if (err) {
+      return {
+        message: err,
+        status: responseStatus.VALIDATE_FAIL
+      } as any
+    }
+
     try {
-      return await this.callApi<AddCardFormResponse>(
-        async () => {
-          try {
-            const data = await api.tokenPayments.createAddCardFormRequest(addCardFormRequest)
-            // If the response is { data: { redirectUrl } }
-            if (data && 'data' in data && data.data && 'redirectUrl' in data.data) {
-              return [undefined, data.data]
-            }
-            return [undefined, data]
-          } catch (error) {
-            // If error is an object with status, pass it as the first tuple element
-            if (error && typeof error === 'object' && 'status' in error) {
-              return [error, undefined]
-            }
-            // Otherwise, treat as generic error
-            return [error, undefined]
-          }
-        },
-        AddCardFormResponse,
-        () => validateError(convertObjectToClass(addCardFormRequest, AddCardFormRequest)),
-        null,
-        null
+      const payload = {
+        checkoutRedirectSuccessUrl: addCardFormRequest.checkoutRedirectSuccessUrl,
+        checkoutRedirectCancelUrl: addCardFormRequest.checkoutRedirectCancelUrl,
+        language: addCardFormRequest.language
+      }
+      const headers = this.getHeaders(METHOD.POST, null, null, payload)
+
+      // Signature override for add-card-form: Sign Method + Path + Body
+      // Headers are NOT included in this signature calculation
+
+      const signature = Signature.calculateCustomHmac(
+        this.secretKey as string,
+        'POST',
+        '/tokenization/addcard-form',
+        convertObjectKeys(payload)
       )
+      headers['signature'] = signature
+
+      const data = await api.tokenPayments.createAddCardFormRequest(payload, headers)
+
+      return data as any
+
+      return data as any
     } catch (error) {
       throw error
     }

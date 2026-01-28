@@ -111,11 +111,15 @@ const tokenPayments = {
   ) => handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/commit`, payload, headers)),
   revertPaymentAuthorizationHold: (params: RevertPaymentAuthHoldRequest, headers: { [key: string]: string | number }) =>
     handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/token/revert`, {}, headers)),
-  createAddCardFormRequest: async (payload: AddCardFormRequest): Promise<AddCardFormResponse> => {
+  createAddCardFormRequest: async (
+    payload: any,
+    headers: { [key: string]: string | number }
+  ): Promise<AddCardFormResponse> => {
     const [err, res] = await handleRequest(
       axios({
         method: 'post',
         url: `${apiEndpoint}/tokenization/addcard-form`,
+        headers,
         data: convertObjectKeys(payload),
         maxRedirects: 0,
         validateStatus: (status: number) => status >= 200 && status < 400

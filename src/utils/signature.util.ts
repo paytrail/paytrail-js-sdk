@@ -32,4 +32,14 @@ export class Signature {
   public static encodeMD5(data: string): string {
     return crypto.createHash('md5').update(data).digest('hex')
   }
+  public static calculateCustomHmac(
+    secret: string,
+    method: string,
+    path: string,
+    body: object,
+    encType = 'sha256'
+  ): string {
+    const hmacPayload = [method, path, JSON.stringify(body)].join('\n')
+    return crypto.createHmac(encType, secret).update(hmacPayload).digest('hex')
+  }
 }
