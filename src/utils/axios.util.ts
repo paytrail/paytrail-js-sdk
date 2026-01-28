@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
+import * as crypto from 'crypto'
 import { API_ENDPOINT } from '../constants/variable.constant'
 import {
   AddCardFormResponse,
@@ -173,10 +174,45 @@ const tokenPayments = {
   }
 }
 
+export function createSignature(
+  method: string,
+  url: string,
+  body: string,
+  headers: Record<string, string>,
+  secretKey: string
+): string {
+  const sortedHeaders = Object.keys(headers)
+    .filter(key => key.startsWith('checkout-'))
+    .sort()
+    .map(key => `${key}:${headers[key]}`)
+    .join('\n')
+
+  const payload = [
+    method,
+    url,
+    body,
+    sortedHeaders
+  ].join('\n')
+
+  return crypto
+    .createHmac('sha256', secretKey)
+    .update(payload)
+    .digest('hex')
+}
+
 export const api = {
   merchants,
   payments,
   paymentReports,
   settlements,
-  tokenPayments
+  tokenPayments: {
+    async createAddCardFormRequest(body: any, headers: any) {
+      return axios.post(
+        'https://services.paytrail.com/tokenization/addcard-form',
+        body,
+        { headers }
+      )
+    }
+  }
 }
+

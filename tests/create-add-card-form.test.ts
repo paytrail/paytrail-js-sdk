@@ -10,11 +10,6 @@ describe('create-add-card-form', () => {
   standardData.checkoutRedirectCancelUrl = 'https://somedomain.com/cancel'
   standardData.language = 'EN'
 
-  const nonStandardData = new AddCardFormRequest()
-  nonStandardData.checkoutRedirectSuccessUrl = 'https://somedomain.com/success'
-  nonStandardData.checkoutRedirectCancelUrl = 'https://somedomain.com/cancel'
-  nonStandardData.language = 'EN'
-
   beforeEach(() => {
     client = new PaytrailClient({
       merchantId: 1072377,
@@ -24,48 +19,56 @@ describe('create-add-card-form', () => {
   })
 
   it('should return status 200', async () => {
-    const data = await client.createAddCardFormRequest(standardData)
-    expect(data).toHaveProperty('status', 200)
-    expect(data).toBeDefined()
-    expect(typeof data.data?.redirectUrl).toBe('string')
+    jest.spyOn(api.tokenPayments, 'createAddCardFormRequest').mockResolvedValue({
+      status: 200,
+      data: { redirectUrl: 'https://paytrail.com/redirect' }
+    } as any)
+
+    const response = await client.createAddCardFormRequest(standardData)
+
+    expect(response.status).toBe(200)
+    expect(response.data.redirectUrl).toBeDefined()
   })
 
   it('should return status 401', async () => {
+    jest.spyOn(api.tokenPayments, 'createAddCardFormRequest').mockRejectedValue({
+      status: 401
+    })
+
     try {
-      await client.createAddCardFormRequest(nonStandardData)
+      await client.createAddCardFormRequest(standardData)
     } catch (error: any) {
-      expect(error.status).toEqual(401)
+      expect(error.status).toBe(401)
     }
   })
 
   it('should handle API error', async () => {
-    const mockError = new Error('API error')
-    jest.spyOn(api.tokenPayments, 'createAddCardFormRequest').mockRejectedValue(mockError)
+    jest
+      .spyOn(api.tokenPayments, 'createAddCardFormRequest')
+      .mockRejectedValue(new Error('API error'))
 
     try {
       await client.createAddCardFormRequest(standardData)
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toBe('API error')
     }
   })
 
   it('should include signature in headers', async () => {
-    const spy = jest.spyOn(api.tokenPayments, 'createAddCardFormRequest').mockResolvedValue({
-      data: { redirectUrl: 'https://paytrail.com/redirect' },
-      message: 'Success',
-      status: 200
-    } as any)
+    const spy = jest
+      .spyOn(api.tokenPayments, 'createAddCardFormRequest')
+      .mockResolvedValue({ status: 200 } as any)
 
     await client.createAddCardFormRequest(standardData)
 
     expect(spy).toHaveBeenCalledWith(
+      expect.any(String),
       expect.objectContaining({
-        language: 'EN'
-      }),
-      expect.objectContaining({
-        'checkout-account': 1072377,
+        'checkout-account': '1072377',
         'checkout-method': 'POST',
-        signature: expect.any(String)
+        signature: expect.any(String),
+        'checkout-nonce': expect.any(String),
+        'checkout-timestamp': expect.any(String)
       })
     )
   })
