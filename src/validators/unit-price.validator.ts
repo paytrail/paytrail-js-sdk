@@ -1,4 +1,10 @@
-import { ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface, registerDecorator, ValidationOptions } from 'class-validator'
+import {
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  registerDecorator,
+  ValidationOptions
+} from 'class-validator'
 
 /**
  * Validator constraint for validating unitPrice based on context
@@ -48,9 +54,9 @@ export class IsValidUnitPriceConstraint implements ValidatorConstraintInterface 
   defaultMessage(args: ValidationArguments): string {
     const object = args.object as any
     const unitPrice = args.value as number
-    
+
     const isShopInShopItem = object.merchant && object.stamp && object.reference
-    
+
     if (isShopInShopItem && unitPrice < 0) {
       return 'Shop-in-Shop items cannot have negative unitPrice'
     }

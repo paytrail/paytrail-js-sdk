@@ -1,4 +1,4 @@
-import { responseMessage, responseStatus } from './constants/message-response.constant'
+import { responseStatus } from './constants/message-response.constant'
 import { API_ENDPOINT, METHOD } from './constants/variable.constant'
 import { IPaytrail } from './interfaces/IPayTrail.interface'
 import {
@@ -350,32 +350,26 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       } as any
     }
 
-    try {
-      const payload = {
-        checkoutRedirectSuccessUrl: addCardFormRequest.checkoutRedirectSuccessUrl,
-        checkoutRedirectCancelUrl: addCardFormRequest.checkoutRedirectCancelUrl,
-        language: addCardFormRequest.language
-      }
-      const headers = this.getHeaders(METHOD.POST, null, null, payload)
-
-      // Signature override for add-card-form: Sign Method + Path + Body
-      // Headers are NOT included in this signature calculation
-
-      const signature = Signature.calculateCustomHmac(
-        this.secretKey as string,
-        'POST',
-        '/tokenization/addcard-form',
-        convertObjectKeys(payload)
-      )
-      headers['signature'] = signature
-
-      const data = await api.tokenPayments.createAddCardFormRequest(payload, headers)
-
-      return data as any
-
-      return data as any
-    } catch (error) {
-      throw error
+    const payload = {
+      checkoutRedirectSuccessUrl: addCardFormRequest.checkoutRedirectSuccessUrl,
+      checkoutRedirectCancelUrl: addCardFormRequest.checkoutRedirectCancelUrl,
+      language: addCardFormRequest.language
     }
+    const headers = this.getHeaders(METHOD.POST, null, null, payload)
+
+    // Signature override for add-card-form: Sign Method + Path + Body
+    // Headers are NOT included in this signature calculation
+
+    const signature = Signature.calculateCustomHmac(
+      this.secretKey as string,
+      'POST',
+      '/tokenization/addcard-form',
+      convertObjectKeys(payload)
+    )
+    headers['signature'] = signature
+
+    const data = await api.tokenPayments.createAddCardFormRequest(payload, headers)
+
+    return data as any
   }
 }
