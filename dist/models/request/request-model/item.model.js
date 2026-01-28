@@ -11,8 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Item = void 0;
 const class_validator_1 = require("class-validator");
-const commission_model_1 = require("./commission.model");
-const class_transformer_1 = require("class-transformer");
 require("reflect-metadata");
 /**
  * Class Item
@@ -27,7 +25,6 @@ exports.Item = Item;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.Min)(0),
     __metadata("design:type", Number)
 ], Item.prototype, "unitPrice", void 0);
 __decorate([
@@ -82,9 +79,3 @@ __decorate([
     (0, class_validator_1.Length)(0, 50),
     __metadata("design:type", String)
 ], Item.prototype, "merchant", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.ValidateNested)(),
-    (0, class_transformer_1.Type)(() => commission_model_1.Commission),
-    __metadata("design:type", commission_model_1.Commission)
-], Item.prototype, "commission", void 0);

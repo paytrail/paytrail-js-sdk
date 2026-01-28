@@ -12,35 +12,40 @@ export class AddCardFormRequest {
    */
   @IsNotEmpty()
   @IsNumber()
-  checkoutAccount: number
+  @IsOptional()
+  checkoutAccount?: number
 
   /**
    * Used signature algorithm. The same as used by merchant when creating the payment.
    */
   @IsNotEmpty()
   @IsString()
-  checkoutAlgorithm: string
+  @IsOptional()
+  checkoutAlgorithm?: string
 
   /**
    * HTTP verb of the request. Always POST for addcard-form.
    */
   @IsNotEmpty()
   @IsString()
-  checkoutMethod: string
+  @IsOptional()
+  checkoutMethod?: string
 
   /**
    * Unique identifier for this request.
    */
   @IsNotEmpty()
   @IsString()
-  checkoutNonce: string
+  @IsOptional()
+  checkoutNonce?: string
 
   /**
    * ISO 8601 date time.
    */
   @IsNotEmpty()
   @IsString()
-  checkoutTimestamp: string
+  @IsOptional()
+  checkoutTimestamp?: string
 
   /**
    * Merchant's url for user redirect on successful card addition.
@@ -61,7 +66,8 @@ export class AddCardFormRequest {
    */
   @IsNotEmpty()
   @IsString()
-  signature: string
+  @IsOptional()
+  signature?: string
 
   /**
    * Merchant's url called on successful card addition.

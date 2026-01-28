@@ -1,4 +1,3 @@
-import { Commission } from './commission.model';
 import 'reflect-metadata';
 /**
  * Class Item
@@ -11,6 +10,9 @@ export declare class Item {
     /**
      * Price per unit, VAT included, in each country's
      * minor unit, e.g. for Euros use cents.
+     * Min value -2147483648, max value 2147483647.
+     * Negative values are not allowed when usePricesWithoutVat is true
+     * or for Shop-in-Shop items.
      */
     unitPrice: number;
     /**
@@ -61,9 +63,4 @@ export declare class Item {
      * Required for Shop-in-Shop payments, do not use for normal payments.
      */
     merchant?: string;
-    /**
-     * Shop-in-Shop commission.
-     * Do not use for normal payments.
-     */
-    commission?: Commission;
 }

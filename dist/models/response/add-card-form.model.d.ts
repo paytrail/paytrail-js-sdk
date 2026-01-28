@@ -13,10 +13,6 @@ export declare class AddCardFormResponse extends Response {
  */
 export declare class AddCardFormData {
     /**
-     * Assigned transaction ID for the payment.
-     */
-    transactionId: string;
-    /**
      * URL to hosted payment gateway.
      */
     redirectUrl: string;

@@ -34,6 +34,7 @@ import {
 } from './models'
 import { Paytrail } from './paytrail'
 import { api } from './utils/axios.util'
+import { convertObjectKeys } from './utils/convert-object-keys.util'
 import { convertObjectToClass } from './utils/convert-object-to-class.utils'
 import { Signature } from './utils/signature.util'
 import { validateError } from './utils/validate-error.utils'
@@ -341,6 +342,25 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   public async createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse> {
     // eslint-disable-next-line no-useless-catch
     try {
+      addCardFormRequest.checkoutAccount = this.merchantId
+      addCardFormRequest.checkoutAlgorithm = 'sha256'
+      addCardFormRequest.checkoutMethod = 'POST'
+
+      const currentDate = new Date().toISOString()
+      addCardFormRequest.checkoutTimestamp = currentDate
+      addCardFormRequest.checkoutNonce = Signature.encodeMD5(currentDate)
+
+      const converted = convertObjectKeys(addCardFormRequest)
+      const hparams: { [key: string]: string | number } = {}
+
+      Object.keys(converted).forEach((key) => {
+        if (key.startsWith('checkout-')) {
+          hparams[key] = converted[key]
+        }
+      })
+
+      addCardFormRequest.signature = Signature.calculateHmac(this.secretKey, hparams, '')
+
       return await this.callApi<AddCardFormResponse>(
         async () => {
           try {
