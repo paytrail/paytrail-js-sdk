@@ -44,8 +44,8 @@ npm test -- tests/create-add-card-form.test.ts
 import { PaytrailClient, AddCardFormRequest } from '@paytrail/paytrail-js-sdk';
 
 const client = new PaytrailClient({
-  merchantId: 1072377,
-  secretKey: '226382458d7a1a75486c9732881472dd61fff6debfb193afab1f7e8b85131081418380be827a69fc',
+  merchantId: 695861,
+  secretKey: 'MONISAIPPUAKAUPPIAS',
   platformName: 'test'
 });
 

@@ -71,7 +71,7 @@ export abstract class Paytrail {
     type: string,
     targetClass: any,
     data?: any,
-    dataError?: { message: string | boolean; status: number }
+    dataError?: { message: string | boolean; status: number; data?: any }
   ): T {
     const instance = new targetClass()
     switch (type) {
@@ -85,8 +85,11 @@ export abstract class Paytrail {
       case responseMessage.SIGNATURE_NULL:
       case responseMessage.EXCEPTION:
       case responseMessage.UNAUTHORIZED:
-        instance.message = dataError?.message
-        instance.status = dataError?.status
+        instance.message = dataError?.message as string
+        instance.status = dataError?.status as number
+        if (dataError?.data) {
+          instance.data = dataError.data
+        }
         break
 
       default:
@@ -152,8 +155,9 @@ export abstract class Paytrail {
 
     if (error) {
       return this.handleResponse<T>(responseMessage.EXCEPTION, targetClass, null, {
-        message: error?.response?.data?.meta || error?.response?.data?.message,
-        status: error?.response?.status
+        message: error?.response?.data?.meta || error?.response?.data?.message || error?.message,
+        status: error?.response?.status,
+        data: error?.response?.data
       })
     }
 
