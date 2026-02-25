@@ -74,6 +74,9 @@ class Paytrail {
             case message_response_constant_1.responseMessage.UNAUTHORIZED:
                 instance.message = dataError === null || dataError === void 0 ? void 0 : dataError.message;
                 instance.status = dataError === null || dataError === void 0 ? void 0 : dataError.status;
+                if (dataError === null || dataError === void 0 ? void 0 : dataError.data) {
+                    instance.data = dataError.data;
+                }
                 break;
             default:
                 instance.message = message_response_constant_1.responseMessage.SERVER_ERROR;
@@ -93,7 +96,7 @@ class Paytrail {
      * @returns {Promise<T>} A promise that resolves to an instance of the specified class.
      */
     callApi(getData, targetClass, validateMessagePayload, validateMessageParam, validateMessageQuery) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
             let message = '';
             if (validateMessagePayload) {
@@ -123,8 +126,9 @@ class Paytrail {
             const [error, data] = yield getData();
             if (error) {
                 return this.handleResponse(message_response_constant_1.responseMessage.EXCEPTION, targetClass, null, {
-                    message: ((_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.meta) || ((_d = (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.message),
-                    status: (_e = error === null || error === void 0 ? void 0 : error.response) === null || _e === void 0 ? void 0 : _e.status
+                    message: ((_b = (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.meta) || ((_d = (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.message) || (error === null || error === void 0 ? void 0 : error.message),
+                    status: (_e = error === null || error === void 0 ? void 0 : error.response) === null || _e === void 0 ? void 0 : _e.status,
+                    data: (_f = error === null || error === void 0 ? void 0 : error.response) === null || _f === void 0 ? void 0 : _f.data
                 });
             }
             return this.handleResponse(message_response_constant_1.responseMessage.SUCCESS, targetClass, data);

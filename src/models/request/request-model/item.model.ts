@@ -1,8 +1,6 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator'
 import 'reflect-metadata'
 
- 
-
 /**
  * Class Item
  *
@@ -104,5 +102,4 @@ export class Item {
   @IsOptional()
   @Length(0, 50)
   public merchant?: string
-
 }

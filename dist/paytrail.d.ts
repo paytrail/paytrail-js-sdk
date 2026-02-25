@@ -33,6 +33,7 @@ export declare abstract class Paytrail {
     handleResponse<T>(type: string, targetClass: any, data?: any, dataError?: {
         message: string | boolean;
         status: number;
+        data?: any;
     }): T;
     /**
      * Call an API, validate the response, and return an instance of the specified class.

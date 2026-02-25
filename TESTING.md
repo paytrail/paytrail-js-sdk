@@ -24,10 +24,12 @@ npm test -- tests/create-add-card-form.test.ts
 ## Manual / Integration Verification
 
 ### Setup
+
 1. Ensure you have valid Paytrail Merchant credentials (Merchant ID and Secret Key).
 2. The current test suite uses default test credentials (`merchantId: 695861`, `secret: MONISAIPPUAKAUPPIAS`).
 
 ### Test Flow
+
 1. Instantiate `PaytrailClient` with your credentials.
 2. Create an `AddCardFormRequest` object with only the business fields:
    - `checkoutRedirectSuccessUrl`
@@ -41,27 +43,27 @@ npm test -- tests/create-add-card-form.test.ts
 ### Example Code
 
 ```typescript
-import { PaytrailClient, AddCardFormRequest } from '@paytrail/paytrail-js-sdk';
+import { PaytrailClient, AddCardFormRequest } from '@paytrail/paytrail-js-sdk'
 
 const client = new PaytrailClient({
   merchantId: 695861,
   secretKey: 'MONISAIPPUAKAUPPIAS',
   platformName: 'test'
-});
+})
 
 const run = async () => {
-    const request = new AddCardFormRequest();
-    request.checkoutRedirectSuccessUrl = 'https://example.com/success';
-    request.checkoutRedirectCancelUrl = 'https://example.com/cancel';
-    request.language = 'EN';
+  const request = new AddCardFormRequest()
+  request.checkoutRedirectSuccessUrl = 'https://example.com/success'
+  request.checkoutRedirectCancelUrl = 'https://example.com/cancel'
+  request.language = 'EN'
 
-    try {
-        const response = await client.createAddCardFormRequest(request);
-        console.log('Redirect URL:', response.data.redirectUrl);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-};
+  try {
+    const response = await client.createAddCardFormRequest(request)
+    console.log('Redirect URL:', response.data.redirectUrl)
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}
 
-run();
+run()
 ```

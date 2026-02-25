@@ -15,7 +15,7 @@ describe('create-payment', () => {
   standardData.amount = 1590
   standardData.currency = 'EUR'
   standardData.language = 'FI'
-  
+
   const item = new Item()
   item.unitPrice = 1590
   item.units = 1
@@ -44,7 +44,7 @@ describe('create-payment', () => {
   nonStandardData.amount = -1590
   nonStandardData.currency = 'EUR'
   nonStandardData.language = 'FI'
-  
+
   const nonStandardItem = new Item()
   nonStandardItem.unitPrice = 1590
   nonStandardItem.units = 1

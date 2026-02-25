@@ -1,4 +1,4 @@
-import { AddCardFormRequest, AddCardFormResponse, CreateCitPaymentParams, CreateCitPaymentRequest, CreatePaymentRequest, CreateRefundParams, CreateRefundRequest, CreateSiSPaymentRequest, EmailRefundParams, EmailRefundRequest, GetPaymentStatusRequest, GetTokenRequest, ListGroupedProvidersRequest, MitPaymentParams, MitPaymentRequest, RevertPaymentAuthHoldRequest, SettlementsRequest } from '../models';
+import { AddCardFormRequest, CreateCitPaymentParams, CreateCitPaymentRequest, CreatePaymentRequest, CreateRefundParams, CreateRefundRequest, CreateSiSPaymentRequest, EmailRefundParams, EmailRefundRequest, GetPaymentStatusRequest, GetTokenRequest, ListGroupedProvidersRequest, MitPaymentParams, MitPaymentRequest, RevertPaymentAuthHoldRequest, SettlementsRequest } from '../models';
 import { PaymentReportRequest } from '../models/request/payment-report-request.model';
 export declare const requests: {
     get: (url: string, headers: {
@@ -63,6 +63,6 @@ export declare const api: {
         revertPaymentAuthorizationHold: (params: RevertPaymentAuthHoldRequest, headers: {
             [key: string]: string | number;
         }) => Promise<readonly [any, any]>;
-        createAddCardFormRequest: (payload: AddCardFormRequest) => Promise<AddCardFormResponse>;
+        createAddCardFormRequest: (payload: AddCardFormRequest) => Promise<any>;
     };
 };

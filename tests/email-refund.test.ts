@@ -11,7 +11,7 @@ describe('email-refund', () => {
   const standardData = new EmailRefundRequest()
   standardData.amount = 1590
   standardData.email = 'recipient@example.com'
-  
+
   const callbackUrls = new CallbackUrl()
   callbackUrls.success = 'https://ecom.example.org/refund/success'
   callbackUrls.cancel = 'https://ecom.example.org/refund/cancel'
@@ -20,7 +20,7 @@ describe('email-refund', () => {
   const nonStandardData = new EmailRefundRequest()
   nonStandardData.amount = -1590
   nonStandardData.email = 'recipient@example.com'
-  
+
   const nonStandardCallbackUrls = new CallbackUrl()
   nonStandardCallbackUrls.success = 'https://ecom.example.org/refund/success'
   nonStandardCallbackUrls.cancel = 'https://ecom.example.org/refund/cancel'

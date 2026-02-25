@@ -1,9 +1,7 @@
-
 import axios, { AxiosResponse } from 'axios'
 import { API_ENDPOINT } from '../constants/variable.constant'
 import {
   AddCardFormRequest,
-  AddCardFormResponse,
   CreateCitPaymentParams,
   CreateCitPaymentRequest,
   CreatePaymentRequest,
@@ -94,7 +92,7 @@ const settlements = {
     handleRequest(requests.get(`${apiEndpoint}/settlements?${convertQuery(query)}`, headers))
 }
 
-const createAddCardFormRequest = async (payload: AddCardFormRequest): Promise<AddCardFormResponse> => {
+const createAddCardFormRequest = async (payload: AddCardFormRequest): Promise<any> => {
   const [err, res] = await handleRequest(
     axios({
       method: 'post',
