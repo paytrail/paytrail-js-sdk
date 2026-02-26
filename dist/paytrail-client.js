@@ -215,23 +215,19 @@ class PaytrailClient extends paytrail_1.Paytrail {
         return __awaiter(this, void 0, void 0, function* () {
             // eslint-disable-next-line no-useless-catch
             try {
-                addCardFormRequest.checkoutAccount = this.merchantId;
-                addCardFormRequest.checkoutAlgorithm = 'sha256';
-                addCardFormRequest.checkoutMethod = 'POST';
                 const currentDate = new Date().toISOString();
-                addCardFormRequest.checkoutTimestamp = currentDate;
-                addCardFormRequest.checkoutNonce = signature_util_1.Signature.encodeMD5(currentDate);
-                const converted = (0, convert_object_keys_util_1.convertObjectKeys)(addCardFormRequest);
+                const payload = Object.assign(Object.assign({}, addCardFormRequest), { checkoutAccount: this.merchantId, checkoutAlgorithm: 'sha256', checkoutMethod: 'POST', checkoutTimestamp: currentDate, checkoutNonce: signature_util_1.Signature.encodeMD5(currentDate) });
+                const converted = (0, convert_object_keys_util_1.convertObjectKeys)(payload);
                 const hparams = {};
                 Object.keys(converted).forEach((key) => {
                     if (key.startsWith('checkout-')) {
                         hparams[key] = converted[key];
                     }
                 });
-                addCardFormRequest.signature = signature_util_1.Signature.calculateHmac(this.secretKey, hparams, '');
+                payload.signature = signature_util_1.Signature.calculateHmac(this.secretKey, hparams, '');
                 return yield this.callApi(() => __awaiter(this, void 0, void 0, function* () {
                     try {
-                        const data = yield axios_util_1.api.tokenPayments.createAddCardFormRequest(addCardFormRequest);
+                        const data = yield axios_util_1.api.tokenPayments.createAddCardFormRequest(payload);
                         // If the response is { data: { redirectUrl } }
                         if (data && 'data' in data && data.data && 'redirectUrl' in data.data) {
                             return [undefined, data.data];

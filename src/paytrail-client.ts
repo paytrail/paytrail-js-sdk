@@ -342,15 +342,17 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   public async createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse> {
     // eslint-disable-next-line no-useless-catch
     try {
-      addCardFormRequest.checkoutAccount = this.merchantId
-      addCardFormRequest.checkoutAlgorithm = 'sha256'
-      addCardFormRequest.checkoutMethod = 'POST'
-
       const currentDate = new Date().toISOString()
-      addCardFormRequest.checkoutTimestamp = currentDate
-      addCardFormRequest.checkoutNonce = Signature.encodeMD5(currentDate)
+      const payload: any = {
+        ...addCardFormRequest,
+        checkoutAccount: this.merchantId,
+        checkoutAlgorithm: 'sha256',
+        checkoutMethod: 'POST',
+        checkoutTimestamp: currentDate,
+        checkoutNonce: Signature.encodeMD5(currentDate)
+      }
 
-      const converted = convertObjectKeys(addCardFormRequest)
+      const converted = convertObjectKeys(payload)
       const hparams: { [key: string]: string | number } = {}
 
       Object.keys(converted).forEach((key) => {
@@ -359,12 +361,12 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
         }
       })
 
-      addCardFormRequest.signature = Signature.calculateHmac(this.secretKey, hparams, '')
+      payload.signature = Signature.calculateHmac(this.secretKey, hparams, '')
 
       return await this.callApi<AddCardFormResponse>(
         async () => {
           try {
-            const data = await api.tokenPayments.createAddCardFormRequest(addCardFormRequest)
+            const data = await api.tokenPayments.createAddCardFormRequest(payload)
             // If the response is { data: { redirectUrl } }
             if (data && 'data' in data && data.data && 'redirectUrl' in data.data) {
               return [undefined, data.data]
