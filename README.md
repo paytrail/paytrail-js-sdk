@@ -42,8 +42,8 @@ yarn add @paytrail/paytrail-js-sdk
 const { PaytrailClient, PaymentMethodGroup } = require('@paytrail/paytrail-js-sdk')
 
 const client = new PaytrailClient({
-  merchantId: 123456,
-  secretKey: 'xxx',
+  merchantId: 375917,
+  secretKey: 'SAIPPUAKAUPPIAS',
   platformName: 'xxx'
 })
 
