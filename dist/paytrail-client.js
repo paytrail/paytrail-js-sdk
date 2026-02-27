@@ -14,6 +14,7 @@ const variable_constant_1 = require("./constants/variable.constant");
 const models_1 = require("./models");
 const paytrail_1 = require("./paytrail");
 const axios_util_1 = require("./utils/axios.util");
+const convert_object_keys_util_1 = require("./utils/convert-object-keys.util");
 const convert_object_to_class_utils_1 = require("./utils/convert-object-to-class.utils");
 const signature_util_1 = require("./utils/signature.util");
 const validate_error_utils_1 = require("./utils/validate-error.utils");
@@ -212,11 +213,39 @@ class PaytrailClient extends paytrail_1.Paytrail {
     }
     createAddCardFormRequest(addCardFormRequest) {
         return __awaiter(this, void 0, void 0, function* () {
+            // eslint-disable-next-line no-useless-catch
             try {
-                return yield this.callApi(() => axios_util_1.api.tokenPayments.createAddCardFormRequest(addCardFormRequest), models_1.AddCardFormResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(addCardFormRequest, models_1.AddCardFormRequest)), null, null);
+                const currentDate = new Date().toISOString();
+                const payload = Object.assign(Object.assign({}, addCardFormRequest), { checkoutAccount: this.merchantId, checkoutAlgorithm: 'sha256', checkoutMethod: 'POST', checkoutTimestamp: currentDate, checkoutNonce: signature_util_1.Signature.encodeMD5(currentDate) });
+                const converted = (0, convert_object_keys_util_1.convertObjectKeys)(payload);
+                const hparams = {};
+                Object.keys(converted).forEach((key) => {
+                    if (key.startsWith('checkout-')) {
+                        hparams[key] = converted[key];
+                    }
+                });
+                payload.signature = signature_util_1.Signature.calculateHmac(this.secretKey, hparams, '');
+                return yield this.callApi(() => __awaiter(this, void 0, void 0, function* () {
+                    try {
+                        const data = yield axios_util_1.api.tokenPayments.createAddCardFormRequest(payload);
+                        // If the response is { data: { redirectUrl } }
+                        if (data && 'data' in data && data.data && 'redirectUrl' in data.data) {
+                            return [undefined, data.data];
+                        }
+                        return [undefined, data];
+                    }
+                    catch (error) {
+                        // If error is an object with status, pass it as the first tuple element
+                        if (error && typeof error === 'object' && 'status' in error) {
+                            return [error, undefined];
+                        }
+                        // Otherwise, treat as generic error
+                        return [error, undefined];
+                    }
+                }), models_1.AddCardFormResponse, () => (0, validate_error_utils_1.validateError)((0, convert_object_to_class_utils_1.convertObjectToClass)(addCardFormRequest, models_1.AddCardFormRequest)), null, null);
             }
             catch (error) {
-                throw new Error(error === null || error === void 0 ? void 0 : error.message);
+                throw error;
             }
         });
     }

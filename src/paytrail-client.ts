@@ -34,6 +34,7 @@ import {
 } from './models'
 import { Paytrail } from './paytrail'
 import { api } from './utils/axios.util'
+import { convertObjectKeys } from './utils/convert-object-keys.util'
 import { convertObjectToClass } from './utils/convert-object-to-class.utils'
 import { Signature } from './utils/signature.util'
 import { validateError } from './utils/validate-error.utils'
@@ -341,10 +342,31 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
   public async createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse> {
     // eslint-disable-next-line no-useless-catch
     try {
+      const currentDate = new Date().toISOString()
+      const payload: any = {
+        ...addCardFormRequest,
+        checkoutAccount: this.merchantId,
+        checkoutAlgorithm: 'sha256',
+        checkoutMethod: 'POST',
+        checkoutTimestamp: currentDate,
+        checkoutNonce: Signature.encodeMD5(currentDate)
+      }
+
+      const converted = convertObjectKeys(payload)
+      const hparams: { [key: string]: string | number } = {}
+
+      Object.keys(converted).forEach((key) => {
+        if (key.startsWith('checkout-')) {
+          hparams[key] = converted[key]
+        }
+      })
+
+      payload.signature = Signature.calculateHmac(this.secretKey, hparams, '')
+
       return await this.callApi<AddCardFormResponse>(
         async () => {
           try {
-            const data = await api.tokenPayments.createAddCardFormRequest(addCardFormRequest)
+            const data = await api.tokenPayments.createAddCardFormRequest(payload)
             // If the response is { data: { redirectUrl } }
             if (data && 'data' in data && data.data && 'redirectUrl' in data.data) {
               return [undefined, data.data]

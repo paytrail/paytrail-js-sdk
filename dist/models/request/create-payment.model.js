@@ -18,6 +18,7 @@ const callback_url_model_1 = require("./request-model/callback-url.model");
 const payment_method_group_model_1 = require("./request-model/payment-method-group.model");
 const class_transformer_1 = require("class-transformer");
 require("reflect-metadata");
+const create_payment_validator_1 = require("../../validators/create-payment.validator");
 /**
  * Class CreatePaymentRequest
  *
@@ -66,6 +67,7 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)({ each: true }),
     (0, class_transformer_1.Type)(() => item_model_1.Item),
+    (0, create_payment_validator_1.ValidateItemPrices)(),
     __metadata("design:type", Array)
 ], CreatePaymentRequest.prototype, "items", void 0);
 __decorate([

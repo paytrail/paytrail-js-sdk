@@ -63,6 +63,6 @@ export declare const api: {
         revertPaymentAuthorizationHold: (params: RevertPaymentAuthHoldRequest, headers: {
             [key: string]: string | number;
         }) => Promise<readonly [any, any]>;
-        createAddCardFormRequest: (payload: AddCardFormRequest) => Promise<readonly [any, any]>;
+        createAddCardFormRequest: (payload: AddCardFormRequest) => Promise<any>;
     };
 };

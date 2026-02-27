@@ -12,7 +12,7 @@ describe('create-refund', () => {
   standardData.amount = 1590
   standardData.refundStamp = crypto.randomUUID()
   standardData.refundReference = '9187445'
-  
+
   const callbackUrls = new CallbackUrl()
   callbackUrls.success = 'https://ecom.example.org/refund/success'
   callbackUrls.cancel = 'https://ecom.example.org/refund/cancel'
@@ -22,7 +22,7 @@ describe('create-refund', () => {
   nonStandardData.amount = -1590
   nonStandardData.refundStamp = crypto.randomUUID()
   nonStandardData.refundReference = '9187445'
-  
+
   const nonStandardCallbackUrls = new CallbackUrl()
   nonStandardCallbackUrls.success = 'https://ecom.example.org/refund/success'
   nonStandardCallbackUrls.cancel = 'https://ecom.example.org/refund/cancel'
