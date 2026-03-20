@@ -51,7 +51,7 @@ describe('cancel-payment', () => {
     const data = await client.cancelPayment(request)
     expect(data.status).toEqual(200)
     expect(data.data?.transactionId).toEqual(validTransactionId)
-    
+
     jest.restoreAllMocks()
   })
 
