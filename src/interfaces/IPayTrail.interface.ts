@@ -28,7 +28,9 @@ import {
   RevertPaymentAuthHoldRequest,
   RevertPaymentAuthHoldResponse,
   SettlementsRequest,
-  SettlementsResponse
+  SettlementsResponse,
+  CancelOrderRequest,
+  CancelOrderResponse
 } from '../models'
 
 export interface IPaytrail {
@@ -218,4 +220,14 @@ export interface IPaytrail {
    * @throws Error
    */
   createAddCardFormRequest(addCardFormRequest: AddCardFormRequest): Promise<AddCardFormResponse>
+
+  /**
+   *
+   * @summary HTTP POST /payments/{transactionId}/cancel-order cancels a payment that was set up with manualInvoiceActivation.
+   *          This action cancels the payment and releases any authorization holds that were made.
+   * @param {CancelOrderRequest} cancelOrderRequest
+   * @see https://docs.paytrail.com/#/?id=cancel-order
+   * @throws Error
+   */
+  cancelPayment(cancelOrderRequest: CancelOrderRequest): Promise<CancelOrderResponse>
 }

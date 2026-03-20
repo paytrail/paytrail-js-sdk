@@ -65,5 +65,36 @@ const run = async () => {
   }
 }
 
+### Cancel Order (Klarna/Invoice)
+
+1. Instantiate `PaytrailClient`.
+2. Provide a `transactionId` for a payment created with `manualInvoiceActivation: true`.
+3. Call `client.cancelPayment({ transactionId })`.
+
+**Example Code:**
+
+```typescript
+import { PaytrailClient } from '@paytrail/paytrail-js-sdk'
+
+const client = new PaytrailClient({
+  merchantId: 695861,
+  secretKey: 'MONISAIPPUAKAUPPIAS',
+  platformName: 'test'
+})
+
+const runCancel = async () => {
+  try {
+    const response = await client.cancelPayment({
+      transactionId: 'YOUR_TRANSACTION_ID_HERE'
+    })
+    console.log('Cancel Status:', response.status)
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}
+
+runCancel()
+```
+
 run()
 ```
