@@ -30,7 +30,9 @@ import {
   RevertPaymentAuthHoldRequest,
   RevertPaymentAuthHoldResponse,
   SettlementsRequest,
-  SettlementsResponse
+  SettlementsResponse,
+  CancelOrderRequest,
+  CancelOrderResponse
 } from './models'
 import { Paytrail } from './paytrail'
 import { api } from './utils/axios.util'
@@ -388,6 +390,22 @@ export class PaytrailClient extends Paytrail implements IPaytrail {
       )
     } catch (error) {
       throw error
+    }
+  }
+
+  public async cancelPayment(cancelOrderRequest: CancelOrderRequest): Promise<CancelOrderResponse> {
+    try {
+      const headers = this.getHeaders(METHOD.POST, cancelOrderRequest.transactionId, null, {})
+
+      return await this.callApi<CancelOrderResponse>(
+        () => api.payments.cancelOrder(cancelOrderRequest, headers),
+        CancelOrderResponse,
+        () => validateError(convertObjectToClass(cancelOrderRequest, CancelOrderRequest)),
+        null,
+        null
+      )
+    } catch (error) {
+      throw new Error(error?.message)
     }
   }
 }

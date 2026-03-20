@@ -16,7 +16,8 @@ import {
   MitPaymentParams,
   MitPaymentRequest,
   RevertPaymentAuthHoldRequest,
-  SettlementsRequest
+  SettlementsRequest,
+  CancelOrderRequest
 } from '../models'
 import { handleRequest } from './handle-request.util'
 import { PaymentReportRequest } from '../models/request/payment-report-request.model'
@@ -79,7 +80,9 @@ const payments = {
     headers: { [key: string]: string | number }
   ) => handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund`, payload, headers)),
   emailRefunds: (params: EmailRefundParams, payload: EmailRefundRequest, headers: { [key: string]: string | number }) =>
-    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund/email`, payload, headers))
+    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/refund/email`, payload, headers)),
+  cancelOrder: (params: CancelOrderRequest, headers: { [key: string]: string | number }) =>
+    handleRequest(requests.post(`${apiEndpoint}/payments/${params.transactionId}/cancel-order`, {}, headers))
 }
 
 const paymentReports = {
