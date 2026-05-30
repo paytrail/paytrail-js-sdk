@@ -1,4 +1,4 @@
-import { api } from '../src/utils/axios.util'
+import { api } from '../src/utils/fetch.util'
 import { PaytrailClient } from './../src/paytrail-client'
 import { SettlementsRequest } from '../src/models/request/request-settlements.model'
 

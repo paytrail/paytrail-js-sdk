@@ -33,7 +33,7 @@ import {
   SettlementsResponse
 } from './models'
 import { Paytrail } from './paytrail'
-import { api } from './utils/axios.util'
+import { api } from './utils/fetch.util'
 import { convertObjectKeys } from './utils/convert-object-keys.util'
 import { convertObjectToClass } from './utils/convert-object-to-class.utils'
 import { Signature } from './utils/signature.util'

@@ -1,4 +1,4 @@
-import { api } from '../src/utils/axios.util'
+import { api } from '../src/utils/fetch.util'
 import { PaytrailClient } from './../src/paytrail-client'
 import { CreateCitPaymentRequest } from '../src/models/request/create-cit-payment.model'
 import { CreateCitPaymentParams } from '../src/models/request/create-cit-payment.model'

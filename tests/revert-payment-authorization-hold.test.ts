@@ -1,4 +1,4 @@
-import { api } from '../src/utils/axios.util'
+import { api } from '../src/utils/fetch.util'
 import { PaytrailClient } from './../src/paytrail-client'
 import { RevertPaymentAuthHoldRequest } from '../src/models/request/revert-payment-auth-hold.model'
 import * as crypto from 'crypto'

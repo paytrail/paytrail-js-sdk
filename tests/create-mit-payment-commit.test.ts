@@ -1,4 +1,4 @@
-import { api } from '../src/utils/axios.util'
+import { api } from '../src/utils/fetch.util'
 import { PaytrailClient } from './../src/paytrail-client'
 import { MitPaymentRequest, MitPaymentParams } from '../src/models/request/mit-payment.model'
 import { Item } from '../src/models/request/request-model/item.model'

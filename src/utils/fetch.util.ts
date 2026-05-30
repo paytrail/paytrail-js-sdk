@@ -1,4 +1,3 @@
-import axios, { AxiosResponse } from 'axios'
 import { API_ENDPOINT } from '../constants/variable.constant'
 import {
   AddCardFormRequest,
@@ -24,34 +23,56 @@ import { convertObjectKeys } from './convert-object-keys.util'
 
 const apiEndpoint = API_ENDPOINT
 
-axios.interceptors.request.use((config) => {
-  config.headers['Content-Type'] = 'application/json; charset=utf-8'
-  return config
-})
+const buildHeaders = (extra?: { [key: string]: string | number }): Headers => {
+  const headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+
+  if (extra) {
+    for (const key of Object.keys(extra)) {
+      headers.set(key, String(extra[key]))
+    }
+  }
+
+  return headers
+}
+
+const readErrorBody = async (response: Response): Promise<any> => {
+  const contentType = response.headers.get('content-type')
+
+  if (contentType?.includes('application/json')) {
+    return response.json().catch(() => ({}))
+  }
+
+  await response.body?.cancel()
+  return {}
+}
 
 export const requests = {
   get: async (url: string, headers: { [key: string]: string | number }) => {
-    return axios({
-      method: 'get',
-      url,
-      headers
-    }).then((res) => res.data)
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: buildHeaders(headers)
+    })
+    if (!response.ok) {
+      const errorData = await readErrorBody(response)
+      const error: any = new Error(errorData?.message || response.statusText)
+      error.response = { status: response.status, data: errorData }
+      throw error
+    }
+    return response.json()
   },
   post: async (url: string, body: object, headers?: { [key: string]: string | number }) => {
-    if (headers) {
-      return axios({
-        method: 'post',
-        url,
-        headers,
-        data: body
-      }).then((res) => res.data)
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: buildHeaders(headers),
+      body: JSON.stringify(body)
+    })
+    if (!response.ok) {
+      const errorData = await readErrorBody(response)
+      const error: any = new Error(errorData?.message || response.statusText)
+      error.response = { status: response.status, data: errorData }
+      throw error
     }
-
-    return axios({
-      method: 'post',
-      url,
-      data: body
-    }).then((res) => res.data)
+    return response.json()
   }
 }
 
@@ -93,61 +114,29 @@ const settlements = {
 }
 
 const createAddCardFormRequest = async (payload: AddCardFormRequest): Promise<any> => {
-  const [err, res] = await handleRequest(
-    axios({
-      method: 'post',
-      url: `${apiEndpoint}/tokenization/addcard-form`,
-      data: convertObjectKeys(payload),
-      maxRedirects: 0,
-      validateStatus: (status: number) => status >= 200 && status < 400
-    })
-  )
+  const response = await fetch(`${apiEndpoint}/tokenization/addcard-form`, {
+    method: 'POST',
+    headers: buildHeaders(),
+    body: JSON.stringify(convertObjectKeys(payload)),
+    redirect: 'manual'
+  })
 
-  if (err) {
-    // If the error has a response and status, throw an object with status for test compatibility
-    if (err && err.response && err.response.status) {
-      throw { status: err.response.status, message: err.response.data?.message || err.message }
-    }
-    throw err
+  if (response.status >= 400) {
+    const errorData = await response.json().catch(() => ({}))
+    throw { status: response.status, message: errorData?.message || response.statusText }
   }
 
-  // Get the redirect URL from the response headers or data
-  // Check if res is an AxiosResponse or a plain object
-  let redirectUrl: string | undefined = undefined
-  if (
-    res &&
-    typeof res === 'object' &&
-    'headers' in res &&
-    res.headers &&
-    res.headers.redirects &&
-    res.headers.redirects.redirectUrl
-  ) {
-    redirectUrl = res.headers.redirects.redirectUrl
-  } else if (
-    res &&
-    typeof res === 'object' &&
-    'headers' in res &&
-    res.headers &&
-    (res as AxiosResponse).headers.location
-  ) {
-    redirectUrl = (res as AxiosResponse).headers.location
-  } else if (typeof res === 'string') {
-    // Extract URL from HTML anchor tag
-    const match = (res as string).match(/href=["']([^"']+)["']/)
-    if (match) {
-      redirectUrl = match[1]
-    }
-  } else if (res && typeof res === 'object' && res.data && typeof res.data.redirectUrl === 'string') {
-    // Fallback: check for data.redirectUrl property
-    redirectUrl = res.data.redirectUrl
+  const location = response.headers.get('location')
+  if (location && location.trim() !== '') {
+    return { data: { redirectUrl: location }, message: 'Success', status: 200 }
   }
 
-  // If redirectUrl is missing, undefined, or not a valid string, treat as error
-  if (!redirectUrl || typeof redirectUrl !== 'string' || redirectUrl.trim() === '') {
-    throw { status: 500, message: 'Missing or invalid redirectUrl in response' }
+  const data = await response.json().catch(() => null)
+  if (data && typeof data.redirectUrl === 'string') {
+    return { data: { redirectUrl: data.redirectUrl }, message: 'Success', status: 200 }
   }
-  // Return only the redirectUrl object, let handleResponse wrap it
-  return { data: { redirectUrl }, message: 'Success', status: 200 }
+
+  throw { status: 500, message: 'Missing or invalid redirectUrl in response' }
 }
 
 const tokenPayments = {
