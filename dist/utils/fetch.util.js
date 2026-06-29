@@ -10,37 +10,55 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.api = exports.requests = void 0;
-const axios_1 = require("axios");
 const variable_constant_1 = require("../constants/variable.constant");
 const handle_request_util_1 = require("./handle-request.util");
 const convert_object_keys_util_1 = require("./convert-object-keys.util");
 const apiEndpoint = variable_constant_1.API_ENDPOINT;
-axios_1.default.interceptors.request.use((config) => {
-    config.headers['Content-Type'] = 'application/json; charset=utf-8';
-    return config;
+const buildHeaders = (extra) => {
+    const headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' });
+    if (extra) {
+        for (const key of Object.keys(extra)) {
+            headers.set(key, String(extra[key]));
+        }
+    }
+    return headers;
+};
+const readErrorBody = (response) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const contentType = response.headers.get('content-type');
+    if (contentType === null || contentType === void 0 ? void 0 : contentType.includes('application/json')) {
+        return response.json().catch(() => ({}));
+    }
+    yield ((_a = response.body) === null || _a === void 0 ? void 0 : _a.cancel());
+    return {};
 });
 exports.requests = {
     get: (url, headers) => __awaiter(void 0, void 0, void 0, function* () {
-        return (0, axios_1.default)({
-            method: 'get',
-            url,
-            headers
-        }).then((res) => res.data);
+        const response = yield fetch(url, {
+            method: 'GET',
+            headers: buildHeaders(headers)
+        });
+        if (!response.ok) {
+            const errorData = yield readErrorBody(response);
+            const error = new Error((errorData === null || errorData === void 0 ? void 0 : errorData.message) || response.statusText);
+            error.response = { status: response.status, data: errorData };
+            throw error;
+        }
+        return response.json();
     }),
     post: (url, body, headers) => __awaiter(void 0, void 0, void 0, function* () {
-        if (headers) {
-            return (0, axios_1.default)({
-                method: 'post',
-                url,
-                headers,
-                data: body
-            }).then((res) => res.data);
+        const response = yield fetch(url, {
+            method: 'POST',
+            headers: buildHeaders(headers),
+            body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+            const errorData = yield readErrorBody(response);
+            const error = new Error((errorData === null || errorData === void 0 ? void 0 : errorData.message) || response.statusText);
+            error.response = { status: response.status, data: errorData };
+            throw error;
         }
-        return (0, axios_1.default)({
-            method: 'post',
-            url,
-            data: body
-        }).then((res) => res.data);
+        return response.json();
     })
 };
 const convertQuery = (param) => {
@@ -65,56 +83,25 @@ const settlements = {
     get: (query, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.get(`${apiEndpoint}/settlements?${convertQuery(query)}`, headers))
 };
 const createAddCardFormRequest = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const [err, res] = yield (0, handle_request_util_1.handleRequest)((0, axios_1.default)({
-        method: 'post',
-        url: `${apiEndpoint}/tokenization/addcard-form`,
-        data: (0, convert_object_keys_util_1.convertObjectKeys)(payload),
-        maxRedirects: 0,
-        validateStatus: (status) => status >= 200 && status < 400
-    }));
-    if (err) {
-        // If the error has a response and status, throw an object with status for test compatibility
-        if (err && err.response && err.response.status) {
-            throw { status: err.response.status, message: ((_a = err.response.data) === null || _a === void 0 ? void 0 : _a.message) || err.message };
-        }
-        throw err;
+    const response = yield fetch(`${apiEndpoint}/tokenization/addcard-form`, {
+        method: 'POST',
+        headers: buildHeaders(),
+        body: JSON.stringify((0, convert_object_keys_util_1.convertObjectKeys)(payload)),
+        redirect: 'manual'
+    });
+    if (response.status >= 400) {
+        const errorData = yield response.json().catch(() => ({}));
+        throw { status: response.status, message: (errorData === null || errorData === void 0 ? void 0 : errorData.message) || response.statusText };
     }
-    // Get the redirect URL from the response headers or data
-    // Check if res is an AxiosResponse or a plain object
-    let redirectUrl = undefined;
-    if (res &&
-        typeof res === 'object' &&
-        'headers' in res &&
-        res.headers &&
-        res.headers.redirects &&
-        res.headers.redirects.redirectUrl) {
-        redirectUrl = res.headers.redirects.redirectUrl;
+    const location = response.headers.get('location');
+    if (location && location.trim() !== '') {
+        return { data: { redirectUrl: location }, message: 'Success', status: 200 };
     }
-    else if (res &&
-        typeof res === 'object' &&
-        'headers' in res &&
-        res.headers &&
-        res.headers.location) {
-        redirectUrl = res.headers.location;
+    const data = yield response.json().catch(() => null);
+    if (data && typeof data.redirectUrl === 'string') {
+        return { data: { redirectUrl: data.redirectUrl }, message: 'Success', status: 200 };
     }
-    else if (typeof res === 'string') {
-        // Extract URL from HTML anchor tag
-        const match = res.match(/href=["']([^"']+)["']/);
-        if (match) {
-            redirectUrl = match[1];
-        }
-    }
-    else if (res && typeof res === 'object' && res.data && typeof res.data.redirectUrl === 'string') {
-        // Fallback: check for data.redirectUrl property
-        redirectUrl = res.data.redirectUrl;
-    }
-    // If redirectUrl is missing, undefined, or not a valid string, treat as error
-    if (!redirectUrl || typeof redirectUrl !== 'string' || redirectUrl.trim() === '') {
-        throw { status: 500, message: 'Missing or invalid redirectUrl in response' };
-    }
-    // Return only the redirectUrl object, let handleResponse wrap it
-    return { data: { redirectUrl }, message: 'Success', status: 200 };
+    throw { status: 500, message: 'Missing or invalid redirectUrl in response' };
 });
 const tokenPayments = {
     createGetToken: (param, headers) => (0, handle_request_util_1.handleRequest)(exports.requests.post(`${apiEndpoint}/tokenization/${param.checkoutTokenizationId}`, {}, headers)),

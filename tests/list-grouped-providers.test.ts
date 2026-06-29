@@ -1,5 +1,5 @@
 import { ListGroupedProvidersRequest, PaymentMethodGroup } from '../src/models'
-import { api } from '../src/utils/axios.util'
+import { api } from '../src/utils/fetch.util'
 import { PaytrailClient } from './../src/paytrail-client'
 
 describe('list-grouped-providers', () => {

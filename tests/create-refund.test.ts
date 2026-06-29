@@ -1,4 +1,4 @@
-import { api, requests } from '../src/utils/axios.util'
+import { api, requests } from '../src/utils/fetch.util'
 import { PaytrailClient } from './../src/paytrail-client'
 import { CreateRefundRequest, CreateRefundParams } from '../src/models/request/create-refund.model'
 import { CallbackUrl } from '../src/models/request/request-model/callback-url.model'

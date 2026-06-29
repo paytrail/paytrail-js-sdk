@@ -1,7 +1,7 @@
 import { RequestType } from '../src/models'
 import { PaymentStatus } from '../src/models/request/request-model/payment-status.model'
 import { PaymentReportRequest } from '../src/models/request/payment-report-request.model'
-import { api } from '../src/utils/axios.util'
+import { api } from '../src/utils/fetch.util'
 import { PaytrailClient } from './../src/paytrail-client'
 
 describe('paymen-report-request', () => {
